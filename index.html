@@ -114,11 +114,11 @@
     }
 
     async function handleStop() {
-      console.log('[PhoneBooth] Gửi lệnh: stop');
+      console.log('[PhoneBooth] Gửi lệnh: open (mở cửa để ra ngoài)');
       btnStop.disabled = true;
-      showStatus('⏳ Đang gửi lệnh...', '#888');
+      showStatus('⏳ Đang mở cửa để ra ngoài...', '#888');
 
-      const { error } = await db.from('commands').insert({ action: 'stop', executed: false });
+      const { error } = await db.from('commands').insert({ action: 'open', executed: false });
 
       if (error) {
         console.error('[PhoneBooth] Lỗi:', error);
@@ -127,12 +127,12 @@
         return;
       }
 
-      console.log('[PhoneBooth] Insert thành công: stop');
-      showStatus('✅ Đã dừng. Cửa đang đóng.', '#f97316');
+      console.log('[PhoneBooth] Insert thành công: open (ra ngoài)');
+      showStatus('✅ Cửa đang mở. Vui lòng ra ngoài.', '#f97316');
       setTimeout(() => {
         showOpenButton();
         showStatus('', '');
-      }, 3000);
+      }, 6000);
     }
   </script>
 </body>
