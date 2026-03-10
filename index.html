@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epione PhoneBooth</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 48px;
+      letter-spacing: -0.5px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      padding: 18px 0;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-open {
+      background: #22c55e;
+      margin-bottom: 16px;
+    }
+    .btn-stop {
+      background: #ef4444;
+      font-size: 17px;
+      padding: 14px 0;
+    }
+    .status {
+      margin-top: 32px;
+      font-size: 16px;
+      min-height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">Epione PhoneBooth</div>
+    <button class="btn btn-open" id="btnOpen" onclick="sendCommand('open')">Mở PhoneBooth</button>
+    <button class="btn btn-stop" id="btnStop" onclick="sendCommand('stop')">Dừng / Ra ngoài</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ============== CẤU HÌNH ==============
+    const SUPABASE_URL = "https://iwczjfomyybszwdlzwjs.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3Y3pqZm9teXlic3p3ZGx6d2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDIzODgsImV4cCI6MjA4ODcxODM4OH0.dvGSX8N5_tHpGqWL5rCreCdGpASxOK2nwwcbCpILew4";
+    // ======================================
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const btnOpen = document.getElementById('btnOpen');
+    const btnStop = document.getElementById('btnStop');
+    const statusEl = document.getElementById('status');
+
+    function setButtons(enabled) {
+      btnOpen.disabled = !enabled;
+      btnStop.disabled = !enabled;
+    }
+
+    function showStatus(text, color) {
+      statusEl.textContent = text;
+      statusEl.style.color = color;
+    }
+
+    async function sendCommand(action) {
+      console.log(`[PhoneBooth] Gửi lệnh: ${action}`);
+      setButtons(false);
+      showStatus('⏳ Đang gửi lệnh...', '#888');
+
+      const { error } = await db.from('commands').insert({ action, executed: false });
+
+      if (error) {
+        console.error('[PhoneBooth] Lỗi:', error);
+        showStatus('❌ Lỗi kết nối. Vui lòng thử lại.', '#ef4444');
+        setButtons(true);
+        return;
+      }
+
+      console.log(`[PhoneBooth] Insert thành công: ${action}`);
+
+      if (action === 'open') {
+        showStatus('✅ Đang mở... Vui lòng chờ', '#22c55e');
+        setTimeout(() => { setButtons(true); showStatus('', ''); }, 5000);
+      } else {
+        showStatus('✅ Đã dừng. Cửa đang đóng.', '#f97316');
+        setTimeout(() => { setButtons(true); showStatus('', ''); }, 3000);
+      }
+    }
+  </script>
+</body>
+</html>
