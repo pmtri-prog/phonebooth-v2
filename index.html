@@ -30,12 +30,20 @@
     .counter {
       font-size: 15px;
       color: #888;
-      margin-bottom: 40px;
+      margin-bottom: 24px;
     }
     .counter span {
       font-weight: 700;
       color: #111;
     }
+    .timer {
+      font-size: 48px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 32px;
+      font-variant-numeric: tabular-nums;
+    }
+    .timer.hidden { display: none; }
     .btn {
       display: block;
       width: 100%;
@@ -68,6 +76,7 @@
   <div class="container">
     <div class="logo">Epione PhoneBooth</div>
     <div class="counter">Tổng lượt sử dụng: <span id="count">--</span></div>
+    <div class="timer hidden" id="timer">00:00</div>
     <button class="btn btn-open" id="btnOpen" onclick="handleOpen()">Mở PhoneBooth</button>
     <button class="btn btn-stop hidden" id="btnStop" onclick="handleStop()">Dừng / Ra ngoài</button>
     <div class="status" id="status"></div>
@@ -87,6 +96,10 @@
     const btnStop = document.getElementById('btnStop');
     const statusEl = document.getElementById('status');
     const countEl = document.getElementById('count');
+    const timerEl = document.getElementById('timer');
+
+    let timerInterval = null;
+    let sessionStartTime = null;
 
     function showStatus(text, color) {
       statusEl.textContent = text;
@@ -103,6 +116,32 @@
       btnOpen.classList.add('hidden');
       btnStop.classList.remove('hidden');
       btnStop.disabled = false;
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const s = (seconds % 60).toString().padStart(2, '0');
+      return m + ':' + s;
+    }
+
+    function startTimer() {
+      sessionStartTime = new Date();
+      timerEl.classList.remove('hidden');
+      timerEl.textContent = '00:00';
+      timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - sessionStartTime.getTime()) / 1000);
+        timerEl.textContent = formatTime(elapsed);
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      const endTime = new Date();
+      const durationSec = Math.floor((endTime - sessionStartTime) / 1000);
+      console.log('[PhoneBooth] Thời gian phiên:', formatTime(durationSec));
+      timerEl.classList.add('hidden');
+      return { startTime: sessionStartTime, endTime, durationSec };
     }
 
     async function loadCount() {
@@ -133,6 +172,7 @@
 
       console.log('[PhoneBooth] Insert thành công: open');
       showStatus('✅ Đang mở... Vui lòng vào PhoneBooth', '#22c55e');
+      startTimer();
       showStopButton();
     }
 
@@ -150,14 +190,17 @@
         return;
       }
 
-      // Lưu 1 lượt sử dụng
-      const { error: sessionErr } = await db.from('sessions').insert({ completed_at: new Date().toISOString() });
+      // Dừng timer và lưu phiên
+      const session = stopTimer();
+      const { error: sessionErr } = await db.from('sessions').insert({
+        started_at: session.startTime.toISOString(),
+        ended_at: session.endTime.toISOString(),
+        duration_seconds: session.durationSec
+      });
       if (sessionErr) console.error('[PhoneBooth] Lỗi lưu session:', sessionErr);
 
-      console.log('[PhoneBooth] Hoàn thành 1 lượt');
+      console.log('[PhoneBooth] Hoàn thành 1 lượt -', formatTime(session.durationSec));
       showStatus('✅ Cửa đang mở. Vui lòng ra ngoài.', '#f97316');
-
-      // Cập nhật counter
       loadCount();
 
       setTimeout(() => {
@@ -166,7 +209,6 @@
       }, 6000);
     }
 
-    // Load counter khi mở trang
     loadCount();
   </script>
 </body>
