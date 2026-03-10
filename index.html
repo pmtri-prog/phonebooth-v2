@@ -2,123 +2,232 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Epione PhoneBooth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8f9fa;
       min-height: 100vh;
-      padding: 20px;
+      padding: 0;
     }
-    .container {
+
+    /* Header */
+    .header {
+      background: #fff;
+      padding: 20px 20px 16px;
       text-align: center;
-      width: 100%;
-      max-width: 400px;
+      border-bottom: 1px solid #eee;
     }
     .logo {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 22px;
+      font-weight: 800;
       color: #111;
-      margin-bottom: 8px;
       letter-spacing: -0.5px;
+    }
+    .logo span { color: #22c55e; }
+
+    /* State card */
+    .state-card {
+      margin: 16px;
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .state-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
     }
     .state-badge {
       display: inline-block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 4px 12px;
+      padding: 5px 14px;
       border-radius: 20px;
-      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
     }
     .state-idle { background: #f0f0f0; color: #666; }
     .state-opening { background: #fef3c7; color: #b45309; }
     .state-inuse { background: #dcfce7; color: #16a34a; }
     .state-offline { background: #fee2e2; color: #dc2626; }
+
     .counter {
-      font-size: 14px;
-      color: #888;
-      margin-bottom: 20px;
+      font-size: 13px;
+      color: #999;
+      margin-top: 4px;
     }
-    .counter span { font-weight: 700; color: #111; }
+    .counter span { font-weight: 700; color: #555; }
+
+    /* Timer */
+    .timer-wrap { margin: 20px 0 4px; }
+    .timer-wrap.hidden { display: none; }
     .timer {
-      font-size: 52px;
-      font-weight: 700;
+      font-size: 56px;
+      font-weight: 800;
       color: #111;
-      margin-bottom: 8px;
       font-variant-numeric: tabular-nums;
+      line-height: 1;
     }
     .timer-label {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 28px;
+      font-size: 12px;
+      color: #999;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .timer.hidden, .timer-label.hidden { display: none; }
+
+    /* Buttons */
+    .actions {
+      padding: 0 16px;
+    }
     .btn {
       display: block;
       width: 100%;
       border: none;
       color: #fff;
-      font-size: 20px;
-      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
       padding: 18px 0;
-      border-radius: 14px;
+      border-radius: 16px;
       cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
+      transition: transform 0.1s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn:active { transform: scale(0.97); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .btn-open { background: #22c55e; }
-    .btn-stop { background: #ef4444; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn-open {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+    }
+    .btn-stop {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 4px 14px rgba(239,68,68,0.35);
+    }
     .hidden { display: none; }
+
+    /* Status */
     .status {
-      margin-top: 24px;
-      font-size: 15px;
-      min-height: 24px;
+      text-align: center;
+      padding: 12px 16px 0;
+      font-size: 14px;
+      min-height: 32px;
+      font-weight: 500;
     }
-    .log-feed {
-      margin-top: 32px;
-      text-align: left;
-      border-top: 1px solid #eee;
-      padding-top: 16px;
+
+    /* Log feed */
+    .log-section {
+      margin: 20px 16px 0;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      overflow: hidden;
     }
-    .log-feed h3 {
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .log-header h3 {
       font-size: 13px;
+      font-weight: 600;
       color: #888;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 10px;
+    }
+    .log-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .log-list {
+      max-height: 260px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .log-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #f8f8f8;
       font-size: 13px;
-      color: #555;
-      padding: 6px 0;
-      border-bottom: 1px solid #f5f5f5;
-      font-family: 'SF Mono', Monaco, monospace;
+      align-items: flex-start;
     }
-    .log-item .time { color: #aaa; }
-    .log-item .event { font-weight: 600; color: #111; }
+    .log-item:last-child { border-bottom: none; }
+    .log-time {
+      color: #bbb;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+      padding-top: 1px;
+      min-width: 52px;
+    }
+    .log-text {
+      color: #333;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .log-note {
+      color: #999;
+      font-weight: 400;
+    }
+
+    /* Safe area */
+    .footer-space { height: 32px; }
+
+    /* Animation for new logs */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .log-item-new { animation: slideIn 0.3s ease; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">Epione PhoneBooth</div>
+  <div class="header">
+    <div class="logo">Epione <span>PhoneBooth</span></div>
+  </div>
+
+  <div class="state-card">
+    <div class="state-icon" id="stateIcon">🟢</div>
     <div id="stateBadge" class="state-badge state-idle">Sẵn sàng</div>
-    <div class="counter">Tổng lượt: <span id="count">--</span></div>
-    <div class="timer hidden" id="timer">00:00</div>
-    <div class="timer-label hidden" id="timerLabel">Thời gian sử dụng</div>
-    <button class="btn btn-open" id="btnOpen" onclick="handleOpen()">Mở PhoneBooth</button>
-    <button class="btn btn-stop hidden" id="btnStop" onclick="handleStop()">Dừng / Ra ngoài</button>
-    <div class="status" id="status"></div>
-    <div class="log-feed">
-      <h3>Nhật ký hoạt động</h3>
-      <div id="logList">Đang tải...</div>
+    <div class="counter">Tổng lượt sử dụng: <span id="count">--</span></div>
+    <div class="timer-wrap hidden" id="timerWrap">
+      <div class="timer" id="timer">00:00</div>
+      <div class="timer-label">Thời gian sử dụng</div>
     </div>
   </div>
+
+  <div class="actions">
+    <button class="btn btn-open" id="btnOpen" onclick="handleOpen()">Mở PhoneBooth</button>
+    <button class="btn btn-stop hidden" id="btnStop" onclick="handleStop()">Dừng / Ra ngoài</button>
+  </div>
+  <div class="status" id="status"></div>
+
+  <div class="log-section">
+    <div class="log-header">
+      <h3>Nhật ký hoạt động</h3>
+      <div class="log-dot"></div>
+    </div>
+    <div class="log-list" id="logList"></div>
+  </div>
+
+  <div class="footer-space"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -135,54 +244,63 @@
     const statusEl = document.getElementById('status');
     const countEl = document.getElementById('count');
     const timerEl = document.getElementById('timer');
-    const timerLabel = document.getElementById('timerLabel');
+    const timerWrap = document.getElementById('timerWrap');
     const stateBadge = document.getElementById('stateBadge');
+    const stateIcon = document.getElementById('stateIcon');
     const logList = document.getElementById('logList');
 
     let timerInterval = null;
     let sessionStartTime = null;
-    let currentBoothState = 'idle'; // idle, opening, inuse
+    let currentBoothState = 'idle';
 
-    // ============== EVENT → TIẾNG VIỆT ==============
+    // ============== EVENT CONFIG ==============
     const eventLabels = {
       'boot_start': 'Khởi động hệ thống',
-      'pir_warming_up': 'Đang khởi động cảm biến',
+      'pir_warming_up': 'Khởi động cảm biến',
       'system_ready': 'Hệ thống sẵn sàng',
       'cmd_open_received': 'Nhận lệnh mở cửa',
-      'cmd_stop_received': 'Nhận lệnh dừng phiên',
-      'cmd_expired_skipped': 'Lệnh hết hạn, bỏ qua',
+      'cmd_stop_received': 'Nhận lệnh dừng',
+      'cmd_expired_skipped': 'Lệnh hết hạn',
       'door_opened': 'Cửa đang mở',
       'door_closed': 'Cửa đã đóng',
-      'entry_detected': 'Phát hiện người vào',
-      'opened_no_entry': 'Không có người vào',
-      'session_started': 'Bắt đầu phiên sử dụng',
-      'session_ended_manual': 'Kết thúc phiên (khách bấm dừng)',
-      'session_ended_auto': 'Kết thúc phiên (không có người)',
-      'session_ended_timeout': 'Kết thúc phiên (hết giờ)',
-      'session_overtime_occupied': 'Quá giờ — vẫn có người bên trong',
-      'motion_unexpected': 'Phát hiện chuyển động bất thường',
-      'emergency_button': 'Nút khẩn cấp được nhấn',
-      'wifi_disconnected': 'Mất kết nối WiFi',
-      'wifi_reconnected': 'Đã kết nối lại WiFi',
-      'supabase_error': 'Lỗi kết nối server',
+      'entry_detected': 'Có người vào booth',
+      'opened_no_entry': 'Không có ai vào',
+      'session_started': 'Bắt đầu phiên',
+      'session_ended_manual': 'Kết thúc (bấm dừng)',
+      'session_ended_auto': 'Tự kết thúc (trống)',
+      'session_ended_timeout': 'Hết giờ',
+      'session_overtime_occupied': 'Quá giờ — có người',
+      'motion_unexpected': 'Chuyển động bất thường',
+      'emergency_button': 'Khẩn cấp!',
+      'wifi_disconnected': 'Mất WiFi',
+      'wifi_reconnected': 'WiFi đã kết nối',
+      'supabase_error': 'Lỗi server',
     };
 
-    // Events mà sau đó UI nên reset về IDLE
+    const stateConfig = {
+      idle:    { icon: '🟢', badge: 'Sẵn sàng',     css: 'state-idle' },
+      opening: { icon: '🔓', badge: 'Đang mở cửa',  css: 'state-opening' },
+      inuse:   { icon: '🔵', badge: 'Đang sử dụng', css: 'state-inuse' },
+      offline: { icon: '🔴', badge: 'Mất kết nối',  css: 'state-offline' },
+    };
+
     const resetEvents = [
       'session_ended_manual', 'session_ended_auto', 'session_ended_timeout',
       'opened_no_entry', 'emergency_button'
     ];
 
-    // ============== UI FUNCTIONS ==============
+    // ============== UI ==============
     function showStatus(text, color) {
       statusEl.textContent = text;
       statusEl.style.color = color;
     }
 
-    function setBoothState(state, label) {
+    function setBoothState(state, customLabel) {
       currentBoothState = state;
-      stateBadge.className = 'state-badge state-' + state;
-      stateBadge.textContent = label;
+      const cfg = stateConfig[state] || stateConfig.idle;
+      stateIcon.textContent = cfg.icon;
+      stateBadge.className = 'state-badge ' + cfg.css;
+      stateBadge.textContent = customLabel || cfg.badge;
     }
 
     function showOpenButton() {
@@ -205,8 +323,7 @@
 
     function startTimer() {
       sessionStartTime = new Date();
-      timerEl.classList.remove('hidden');
-      timerLabel.classList.remove('hidden');
+      timerWrap.classList.remove('hidden');
       timerEl.textContent = '00:00';
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
@@ -222,15 +339,14 @@
       if (sessionStartTime) {
         durationSec = Math.floor((Date.now() - sessionStartTime.getTime()) / 1000);
       }
-      timerEl.classList.add('hidden');
-      timerLabel.classList.add('hidden');
+      timerWrap.classList.add('hidden');
       return durationSec;
     }
 
     function resetToIdle(statusText, statusColor) {
       stopTimer();
       showOpenButton();
-      setBoothState('idle', 'Sẵn sàng');
+      setBoothState('idle');
       if (statusText) {
         showStatus(statusText, statusColor || '#888');
         setTimeout(() => showStatus('', ''), 5000);
@@ -247,63 +363,63 @@
       const { data, error } = await db.from('booth_logs')
         .select('event, note, created_at')
         .order('created_at', { ascending: false })
-        .limit(15);
+        .limit(20);
 
       if (error || !data) {
-        logList.innerHTML = '<div class="log-item">Không tải được log</div>';
+        logList.innerHTML = '<div class="log-item"><div class="log-text">Không tải được</div></div>';
         return;
       }
 
       renderLogs(data);
-      // Sync UI state từ log mới nhất
       if (data.length > 0) syncStateFromLog(data[0]);
+    }
+
+    function renderLogItem(log, isNew) {
+      const d = new Date(log.created_at);
+      const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const label = eventLabels[log.event] || log.event;
+      const note = log.note ? `<span class="log-note"> — ${log.note}</span>` : '';
+      const cls = isNew ? 'log-item log-item-new' : 'log-item';
+      return `<div class="${cls}"><div class="log-time">${time}</div><div class="log-text">${label}${note}</div></div>`;
     }
 
     function renderLogs(logs) {
       if (logs.length === 0) {
-        logList.innerHTML = '<div class="log-item">Chưa có hoạt động</div>';
+        logList.innerHTML = '<div class="log-item"><div class="log-text">Chưa có hoạt động</div></div>';
         return;
       }
-      logList.innerHTML = logs.map(log => {
-        const d = new Date(log.created_at);
-        const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const label = eventLabels[log.event] || log.event;
-        const note = log.note ? ` — ${log.note}` : '';
-        return `<div class="log-item"><span class="time">${time}</span> <span class="event">${label}</span>${note}</div>`;
-      }).join('');
+      logList.innerHTML = logs.map(l => renderLogItem(l, false)).join('');
     }
 
+    // ============== STATE SYNC ==============
     function syncStateFromLog(log) {
       const ev = log.event;
-      console.log('[Sync] Latest event:', ev);
+      console.log('[Sync]', ev);
 
       if (resetEvents.includes(ev)) {
-        // Ưu tiên xử lý reset trước — tránh bị event khác ghi đè
         const messages = {
-          'session_ended_manual': ['Phiên kết thúc. Cửa đang mở để ra.', '#f97316'],
+          'session_ended_manual': ['Phiên kết thúc. Cửa mở để ra.', '#f97316'],
           'session_ended_auto': ['Phiên tự kết thúc — không có người.', '#f97316'],
-          'session_ended_timeout': ['Phiên kết thúc — hết giờ.', '#f97316'],
-          'opened_no_entry': ['Không có người vào. Sẵn sàng.', '#888'],
+          'session_ended_timeout': ['Hết giờ. Phiên đã kết thúc.', '#f97316'],
+          'opened_no_entry': ['Không có ai vào. Sẵn sàng.', '#888'],
           'emergency_button': ['Khẩn cấp! Cửa đã mở.', '#ef4444'],
         };
         const [msg, color] = messages[ev] || ['', '#888'];
         resetToIdle(msg, color);
         loadCount();
       } else if (ev === 'session_started') {
-        setBoothState('inuse', 'Đang sử dụng');
+        setBoothState('inuse');
         showStopButton();
         if (!timerInterval) startTimer();
       } else if (ev === 'entry_detected') {
         setBoothState('opening', 'Đang vào...');
       } else if (ev === 'cmd_open_received') {
-        setBoothState('opening', 'Đang mở cửa...');
+        setBoothState('opening');
       } else if (ev === 'door_opened') {
-        // Chỉ set opening nếu chưa reset
         if (currentBoothState !== 'idle') {
           setBoothState('opening', 'Cửa đang mở...');
         }
       } else if (ev === 'door_closed') {
-        // Không thay đổi state — chờ event tiếp theo quyết định
         if (currentBoothState === 'idle') {
           showStatus('Cửa đã đóng.', '#888');
           setTimeout(() => showStatus('', ''), 3000);
@@ -312,13 +428,11 @@
         resetToIdle('Hệ thống sẵn sàng.', '#22c55e');
       } else if (ev === 'session_overtime_occupied') {
         setBoothState('inuse', 'Quá giờ — có người');
-        showStatus('Quá giờ nhưng vẫn có người bên trong', '#f97316');
+        showStatus('Quá giờ, vẫn có người bên trong', '#f97316');
       } else if (ev === 'wifi_disconnected') {
-        setBoothState('offline', 'Mất kết nối');
+        setBoothState('offline');
       } else if (ev === 'wifi_reconnected') {
-        if (currentBoothState === 'offline') {
-          setBoothState('idle', 'Sẵn sàng');
-        }
+        if (currentBoothState === 'offline') setBoothState('idle');
       }
     }
 
@@ -330,17 +444,14 @@
           schema: 'public',
           table: 'booth_logs'
         }, (payload) => {
-          console.log('[Realtime] New log:', payload.new.event);
+          console.log('[Realtime]', payload.new.event);
           syncStateFromLog(payload.new);
-          // Thêm log mới vào đầu danh sách
-          const existing = logList.innerHTML;
-          const log = payload.new;
-          const d = new Date(log.created_at);
-          const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-          const label = eventLabels[log.event] || log.event;
-          const note = log.note ? ` — ${log.note}` : '';
-          const html = `<div class="log-item"><span class="time">${time}</span> <span class="event">${label}</span>${note}</div>`;
-          logList.innerHTML = html + existing;
+          const html = renderLogItem(payload.new, true);
+          logList.insertAdjacentHTML('afterbegin', html);
+          // Giới hạn 20 log items
+          while (logList.children.length > 20) {
+            logList.removeChild(logList.lastChild);
+          }
         })
         .subscribe((status) => {
           console.log('[Realtime] Status:', status);
@@ -349,40 +460,38 @@
 
     // ============== ACTIONS ==============
     async function handleOpen() {
-      console.log('[PhoneBooth] Gửi lệnh: open');
+      console.log('[UI] open');
       btnOpen.disabled = true;
-      showStatus('⏳ Đang gửi lệnh...', '#888');
-      setBoothState('opening', 'Đang mở cửa...');
+      showStatus('Đang gửi lệnh...', '#888');
+      setBoothState('opening');
 
       const { error } = await db.from('commands').insert({ action: 'open', executed: false });
 
       if (error) {
-        console.error('[PhoneBooth] Lỗi:', error);
-        showStatus('❌ Lỗi kết nối. Vui lòng thử lại.', '#ef4444');
+        console.error('[UI] Error:', error);
+        showStatus('Lỗi kết nối. Thử lại.', '#ef4444');
         btnOpen.disabled = false;
-        setBoothState('idle', 'Sẵn sàng');
+        setBoothState('idle');
         return;
       }
 
-      showStatus('✅ Lệnh đã gửi. Đang mở cửa...', '#22c55e');
-      // UI sẽ tự cập nhật qua Realtime khi ESP32 ghi log
+      showStatus('Lệnh đã gửi. Đang mở cửa...', '#22c55e');
     }
 
     async function handleStop() {
-      console.log('[PhoneBooth] Gửi lệnh: stop');
+      console.log('[UI] stop');
       btnStop.disabled = true;
-      showStatus('⏳ Đang gửi lệnh dừng...', '#888');
+      showStatus('Đang gửi lệnh dừng...', '#888');
 
       const { error } = await db.from('commands').insert({ action: 'stop', executed: false });
 
       if (error) {
-        console.error('[PhoneBooth] Lỗi:', error);
-        showStatus('❌ Lỗi kết nối. Vui lòng thử lại.', '#ef4444');
+        console.error('[UI] Error:', error);
+        showStatus('Lỗi kết nối. Thử lại.', '#ef4444');
         btnStop.disabled = false;
         return;
       }
 
-      // Lưu session
       if (sessionStartTime) {
         const durationSec = stopTimer();
         await db.from('sessions').insert({
@@ -392,8 +501,7 @@
         });
       }
 
-      showStatus('✅ Lệnh đã gửi. Đang mở cửa để ra...', '#f97316');
-      // UI sẽ tự cập nhật qua Realtime
+      showStatus('Đang mở cửa để ra ngoài...', '#f97316');
     }
 
     // ============== INIT ==============
