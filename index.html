@@ -24,8 +24,17 @@
       font-size: 28px;
       font-weight: 700;
       color: #111;
-      margin-bottom: 48px;
+      margin-bottom: 12px;
       letter-spacing: -0.5px;
+    }
+    .counter {
+      font-size: 15px;
+      color: #888;
+      margin-bottom: 40px;
+    }
+    .counter span {
+      font-weight: 700;
+      color: #111;
     }
     .btn {
       display: block;
@@ -58,6 +67,7 @@
 <body>
   <div class="container">
     <div class="logo">Epione PhoneBooth</div>
+    <div class="counter">Tổng lượt sử dụng: <span id="count">--</span></div>
     <button class="btn btn-open" id="btnOpen" onclick="handleOpen()">Mở PhoneBooth</button>
     <button class="btn btn-stop hidden" id="btnStop" onclick="handleStop()">Dừng / Ra ngoài</button>
     <div class="status" id="status"></div>
@@ -76,6 +86,7 @@
     const btnOpen = document.getElementById('btnOpen');
     const btnStop = document.getElementById('btnStop');
     const statusEl = document.getElementById('status');
+    const countEl = document.getElementById('count');
 
     function showStatus(text, color) {
       statusEl.textContent = text;
@@ -92,6 +103,18 @@
       btnOpen.classList.add('hidden');
       btnStop.classList.remove('hidden');
       btnStop.disabled = false;
+    }
+
+    async function loadCount() {
+      console.log('[PhoneBooth] Load tổng lượt...');
+      const { count, error } = await db.from('sessions').select('*', { count: 'exact', head: true });
+      if (error) {
+        console.error('[PhoneBooth] Lỗi load count:', error);
+        countEl.textContent = '0';
+        return;
+      }
+      countEl.textContent = count;
+      console.log('[PhoneBooth] Tổng lượt:', count);
     }
 
     async function handleOpen() {
@@ -127,13 +150,24 @@
         return;
       }
 
-      console.log('[PhoneBooth] Insert thành công: open (ra ngoài)');
+      // Lưu 1 lượt sử dụng
+      const { error: sessionErr } = await db.from('sessions').insert({ completed_at: new Date().toISOString() });
+      if (sessionErr) console.error('[PhoneBooth] Lỗi lưu session:', sessionErr);
+
+      console.log('[PhoneBooth] Hoàn thành 1 lượt');
       showStatus('✅ Cửa đang mở. Vui lòng ra ngoài.', '#f97316');
+
+      // Cập nhật counter
+      loadCount();
+
       setTimeout(() => {
         showOpenButton();
         showStatus('', '');
       }, 6000);
     }
+
+    // Load counter khi mở trang
+    loadCount();
   </script>
 </body>
 </html>
