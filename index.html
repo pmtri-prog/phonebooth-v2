@@ -24,26 +24,40 @@
       font-size: 28px;
       font-weight: 700;
       color: #111;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       letter-spacing: -0.5px;
     }
+    .state-badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .state-idle { background: #f0f0f0; color: #666; }
+    .state-opening { background: #fef3c7; color: #b45309; }
+    .state-inuse { background: #dcfce7; color: #16a34a; }
+    .state-offline { background: #fee2e2; color: #dc2626; }
     .counter {
-      font-size: 15px;
+      font-size: 14px;
       color: #888;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-    .counter span {
-      font-weight: 700;
-      color: #111;
-    }
+    .counter span { font-weight: 700; color: #111; }
     .timer {
-      font-size: 48px;
+      font-size: 52px;
       font-weight: 700;
       color: #111;
-      margin-bottom: 32px;
+      margin-bottom: 8px;
       font-variant-numeric: tabular-nums;
     }
-    .timer.hidden { display: none; }
+    .timer-label {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+    .timer.hidden, .timer-label.hidden { display: none; }
     .btn {
       display: block;
       width: 100%;
@@ -57,29 +71,53 @@
       transition: opacity 0.2s, transform 0.1s;
     }
     .btn:active { transform: scale(0.97); }
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .btn-open { background: #22c55e; }
     .btn-stop { background: #ef4444; }
     .hidden { display: none; }
     .status {
-      margin-top: 32px;
-      font-size: 16px;
+      margin-top: 24px;
+      font-size: 15px;
       min-height: 24px;
     }
+    .log-feed {
+      margin-top: 32px;
+      text-align: left;
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+    }
+    .log-feed h3 {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .log-item {
+      font-size: 13px;
+      color: #555;
+      padding: 6px 0;
+      border-bottom: 1px solid #f5f5f5;
+      font-family: 'SF Mono', Monaco, monospace;
+    }
+    .log-item .time { color: #aaa; }
+    .log-item .event { font-weight: 600; color: #111; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="logo">Epione PhoneBooth</div>
-    <div class="counter">Tổng lượt sử dụng: <span id="count">--</span></div>
+    <div id="stateBadge" class="state-badge state-idle">Sẵn sàng</div>
+    <div class="counter">Tổng lượt: <span id="count">--</span></div>
     <div class="timer hidden" id="timer">00:00</div>
+    <div class="timer-label hidden" id="timerLabel">Thời gian sử dụng</div>
     <button class="btn btn-open" id="btnOpen" onclick="handleOpen()">Mở PhoneBooth</button>
     <button class="btn btn-stop hidden" id="btnStop" onclick="handleStop()">Dừng / Ra ngoài</button>
     <div class="status" id="status"></div>
+    <div class="log-feed">
+      <h3>Nhật ký hoạt động</h3>
+      <div id="logList">Đang tải...</div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -97,13 +135,54 @@
     const statusEl = document.getElementById('status');
     const countEl = document.getElementById('count');
     const timerEl = document.getElementById('timer');
+    const timerLabel = document.getElementById('timerLabel');
+    const stateBadge = document.getElementById('stateBadge');
+    const logList = document.getElementById('logList');
 
     let timerInterval = null;
     let sessionStartTime = null;
+    let currentBoothState = 'idle'; // idle, opening, inuse
 
+    // ============== EVENT → TIẾNG VIỆT ==============
+    const eventLabels = {
+      'boot_start': 'Khởi động hệ thống',
+      'pir_warming_up': 'Đang khởi động cảm biến',
+      'system_ready': 'Hệ thống sẵn sàng',
+      'cmd_open_received': 'Nhận lệnh mở cửa',
+      'cmd_stop_received': 'Nhận lệnh dừng phiên',
+      'cmd_expired_skipped': 'Lệnh hết hạn, bỏ qua',
+      'door_opened': 'Cửa đang mở',
+      'door_closed': 'Cửa đã đóng',
+      'entry_detected': 'Phát hiện người vào',
+      'opened_no_entry': 'Không có người vào',
+      'session_started': 'Bắt đầu phiên sử dụng',
+      'session_ended_manual': 'Kết thúc phiên (khách bấm dừng)',
+      'session_ended_auto': 'Kết thúc phiên (không có người)',
+      'session_ended_timeout': 'Kết thúc phiên (hết giờ)',
+      'session_overtime_occupied': 'Quá giờ — vẫn có người bên trong',
+      'motion_unexpected': 'Phát hiện chuyển động bất thường',
+      'emergency_button': 'Nút khẩn cấp được nhấn',
+      'wifi_disconnected': 'Mất kết nối WiFi',
+      'wifi_reconnected': 'Đã kết nối lại WiFi',
+      'supabase_error': 'Lỗi kết nối server',
+    };
+
+    // Events mà sau đó UI nên reset về IDLE
+    const resetEvents = [
+      'session_ended_manual', 'session_ended_auto', 'session_ended_timeout',
+      'opened_no_entry', 'emergency_button'
+    ];
+
+    // ============== UI FUNCTIONS ==============
     function showStatus(text, color) {
       statusEl.textContent = text;
       statusEl.style.color = color;
+    }
+
+    function setBoothState(state, label) {
+      currentBoothState = state;
+      stateBadge.className = 'state-badge state-' + state;
+      stateBadge.textContent = label;
     }
 
     function showOpenButton() {
@@ -127,7 +206,9 @@
     function startTimer() {
       sessionStartTime = new Date();
       timerEl.classList.remove('hidden');
+      timerLabel.classList.remove('hidden');
       timerEl.textContent = '00:00';
+      clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         const elapsed = Math.floor((Date.now() - sessionStartTime.getTime()) / 1000);
         timerEl.textContent = formatTime(elapsed);
@@ -137,29 +218,121 @@
     function stopTimer() {
       clearInterval(timerInterval);
       timerInterval = null;
-      const endTime = new Date();
-      const durationSec = Math.floor((endTime - sessionStartTime) / 1000);
-      console.log('[PhoneBooth] Thời gian phiên:', formatTime(durationSec));
+      let durationSec = 0;
+      if (sessionStartTime) {
+        durationSec = Math.floor((Date.now() - sessionStartTime.getTime()) / 1000);
+      }
       timerEl.classList.add('hidden');
-      return { startTime: sessionStartTime, endTime, durationSec };
+      timerLabel.classList.add('hidden');
+      return durationSec;
     }
 
+    function resetToIdle(statusText, statusColor) {
+      stopTimer();
+      showOpenButton();
+      setBoothState('idle', 'Sẵn sàng');
+      if (statusText) {
+        showStatus(statusText, statusColor || '#888');
+        setTimeout(() => showStatus('', ''), 5000);
+      }
+    }
+
+    // ============== DATA ==============
     async function loadCount() {
-      console.log('[PhoneBooth] Load tổng lượt...');
       const { count, error } = await db.from('sessions').select('*', { count: 'exact', head: true });
-      if (error) {
-        console.error('[PhoneBooth] Lỗi load count:', error);
-        countEl.textContent = '0';
+      countEl.textContent = error ? '0' : count;
+    }
+
+    async function loadRecentLogs() {
+      const { data, error } = await db.from('booth_logs')
+        .select('event, note, created_at')
+        .order('created_at', { ascending: false })
+        .limit(15);
+
+      if (error || !data) {
+        logList.innerHTML = '<div class="log-item">Không tải được log</div>';
         return;
       }
-      countEl.textContent = count;
-      console.log('[PhoneBooth] Tổng lượt:', count);
+
+      renderLogs(data);
+      // Sync UI state từ log mới nhất
+      if (data.length > 0) syncStateFromLog(data[0]);
     }
 
+    function renderLogs(logs) {
+      if (logs.length === 0) {
+        logList.innerHTML = '<div class="log-item">Chưa có hoạt động</div>';
+        return;
+      }
+      logList.innerHTML = logs.map(log => {
+        const d = new Date(log.created_at);
+        const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const label = eventLabels[log.event] || log.event;
+        const note = log.note ? ` — ${log.note}` : '';
+        return `<div class="log-item"><span class="time">${time}</span> <span class="event">${label}</span>${note}</div>`;
+      }).join('');
+    }
+
+    function syncStateFromLog(log) {
+      const ev = log.event;
+      console.log('[Sync] Latest event:', ev);
+
+      if (ev === 'session_started') {
+        setBoothState('inuse', 'Đang sử dụng');
+        showStopButton();
+        if (!timerInterval) startTimer();
+      } else if (ev === 'entry_detected') {
+        setBoothState('opening', 'Đang vào...');
+      } else if (ev === 'cmd_open_received' || ev === 'door_opened') {
+        setBoothState('opening', 'Đang mở cửa...');
+      } else if (resetEvents.includes(ev)) {
+        const messages = {
+          'session_ended_manual': ['Phiên kết thúc. Cửa đang mở để ra.', '#f97316'],
+          'session_ended_auto': ['Phiên tự kết thúc — không có người.', '#f97316'],
+          'session_ended_timeout': ['Phiên kết thúc — hết giờ.', '#f97316'],
+          'opened_no_entry': ['Không có người vào. Sẵn sàng.', '#888'],
+          'emergency_button': ['Khẩn cấp! Cửa đã mở.', '#ef4444'],
+        };
+        const [msg, color] = messages[ev] || ['', '#888'];
+        resetToIdle(msg, color);
+        loadCount();
+      } else if (ev === 'session_overtime_occupied') {
+        setBoothState('inuse', 'Quá giờ — có người');
+        showStatus('Quá giờ nhưng vẫn có người bên trong', '#f97316');
+      }
+    }
+
+    // ============== REALTIME ==============
+    function subscribeRealtime() {
+      db.channel('booth-logs-realtime')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'booth_logs'
+        }, (payload) => {
+          console.log('[Realtime] New log:', payload.new.event);
+          syncStateFromLog(payload.new);
+          // Thêm log mới vào đầu danh sách
+          const existing = logList.innerHTML;
+          const log = payload.new;
+          const d = new Date(log.created_at);
+          const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          const label = eventLabels[log.event] || log.event;
+          const note = log.note ? ` — ${log.note}` : '';
+          const html = `<div class="log-item"><span class="time">${time}</span> <span class="event">${label}</span>${note}</div>`;
+          logList.innerHTML = html + existing;
+        })
+        .subscribe((status) => {
+          console.log('[Realtime] Status:', status);
+        });
+    }
+
+    // ============== ACTIONS ==============
     async function handleOpen() {
       console.log('[PhoneBooth] Gửi lệnh: open');
       btnOpen.disabled = true;
       showStatus('⏳ Đang gửi lệnh...', '#888');
+      setBoothState('opening', 'Đang mở cửa...');
 
       const { error } = await db.from('commands').insert({ action: 'open', executed: false });
 
@@ -167,21 +340,20 @@
         console.error('[PhoneBooth] Lỗi:', error);
         showStatus('❌ Lỗi kết nối. Vui lòng thử lại.', '#ef4444');
         btnOpen.disabled = false;
+        setBoothState('idle', 'Sẵn sàng');
         return;
       }
 
-      console.log('[PhoneBooth] Insert thành công: open');
-      showStatus('✅ Đang mở... Vui lòng vào PhoneBooth', '#22c55e');
-      startTimer();
-      showStopButton();
+      showStatus('✅ Lệnh đã gửi. Đang mở cửa...', '#22c55e');
+      // UI sẽ tự cập nhật qua Realtime khi ESP32 ghi log
     }
 
     async function handleStop() {
-      console.log('[PhoneBooth] Gửi lệnh: open (mở cửa để ra ngoài)');
+      console.log('[PhoneBooth] Gửi lệnh: stop');
       btnStop.disabled = true;
-      showStatus('⏳ Đang mở cửa để ra ngoài...', '#888');
+      showStatus('⏳ Đang gửi lệnh dừng...', '#888');
 
-      const { error } = await db.from('commands').insert({ action: 'open', executed: false });
+      const { error } = await db.from('commands').insert({ action: 'stop', executed: false });
 
       if (error) {
         console.error('[PhoneBooth] Lỗi:', error);
@@ -190,26 +362,24 @@
         return;
       }
 
-      // Dừng timer và lưu phiên
-      const session = stopTimer();
-      const { error: sessionErr } = await db.from('sessions').insert({
-        started_at: session.startTime.toISOString(),
-        ended_at: session.endTime.toISOString(),
-        duration_seconds: session.durationSec
-      });
-      if (sessionErr) console.error('[PhoneBooth] Lỗi lưu session:', sessionErr);
+      // Lưu session
+      if (sessionStartTime) {
+        const durationSec = stopTimer();
+        await db.from('sessions').insert({
+          started_at: sessionStartTime.toISOString(),
+          ended_at: new Date().toISOString(),
+          duration_seconds: durationSec
+        });
+      }
 
-      console.log('[PhoneBooth] Hoàn thành 1 lượt -', formatTime(session.durationSec));
-      showStatus('✅ Cửa đang mở. Vui lòng ra ngoài.', '#f97316');
-      loadCount();
-
-      setTimeout(() => {
-        showOpenButton();
-        showStatus('', '');
-      }, 6000);
+      showStatus('✅ Lệnh đã gửi. Đang mở cửa để ra...', '#f97316');
+      // UI sẽ tự cập nhật qua Realtime
     }
 
+    // ============== INIT ==============
     loadCount();
+    loadRecentLogs();
+    subscribeRealtime();
   </script>
 </body>
 </html>
