@@ -45,15 +45,9 @@
       cursor: not-allowed;
       transform: none;
     }
-    .btn-open {
-      background: #22c55e;
-      margin-bottom: 16px;
-    }
-    .btn-stop {
-      background: #ef4444;
-      font-size: 17px;
-      padding: 14px 0;
-    }
+    .btn-open { background: #22c55e; }
+    .btn-stop { background: #ef4444; }
+    .hidden { display: none; }
     .status {
       margin-top: 32px;
       font-size: 16px;
@@ -64,8 +58,8 @@
 <body>
   <div class="container">
     <div class="logo">Epione PhoneBooth</div>
-    <button class="btn btn-open" id="btnOpen" onclick="sendCommand('open')">Mở PhoneBooth</button>
-    <button class="btn btn-stop" id="btnStop" onclick="sendCommand('stop')">Dừng / Ra ngoài</button>
+    <button class="btn btn-open" id="btnOpen" onclick="handleOpen()">Mở PhoneBooth</button>
+    <button class="btn btn-stop hidden" id="btnStop" onclick="handleStop()">Dừng / Ra ngoài</button>
     <div class="status" id="status"></div>
   </div>
 
@@ -83,39 +77,62 @@
     const btnStop = document.getElementById('btnStop');
     const statusEl = document.getElementById('status');
 
-    function setButtons(enabled) {
-      btnOpen.disabled = !enabled;
-      btnStop.disabled = !enabled;
-    }
-
     function showStatus(text, color) {
       statusEl.textContent = text;
       statusEl.style.color = color;
     }
 
-    async function sendCommand(action) {
-      console.log(`[PhoneBooth] Gửi lệnh: ${action}`);
-      setButtons(false);
+    function showOpenButton() {
+      btnOpen.classList.remove('hidden');
+      btnOpen.disabled = false;
+      btnStop.classList.add('hidden');
+    }
+
+    function showStopButton() {
+      btnOpen.classList.add('hidden');
+      btnStop.classList.remove('hidden');
+      btnStop.disabled = false;
+    }
+
+    async function handleOpen() {
+      console.log('[PhoneBooth] Gửi lệnh: open');
+      btnOpen.disabled = true;
       showStatus('⏳ Đang gửi lệnh...', '#888');
 
-      const { error } = await db.from('commands').insert({ action, executed: false });
+      const { error } = await db.from('commands').insert({ action: 'open', executed: false });
 
       if (error) {
         console.error('[PhoneBooth] Lỗi:', error);
         showStatus('❌ Lỗi kết nối. Vui lòng thử lại.', '#ef4444');
-        setButtons(true);
+        btnOpen.disabled = false;
         return;
       }
 
-      console.log(`[PhoneBooth] Insert thành công: ${action}`);
+      console.log('[PhoneBooth] Insert thành công: open');
+      showStatus('✅ Đang mở... Vui lòng vào PhoneBooth', '#22c55e');
+      showStopButton();
+    }
 
-      if (action === 'open') {
-        showStatus('✅ Đang mở... Vui lòng chờ', '#22c55e');
-        setTimeout(() => { setButtons(true); showStatus('', ''); }, 5000);
-      } else {
-        showStatus('✅ Đã dừng. Cửa đang đóng.', '#f97316');
-        setTimeout(() => { setButtons(true); showStatus('', ''); }, 3000);
+    async function handleStop() {
+      console.log('[PhoneBooth] Gửi lệnh: stop');
+      btnStop.disabled = true;
+      showStatus('⏳ Đang gửi lệnh...', '#888');
+
+      const { error } = await db.from('commands').insert({ action: 'stop', executed: false });
+
+      if (error) {
+        console.error('[PhoneBooth] Lỗi:', error);
+        showStatus('❌ Lỗi kết nối. Vui lòng thử lại.', '#ef4444');
+        btnStop.disabled = false;
+        return;
       }
+
+      console.log('[PhoneBooth] Insert thành công: stop');
+      showStatus('✅ Đã dừng. Cửa đang đóng.', '#f97316');
+      setTimeout(() => {
+        showOpenButton();
+        showStatus('', '');
+      }, 3000);
     }
   </script>
 </body>
