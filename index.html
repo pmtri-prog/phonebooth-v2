@@ -277,15 +277,8 @@
       const ev = log.event;
       console.log('[Sync] Latest event:', ev);
 
-      if (ev === 'session_started') {
-        setBoothState('inuse', 'Đang sử dụng');
-        showStopButton();
-        if (!timerInterval) startTimer();
-      } else if (ev === 'entry_detected') {
-        setBoothState('opening', 'Đang vào...');
-      } else if (ev === 'cmd_open_received' || ev === 'door_opened') {
-        setBoothState('opening', 'Đang mở cửa...');
-      } else if (resetEvents.includes(ev)) {
+      if (resetEvents.includes(ev)) {
+        // Ưu tiên xử lý reset trước — tránh bị event khác ghi đè
         const messages = {
           'session_ended_manual': ['Phiên kết thúc. Cửa đang mở để ra.', '#f97316'],
           'session_ended_auto': ['Phiên tự kết thúc — không có người.', '#f97316'],
@@ -296,9 +289,36 @@
         const [msg, color] = messages[ev] || ['', '#888'];
         resetToIdle(msg, color);
         loadCount();
+      } else if (ev === 'session_started') {
+        setBoothState('inuse', 'Đang sử dụng');
+        showStopButton();
+        if (!timerInterval) startTimer();
+      } else if (ev === 'entry_detected') {
+        setBoothState('opening', 'Đang vào...');
+      } else if (ev === 'cmd_open_received') {
+        setBoothState('opening', 'Đang mở cửa...');
+      } else if (ev === 'door_opened') {
+        // Chỉ set opening nếu chưa reset
+        if (currentBoothState !== 'idle') {
+          setBoothState('opening', 'Cửa đang mở...');
+        }
+      } else if (ev === 'door_closed') {
+        // Không thay đổi state — chờ event tiếp theo quyết định
+        if (currentBoothState === 'idle') {
+          showStatus('Cửa đã đóng.', '#888');
+          setTimeout(() => showStatus('', ''), 3000);
+        }
+      } else if (ev === 'system_ready') {
+        resetToIdle('Hệ thống sẵn sàng.', '#22c55e');
       } else if (ev === 'session_overtime_occupied') {
         setBoothState('inuse', 'Quá giờ — có người');
         showStatus('Quá giờ nhưng vẫn có người bên trong', '#f97316');
+      } else if (ev === 'wifi_disconnected') {
+        setBoothState('offline', 'Mất kết nối');
+      } else if (ev === 'wifi_reconnected') {
+        if (currentBoothState === 'offline') {
+          setBoothState('idle', 'Sẵn sàng');
+        }
       }
     }
 
