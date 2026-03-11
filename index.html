@@ -992,6 +992,7 @@
         // Timer đóng băng: chỉ hiển thị thời gian active tính đến lúc pause
         activeSessionStart = startTime;
         clearInterval(timerInterval);
+        timerInterval = null;
         const totalElapsed = Math.floor((new Date(pausedAt).getTime() - startTime.getTime()) / 1000);
         const activeElapsed = totalElapsed - (pausedSec || 0);
         lastDurationStr = formatDuration(Math.max(0, activeElapsed));
