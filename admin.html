@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epione Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F5F5F5;
+      min-height: 100vh;
+      color: #282828;
+    }
+
+    .header {
+      background: #282828;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { font-size: 18px; font-weight: 800; color: #fff; }
+    .logo span { color: #EDEDED; font-weight: 400; }
+    .header-meta { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500; }
+
+    .container { max-width: 1040px; margin: 0 auto; padding: 20px 16px; }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      border: 1px solid #EDEDED;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: #aaa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+      color: #282828;
+    }
+    .stat-sub { font-size: 11px; color: #bbb; margin-top: 2px; }
+
+    /* Booth cards */
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #10069F;
+      margin-bottom: 12px;
+    }
+    .booths-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .booth-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      border: 1px solid #EDEDED;
+      border-left: 4px solid #EDEDED;
+      transition: border-color 0.3s;
+    }
+    .booth-card.online { border-left-color: #22c55e; }
+    .booth-card.offline { border-left-color: #ef4444; }
+    .booth-card.busy { border-left-color: #10069F; }
+
+    .booth-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .booth-name { font-size: 15px; font-weight: 700; }
+    .booth-id { font-size: 10px; color: #bbb; margin-top: 2px; font-family: monospace; letter-spacing: 0.5px; }
+    .booth-status {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .s-online { background: #dcfce7; color: #16a34a; }
+    .s-offline { background: #fee2e2; color: #dc2626; }
+    .s-busy { background: #e8e6f8; color: #10069F; }
+
+    .booth-meta { display: flex; gap: 16px; font-size: 11px; color: #999; }
+    .booth-meta strong { color: #555; font-weight: 600; }
+
+    .booth-session-info {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #F5F3FF;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #10069F;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .booth-session-info .timer {
+      font-size: 18px;
+      font-weight: 800;
+      color: #282828;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Table sections */
+    .section {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #EDEDED;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .section-header h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #282828;
+    }
+    .section-header select {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      padding: 4px 8px;
+      border: 1px solid #EDEDED;
+      border-radius: 6px;
+      color: #555;
+      background: #fff;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    td {
+      font-size: 12px;
+      padding: 9px 16px;
+      border-bottom: 1px solid #F8F8F8;
+      color: #555;
+    }
+    tr:last-child td { border-bottom: none; }
+    .td-booth { font-weight: 600; color: #282828; }
+    .td-active { color: #10069F; font-weight: 600; }
+    .td-ended { color: #aaa; }
+
+    .table-wrap { max-height: 400px; overflow-y: auto; }
+
+    /* Logs */
+    .log-item {
+      padding: 7px 16px;
+      border-bottom: 1px solid #F8F8F8;
+      font-size: 11px;
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+    }
+    .log-item:last-child { border-bottom: none; }
+    .log-time { color: #ccc; font-family: monospace; font-size: 10px; white-space: nowrap; }
+    .log-booth { font-weight: 700; color: #10069F; font-size: 10px; white-space: nowrap; }
+    .log-event { font-weight: 600; color: #282828; }
+    .log-event.feedback { color: #f59e0b; }
+    .log-note { color: #aaa; }
+    .log-stars { color: #f59e0b; font-size: 12px; letter-spacing: 1px; }
+    .logs-wrap { max-height: 280px; overflow-y: auto; }
+    .empty-msg { padding: 20px; text-align: center; color: #ddd; font-size: 12px; }
+
+    @media (max-width: 640px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .booths-grid { grid-template-columns: 1fr; }
+      th, td { padding: 7px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Epione <span>Admin</span></div>
+    <div class="header-meta">Auto-refresh 5s</div>
+  </div>
+
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Booth Online</div>
+        <div class="stat-value" id="statOnline">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Phiên hôm nay</div>
+        <div class="stat-value" id="statToday">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tổng phiên</div>
+        <div class="stat-value" id="statTotal">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TB thời gian</div>
+        <div class="stat-value" id="statAvgDur">--</div>
+        <div class="stat-sub">phút</div>
+      </div>
+    </div>
+
+    <div class="section-title">Booths</div>
+    <div class="booths-grid" id="boothsGrid"></div>
+
+    <div class="section">
+      <div class="section-header">
+        <h3>Lịch sử phiên</h3>
+        <select id="filterBooth">
+          <option value="">Tất cả booth</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Booth</th>
+              <th>Bắt đầu</th>
+              <th>Kết thúc</th>
+              <th>Thời lượng</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h3>Nhật ký sự kiện</h3>
+      </div>
+      <div class="logs-wrap" id="logsWrap">
+        <div class="empty-msg">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://iwczjfomyybszwdlzwjs.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3Y3pqZm9teXlic3p3ZGx6d2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDIzODgsImV4cCI6MjA4ODcxODM4OH0.dvGSX8N5_tHpGqWL5rCreCdGpASxOK2nwwcbCpILew4";
+    const HEARTBEAT_TIMEOUT_S = 10;
+    const POLL_MS = 5000;
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let booths = [];
+    let activeTimers = {};
+
+    function formatDuration(seconds) {
+      if (seconds == null) return '--';
+      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+      const s = (seconds % 60).toString().padStart(2, '0');
+      return m + ':' + s;
+    }
+
+    function formatTime(isoStr) {
+      if (!isoStr) return '--';
+      return new Date(isoStr).toLocaleString('vi-VN', {
+        day: '2-digit', month: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    }
+
+    function formatTimeShort(isoStr) {
+      if (!isoStr) return '--';
+      return new Date(isoStr).toLocaleString('vi-VN', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    }
+
+    async function loadBooths() {
+      const { data } = await db.from('booths').select('*');
+      if (!data) return;
+      booths = data;
+
+      const filter = document.getElementById('filterBooth');
+      const currentVal = filter.value;
+      filter.innerHTML = '<option value="">Tất cả booth</option>';
+      booths.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.booth_id;
+        opt.textContent = b.name || b.booth_id;
+        filter.appendChild(opt);
+      });
+      filter.value = currentVal;
+
+      const { data: activeSessions } = await db.from('sessions')
+        .select('booth_id, started_at').eq('status', 'active');
+      const activeMap = {};
+      if (activeSessions) activeSessions.forEach(s => { activeMap[s.booth_id] = s; });
+
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const { data: todaySessions } = await db.from('sessions')
+        .select('booth_id').gte('started_at', todayStart.toISOString());
+      const todayMap = {};
+      if (todaySessions) todaySessions.forEach(s => {
+        todayMap[s.booth_id] = (todayMap[s.booth_id] || 0) + 1;
+      });
+
+      const grid = document.getElementById('boothsGrid');
+      grid.innerHTML = booths.map(b => {
+        const lastSeen = new Date(b.last_seen);
+        const diffSec = (Date.now() - lastSeen.getTime()) / 1000;
+        const isOnline = diffSec <= HEARTBEAT_TIMEOUT_S;
+        const hasActive = activeMap[b.booth_id];
+        const todayCount = todayMap[b.booth_id] || 0;
+
+        let cardClass = 'offline', statusClass = 's-offline', statusText = 'Offline';
+        if (isOnline && hasActive) {
+          cardClass = 'busy'; statusClass = 's-busy'; statusText = 'Đang dùng';
+        } else if (isOnline) {
+          cardClass = 'online'; statusClass = 's-online'; statusText = 'Online';
+        }
+
+        let sessionHtml = '';
+        if (hasActive) {
+          sessionHtml = `<div class="booth-session-info">
+            <span>Phiên đang chạy</span>
+            <span class="timer" id="timer-${b.booth_id}">--:--</span>
+          </div>`;
+          const startTime = new Date(hasActive.started_at);
+          if (!activeTimers[b.booth_id]) activeTimers[b.booth_id] = { startTime, interval: null };
+          activeTimers[b.booth_id].startTime = startTime;
+        } else {
+          if (activeTimers[b.booth_id]) {
+            clearInterval(activeTimers[b.booth_id].interval);
+            delete activeTimers[b.booth_id];
+          }
+        }
+
+        const lastSeenStr = isOnline ? 'Vừa xong' : Math.floor(diffSec) + 's trước';
+
+        return `<div class="booth-card ${cardClass}">
+          <div class="booth-header">
+            <div>
+              <div class="booth-name">${b.name || b.booth_id}</div>
+              <div class="booth-id">${b.booth_id}</div>
+            </div>
+            <div class="booth-status ${statusClass}">${statusText}</div>
+          </div>
+          <div class="booth-meta">
+            <div>Heartbeat: <strong>${lastSeenStr}</strong></div>
+            <div>Hôm nay: <strong>${todayCount} phiên</strong></div>
+          </div>
+          ${sessionHtml}
+        </div>`;
+      }).join('');
+
+      Object.keys(activeTimers).forEach(boothId => {
+        const t = activeTimers[boothId];
+        clearInterval(t.interval);
+        const tick = () => {
+          const el = document.getElementById('timer-' + boothId);
+          if (!el) return;
+          const elapsed = Math.floor((Date.now() - t.startTime.getTime()) / 1000);
+          el.textContent = formatDuration(elapsed);
+        };
+        tick();
+        t.interval = setInterval(tick, 1000);
+      });
+
+      let onlineCount = 0;
+      booths.forEach(b => {
+        if ((Date.now() - new Date(b.last_seen).getTime()) / 1000 <= HEARTBEAT_TIMEOUT_S) onlineCount++;
+      });
+      document.getElementById('statOnline').textContent = onlineCount + '/' + booths.length;
+    }
+
+    async function loadStats() {
+      const { count: total } = await db.from('sessions')
+        .select('*', { count: 'exact', head: true });
+      document.getElementById('statTotal').textContent = total || 0;
+
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const { count: today } = await db.from('sessions')
+        .select('*', { count: 'exact', head: true })
+        .gte('started_at', todayStart.toISOString());
+      document.getElementById('statToday').textContent = today || 0;
+
+      const { data: durs } = await db.from('sessions')
+        .select('duration_seconds')
+        .not('duration_seconds', 'is', null)
+        .order('started_at', { ascending: false })
+        .limit(100);
+
+      if (durs && durs.length > 0) {
+        const avg = durs.reduce((sum, d) => sum + d.duration_seconds, 0) / durs.length;
+        document.getElementById('statAvgDur').textContent = (avg / 60).toFixed(1);
+      } else {
+        document.getElementById('statAvgDur').textContent = '0';
+      }
+    }
+
+    async function loadSessions() {
+      const filterBooth = document.getElementById('filterBooth').value;
+      let query = db.from('sessions').select('*')
+        .order('started_at', { ascending: false }).limit(50);
+      if (filterBooth) query = query.eq('booth_id', filterBooth);
+
+      const { data } = await query;
+      const tbody = document.getElementById('sessionsBody');
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#ddd;padding:20px;">Chưa có phiên nào</td></tr>';
+        return;
+      }
+
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      tbody.innerHTML = data.map(s => {
+        const sc = s.status === 'active' ? 'td-active' : 'td-ended';
+        const st = s.status === 'active' ? 'Đang dùng' : 'Đã kết thúc';
+        return `<tr>
+          <td class="td-booth">${nameMap[s.booth_id] || s.booth_id}</td>
+          <td>${formatTime(s.started_at)}</td>
+          <td>${s.ended_at ? formatTime(s.ended_at) : '--'}</td>
+          <td>${s.duration_seconds != null ? formatDuration(s.duration_seconds) : '--'}</td>
+          <td class="${sc}">${st}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    async function loadLogs() {
+      const { data } = await db.from('booth_logs').select('*')
+        .order('created_at', { ascending: false }).limit(30);
+
+      const wrap = document.getElementById('logsWrap');
+      if (!data || data.length === 0) {
+        wrap.innerHTML = '<div class="empty-msg">Chưa có sự kiện nào</div>';
+        return;
+      }
+
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      wrap.innerHTML = data.map(l => {
+        const isFeedback = l.event === 'user_feedback';
+        const eventClass = isFeedback ? 'log-event feedback' : 'log-event';
+        const eventLabel = isFeedback ? 'Feedback' : l.event;
+        let noteHtml = l.note || '';
+
+        // Parse feedback rating into stars
+        if (isFeedback && l.note) {
+          const match = l.note.match(/^(\d)\/5/);
+          if (match) {
+            const rating = parseInt(match[1]);
+            const stars = '\u2605'.repeat(rating) + '\u2606'.repeat(5 - rating);
+            const comment = l.note.replace(/^\d\/5\s*-?\s*/, '');
+            noteHtml = '<span class="log-stars">' + stars + '</span> ' + comment;
+          }
+        }
+
+        return `<div class="log-item">
+          <span class="log-time">${formatTimeShort(l.created_at)}</span>
+          <span class="log-booth">${nameMap[l.booth_id] || l.booth_id}</span>
+          <span class="${eventClass}">${eventLabel}</span>
+          <span class="log-note">${noteHtml}</span>
+        </div>`;
+      }).join('');
+    }
+
+    async function refresh() {
+      try {
+        await loadBooths();
+        await loadStats();
+        await loadSessions();
+        await loadLogs();
+      } catch (e) {
+        console.error('refresh error:', e);
+      }
+    }
+
+    document.getElementById('filterBooth').addEventListener('change', loadSessions);
+    refresh();
+    setInterval(refresh, POLL_MS);
+  </script>
+</body>
+</html>

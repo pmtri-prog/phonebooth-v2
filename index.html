@@ -10,504 +10,1024 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f8f9fa;
+      background: #FFFFFF;
       min-height: 100vh;
-      padding: 0;
+      color: #282828;
     }
 
-    /* Header */
+    .hidden { display: none !important; }
+
+    /* ===== HEADER ===== */
     .header {
-      background: #fff;
-      padding: 20px 20px 16px;
+      background: #282828;
+      padding: 16px 20px;
       text-align: center;
-      border-bottom: 1px solid #eee;
     }
     .logo {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
-      color: #111;
-      letter-spacing: -0.5px;
+      color: #fff;
+      letter-spacing: -0.3px;
     }
-    .logo span { color: #22c55e; }
+    .logo span { color: #EDEDED; font-weight: 400; }
+    .booth-name-bar {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+      font-weight: 500;
+    }
 
-    /* State card */
-    .state-card {
-      margin: 16px;
-      background: #fff;
-      border-radius: 20px;
-      padding: 28px 20px;
-      text-align: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-    .state-icon {
-      font-size: 40px;
-      margin-bottom: 12px;
-    }
-    .state-badge {
-      display: inline-block;
+    /* ===== CONNECTION BAR ===== */
+    .conn-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 0;
       font-size: 12px;
       font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 20px;
+      background: #EDEDED;
+    }
+    .conn-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .conn-bar.online .conn-dot { background: #22c55e; }
+    .conn-bar.online .conn-label { color: #16a34a; }
+    .conn-bar.offline .conn-dot { background: #ef4444; }
+    .conn-bar.offline .conn-label { color: #ef4444; }
+    .conn-bar.checking .conn-dot { background: #f59e0b; animation: pulse 1.2s infinite; }
+    .conn-bar.checking .conn-label { color: #f59e0b; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
+    }
+
+    /* ===== LANDING PAGE ===== */
+    .landing {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 56px);
+      padding: 40px 24px;
+      text-align: center;
+      background: #FFFFFF;
+    }
+    .landing-visual {
+      width: 120px;
+      height: 120px;
+      background: #EDEDED;
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      margin-bottom: 28px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .landing h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #282828;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .landing-sub {
+      font-size: 15px;
+      color: #888;
+      line-height: 1.6;
+      max-width: 280px;
+      margin-bottom: 36px;
+    }
+    .how-to {
+      width: 100%;
+      max-width: 320px;
+      text-align: left;
+    }
+    .how-to-title {
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      color: #10069F;
+      margin-bottom: 16px;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #282828;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-content {
+      padding-top: 5px;
+    }
+    .step-content strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #282828;
+      margin-bottom: 2px;
+    }
+    .step-content p {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    /* ===== BOOTH CONTROL PAGE ===== */
+    .main-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px 20px;
+      min-height: calc(100vh - 100px);
+    }
+
+    /* State visual */
+    .state-visual {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      transition: all 0.4s ease;
+    }
+    .state-visual.idle {
+      background: #EDEDED;
+    }
+    .state-visual.active {
+      background: #10069F;
+      box-shadow: 0 0 0 16px rgba(16,6,159,0.08), 0 0 0 32px rgba(16,6,159,0.04);
+    }
+    .state-visual.active .ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      animation: ring-pulse 2s ease-out infinite;
+    }
+    @keyframes ring-pulse {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+    .state-visual.offline {
+      background: #EDEDED;
+      opacity: 0.5;
+    }
+    .state-icon {
+      font-size: 56px;
+      z-index: 1;
+    }
+
+    .state-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       margin-bottom: 6px;
     }
-    .state-idle { background: #f0f0f0; color: #666; }
-    .state-opening { background: #fef3c7; color: #b45309; }
-    .state-inuse { background: #dcfce7; color: #16a34a; }
-    .state-offline { background: #fee2e2; color: #dc2626; }
+    .state-label.idle { color: #888; }
+    .state-label.active { color: #10069F; }
+    .state-label.offline { color: #ef4444; }
 
-    .counter {
-      font-size: 13px;
-      color: #999;
-      margin-top: 4px;
+    .state-msg {
+      font-size: 15px;
+      color: #888;
+      text-align: center;
+      max-width: 260px;
+      line-height: 1.5;
+      min-height: 46px;
     }
-    .counter span { font-weight: 700; color: #555; }
 
     /* Timer */
-    .timer-wrap { margin: 20px 0 4px; }
-    .timer-wrap.hidden { display: none; }
+    .timer-section {
+      margin: 20px 0;
+      text-align: center;
+    }
     .timer {
       font-size: 56px;
       font-weight: 800;
-      color: #111;
+      color: #282828;
       font-variant-numeric: tabular-nums;
       line-height: 1;
+      letter-spacing: -2px;
     }
     .timer-label {
-      font-size: 12px;
-      color: #999;
+      font-size: 11px;
+      color: #aaa;
       margin-top: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* Motivational message */
+    .moti-msg {
+      font-size: 14px;
+      color: #10069F;
+      font-weight: 600;
+      text-align: center;
+      margin: 8px 0 16px;
+      min-height: 20px;
+      transition: opacity 0.3s;
     }
 
     /* Buttons */
     .actions {
-      padding: 0 16px;
+      width: 100%;
+      max-width: 360px;
+      margin-top: auto;
+      padding-bottom: 32px;
     }
     .btn {
       display: block;
       width: 100%;
       border: none;
-      color: #fff;
       font-family: 'Inter', sans-serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       padding: 18px 0;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.2s;
+      transition: transform 0.1s, opacity 0.2s;
       -webkit-tap-highlight-color: transparent;
+      letter-spacing: 0.3px;
     }
     .btn:active { transform: scale(0.97); }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .btn-open {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    .btn-start {
+      background: #282828;
+      color: #FFFFFF;
+      box-shadow: 0 4px 20px rgba(40,40,40,0.25);
     }
-    .btn-stop {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      box-shadow: 0 4px 14px rgba(239,68,68,0.35);
+    .btn-end {
+      background: #FFFFFF;
+      color: #282828;
+      border: 2px solid #282828;
     }
-    .hidden { display: none; }
+    .btn-end:active { background: #EDEDED; }
 
-    /* Status */
-    .status {
+    .status-msg {
       text-align: center;
-      padding: 12px 16px 0;
-      font-size: 14px;
-      min-height: 32px;
+      padding: 12px 0;
+      font-size: 13px;
+      min-height: 40px;
       font-weight: 500;
+      color: #888;
     }
 
-    /* Log feed */
-    .log-section {
-      margin: 20px 16px 0;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      overflow: hidden;
+    /* ===== ONBOARDING OVERLAY ===== */
+    .onboard-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(40,40,40,0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
     }
-    .log-header {
+    .onboard-sheet {
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 28px 24px 36px;
+      width: 100%;
+      max-width: 420px;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .onboard-sheet h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #282828;
+      margin-bottom: 6px;
+    }
+    .onboard-sheet .sub {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .onboard-tips {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .tip {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border-bottom: 1px solid #f0f0f0;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #F8F8F8;
+      border-radius: 12px;
     }
-    .log-header h3 {
+    .tip-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .tip-text {
       font-size: 13px;
-      font-weight: 600;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #555;
+      font-weight: 500;
+      line-height: 1.4;
     }
-    .log-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #22c55e;
-      animation: pulse 2s infinite;
+    .tip-text strong { color: #282828; }
+    .btn-onboard {
+      display: block;
+      width: 100%;
+      background: #10069F;
+      color: #fff;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 0;
+      border-radius: 14px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    .log-list {
-      max-height: 260px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .log-item {
+    .btn-onboard:active { opacity: 0.9; }
+
+    /* ===== FUN COMPLETION ===== */
+    .completion-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, #f0edff 0%, #fff7e6 50%, #e8faf0 100%);
+      z-index: 100;
       display: flex;
-      gap: 10px;
-      padding: 10px 16px;
-      border-bottom: 1px solid #f8f8f8;
-      font-size: 13px;
-      align-items: flex-start;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #282828;
+      text-align: center;
+      padding: 40px 24px;
+      animation: fadeIn 0.3s ease;
+      overflow-y: auto;
     }
-    .log-item:last-child { border-bottom: none; }
-    .log-time {
-      color: #bbb;
-      font-size: 11px;
-      font-weight: 500;
-      white-space: nowrap;
-      padding-top: 1px;
-      min-width: 52px;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
-    .log-text {
-      color: #333;
-      font-weight: 500;
-      line-height: 1.3;
+    .confetti {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
+      animation: confettiFall linear forwards;
+      pointer-events: none;
+      z-index: 101;
     }
-    .log-note {
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .completion-icon {
+      font-size: 80px;
+      margin-bottom: 16px;
+      animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0) rotate(-20deg); }
+      60% { transform: scale(1.3) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .completion-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #282828;
+      margin-bottom: 4px;
+    }
+    .completion-sub {
+      font-size: 14px;
       color: #999;
-      font-weight: 400;
+      margin-bottom: 4px;
     }
-
-    /* Safe area */
-    .footer-space { height: 32px; }
-
-    /* Animation for new logs */
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .completion-duration {
+      font-size: 52px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      margin: 12px 0;
+      color: #10069F;
+      letter-spacing: -2px;
     }
-    .log-item-new { animation: slideIn 0.3s ease; }
+    .completion-msg {
+      font-size: 15px;
+      color: #888;
+      max-width: 280px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .btn-done {
+      background: #282828;
+      color: #fff;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 48px;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(40,40,40,0.2);
+    }
+    .btn-done:active { transform: scale(0.97); }
+
+    /* Feedback */
+    .feedback-section {
+      width: 100%;
+      max-width: 320px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .feedback-label {
+      font-size: 14px;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .feedback-stars {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .star-btn {
+      background: none;
+      border: none;
+      font-size: 40px;
+      cursor: pointer;
+      filter: grayscale(1);
+      opacity: 0.3;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      padding: 0;
+    }
+    .star-btn.selected { filter: grayscale(0); opacity: 1; transform: scale(1.1); }
+    .star-btn:active { transform: scale(0.9); }
+    .feedback-input {
+      width: 100%;
+      background: #F8F8F8;
+      border: 1px solid #EDEDED;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #282828;
+      resize: none;
+      outline: none;
+      margin-bottom: 12px;
+    }
+    .feedback-input::placeholder { color: #bbb; }
+    .feedback-input:focus { border-color: #10069F; }
+    .btn-send-feedback {
+      background: #10069F;
+      color: #fff;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-send-feedback:active { opacity: 0.85; }
+    .btn-send-feedback:disabled { opacity: 0.3; cursor: default; }
+    .feedback-thanks {
+      font-size: 15px;
+      color: #10069F;
+      font-weight: 700;
+      padding: 12px 0;
+    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">Epione <span>PhoneBooth</span></div>
-  </div>
 
-  <div class="state-card">
-    <div class="state-icon" id="stateIcon">🟢</div>
-    <div id="stateBadge" class="state-badge state-idle">Sẵn sàng</div>
-    <div class="counter">Tổng lượt sử dụng: <span id="count">--</span></div>
-    <div class="timer-wrap hidden" id="timerWrap">
-      <div class="timer" id="timer">00:00</div>
-      <div class="timer-label">Thời gian sử dụng</div>
+  <!-- ==================== LANDING ==================== -->
+  <div id="pageLanding" class="hidden">
+    <div class="header">
+      <div class="logo">Epione <span>PhoneBooth</span></div>
+    </div>
+    <div class="landing">
+      <div class="landing-visual">&#128222;</div>
+      <h1>Không gian riêng,<br>ngay tầm tay</h1>
+      <div class="landing-sub">Quét mã QR trên cửa PhoneBooth để bắt đầu phiên làm việc tập trung của bạn.</div>
+      <div class="how-to">
+        <div class="how-to-title">Cách sử dụng</div>
+        <div class="step">
+          <div class="step-circle">1</div>
+          <div class="step-content">
+            <strong>Tìm PhoneBooth</strong>
+            <p>Đến gần booth và quét mã QR trên cửa</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-circle">2</div>
+          <div class="step-content">
+            <strong>Bắt đầu phiên</strong>
+            <p>Nhấn nút để mở cửa, bước vào và tập trung</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-circle">3</div>
+          <div class="step-content">
+            <strong>Kết thúc khi xong</strong>
+            <p>Nhấn kết thúc, cửa mở để bạn ra ngoài</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="actions">
-    <button class="btn btn-open" id="btnOpen" onclick="handleOpen()">Mở PhoneBooth</button>
-    <button class="btn btn-stop hidden" id="btnStop" onclick="handleStop()">Dừng / Ra ngoài</button>
-  </div>
-  <div class="status" id="status"></div>
-
-  <div class="log-section">
-    <div class="log-header">
-      <h3>Nhật ký hoạt động</h3>
-      <div class="log-dot"></div>
+  <!-- ==================== BOOTH CONTROL ==================== -->
+  <div id="pageBooth" class="hidden">
+    <div class="header">
+      <div class="logo">Epione <span>PhoneBooth</span></div>
+      <div class="booth-name-bar" id="boothName"></div>
     </div>
-    <div class="log-list" id="logList"></div>
+    <div class="conn-bar checking" id="connBar">
+      <div class="conn-dot"></div>
+      <span class="conn-label" id="connText">Đang kết nối...</span>
+    </div>
+
+    <div class="main-area">
+      <!-- State visual -->
+      <div class="state-visual idle" id="stateVisual">
+        <div class="ring hidden" id="activeRing"></div>
+        <div class="state-icon" id="stateIcon">&#128274;</div>
+      </div>
+      <div class="state-label idle" id="stateLabel">SẴN SÀNG</div>
+      <div class="state-msg" id="stateMsg">Booth đang trống. Nhấn nút bên dưới để bắt đầu phiên của bạn.</div>
+
+      <!-- Timer (hidden khi idle) -->
+      <div class="timer-section hidden" id="timerSection">
+        <div class="timer" id="timer">00:00</div>
+        <div class="timer-label">Thời gian phiên</div>
+      </div>
+
+      <!-- Motivational message -->
+      <div class="moti-msg" id="motiMsg"></div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <div class="status-msg" id="status"></div>
+        <button class="btn btn-start" id="btnStart" onclick="handleStart()">Bắt đầu phiên</button>
+        <button class="btn btn-end hidden" id="btnEnd" onclick="handleEnd()">Kết thúc phiên</button>
+      </div>
+    </div>
   </div>
 
-  <div class="footer-space"></div>
+  <!-- ==================== ONBOARDING OVERLAY ==================== -->
+  <div class="onboard-overlay hidden" id="onboardOverlay">
+    <div class="onboard-sheet">
+      <h2>Chào bạn! &#128075;</h2>
+      <div class="sub">Đây là lần đầu bạn sử dụng PhoneBooth. Một vài điều cần biết:</div>
+      <div class="onboard-tips">
+        <div class="tip">
+          <div class="tip-icon">&#128274;</div>
+          <div class="tip-text"><strong>Cửa tự mở 5 giây</strong> để bạn vào, sau đó tự đóng lại</div>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">&#9200;</div>
+          <div class="tip-text"><strong>Thời gian tối đa 60 phút.</strong> Hệ thống sẽ tự kết thúc nếu quá giờ</div>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">&#128682;</div>
+          <div class="tip-text"><strong>Nút vật lý bên trong</strong> booth luôn mở được cửa nếu cần ra ngoài</div>
+        </div>
+      </div>
+      <button class="btn-onboard" onclick="closeOnboarding()">Đã hiểu, bắt đầu thôi!</button>
+    </div>
+  </div>
+
+  <!-- ==================== COMPLETION OVERLAY ==================== -->
+  <div class="completion-overlay hidden" id="completionOverlay">
+    <div class="completion-icon">&#127942;</div>
+    <div class="completion-title">Tuyệt vời!</div>
+    <div class="completion-sub">Phiên làm việc đã kết thúc</div>
+    <div class="completion-duration" id="completionDuration">00:00</div>
+    <div class="completion-msg" id="completionMsg">Bạn đã tập trung thật tốt. Hẹn gặp lại lần sau!</div>
+
+    <div class="feedback-section" id="feedbackSection">
+      <div class="feedback-label">Trải nghiệm của bạn thế nào?</div>
+      <div class="feedback-stars" id="feedbackStars">
+        <button class="star-btn" data-val="1">&#11088;</button>
+        <button class="star-btn" data-val="2">&#11088;</button>
+        <button class="star-btn" data-val="3">&#11088;</button>
+        <button class="star-btn" data-val="4">&#11088;</button>
+        <button class="star-btn" data-val="5">&#11088;</button>
+      </div>
+      <textarea class="feedback-input" id="feedbackText" rows="2" placeholder="Góp ý thêm (tùy chọn)..."></textarea>
+      <button class="btn-send-feedback" id="btnSendFeedback" onclick="sendFeedback()" disabled>Gửi góp ý</button>
+    </div>
+    <div class="feedback-thanks hidden" id="feedbackThanks">Cảm ơn bạn đã góp ý!</div>
+
+    <button class="btn-done" onclick="closeCompletion()" style="margin-top:16px;">Xong</button>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ============== CẤU HÌNH ==============
+    // ============== CONFIG ==============
     const SUPABASE_URL = "https://iwczjfomyybszwdlzwjs.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3Y3pqZm9teXlic3p3ZGx6d2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDIzODgsImV4cCI6MjA4ODcxODM4OH0.dvGSX8N5_tHpGqWL5rCreCdGpASxOK2nwwcbCpILew4";
-    // ======================================
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3Y3pqZm9teXlic3p3ZGx6d2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDIzODgsImV4cCI6MjA4ODcxODM4OH0.dvGSX8N5_tHpGqWL5rCreCdGpASxOK2nwwcbCpILew4";
+    const POLL_MS = 3000;
+    const HEARTBEAT_TIMEOUT_S = 10;
+    const ONBOARD_KEY = 'epione_onboarded';
 
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const urlParams = new URLSearchParams(window.location.search);
+    const BOOTH_ID = urlParams.get('booth');
 
-    const btnOpen = document.getElementById('btnOpen');
-    const btnStop = document.getElementById('btnStop');
-    const statusEl = document.getElementById('status');
-    const countEl = document.getElementById('count');
-    const timerEl = document.getElementById('timer');
-    const timerWrap = document.getElementById('timerWrap');
-    const stateBadge = document.getElementById('stateBadge');
-    const stateIcon = document.getElementById('stateIcon');
-    const logList = document.getElementById('logList');
+    if (!BOOTH_ID) {
+      document.getElementById('pageLanding').classList.remove('hidden');
+    } else {
+      document.getElementById('pageBooth').classList.remove('hidden');
+      initBooth();
+    }
 
-    let timerInterval = null;
-    let sessionStartTime = null;
-    let currentBoothState = 'idle';
-
-    // ============== EVENT CONFIG ==============
-    const eventLabels = {
-      'boot_start': 'Khởi động hệ thống',
-      'pir_warming_up': 'Khởi động cảm biến',
-      'system_ready': 'Hệ thống sẵn sàng',
-      'cmd_open_received': 'Nhận lệnh mở cửa',
-      'cmd_stop_received': 'Nhận lệnh dừng',
-      'cmd_expired_skipped': 'Lệnh hết hạn',
-      'door_opened': 'Cửa đang mở',
-      'door_closed': 'Cửa đã đóng',
-      'entry_detected': 'Có người vào booth',
-      'opened_no_entry': 'Không có ai vào',
-      'session_started': 'Bắt đầu phiên',
-      'session_ended_manual': 'Kết thúc (bấm dừng)',
-      'session_ended_auto': 'Tự kết thúc (trống)',
-      'session_ended_timeout': 'Hết giờ',
-      'session_overtime_occupied': 'Quá giờ — có người',
-      'motion_unexpected': 'Chuyển động bất thường',
-      'emergency_button': 'Khẩn cấp!',
-      'wifi_disconnected': 'Mất WiFi',
-      'wifi_reconnected': 'WiFi đã kết nối',
-      'supabase_error': 'Lỗi server',
-    };
-
-    const stateConfig = {
-      idle:    { icon: '🟢', badge: 'Sẵn sàng',     css: 'state-idle' },
-      opening: { icon: '🔓', badge: 'Đang mở cửa',  css: 'state-opening' },
-      inuse:   { icon: '🔵', badge: 'Đang sử dụng', css: 'state-inuse' },
-      offline: { icon: '🔴', badge: 'Mất kết nối',  css: 'state-offline' },
-    };
-
-    const resetEvents = [
-      'session_ended_manual', 'session_ended_auto', 'session_ended_timeout',
-      'opened_no_entry', 'emergency_button'
+    // ============== MOTIVATIONAL MESSAGES ==============
+    const MOTI_IDLE = [
+      'Sẵn sàng cho một phiên tập trung?',
+      'Không gian yên tĩnh đang chờ bạn',
+      'Focus mode: ON &#128640;',
+    ];
+    const MOTI_ACTIVE = [
+      'Deep work mode &#128293;',
+      'Bạn đang làm rất tốt!',
+      'Tập trung = Siêu năng lực &#9889;',
+      'Keep going! &#128170;',
+      'Flow state activated &#127912;',
+      'No distraction zone &#128526;',
+      'Năng suất x100 &#128200;',
+      'Work smarter, live better',
+    ];
+    const COMPLETION_MSGS = [
+      'Bạn đã tập trung thật tốt. Hẹn gặp lại!',
+      'Một phiên làm việc hiệu quả. Great job!',
+      'Deep work xong rồi. Nghỉ ngơi tý nhé!',
+      'Tuyệt vời! Bạn thật giỏi.',
     ];
 
-    // ============== UI ==============
-    function showStatus(text, color) {
-      statusEl.textContent = text;
-      statusEl.style.color = color;
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function setBoothState(state, customLabel) {
-      currentBoothState = state;
-      const cfg = stateConfig[state] || stateConfig.idle;
-      stateIcon.textContent = cfg.icon;
-      stateBadge.className = 'state-badge ' + cfg.css;
-      stateBadge.textContent = customLabel || cfg.badge;
-    }
-
-    function showOpenButton() {
-      btnOpen.classList.remove('hidden');
-      btnOpen.disabled = false;
-      btnStop.classList.add('hidden');
-    }
-
-    function showStopButton() {
-      btnOpen.classList.add('hidden');
-      btnStop.classList.remove('hidden');
-      btnStop.disabled = false;
-    }
-
-    function formatTime(seconds) {
-      const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-      const s = (seconds % 60).toString().padStart(2, '0');
-      return m + ':' + s;
-    }
-
-    function startTimer() {
-      sessionStartTime = new Date();
-      timerWrap.classList.remove('hidden');
-      timerEl.textContent = '00:00';
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - sessionStartTime.getTime()) / 1000);
-        timerEl.textContent = formatTime(elapsed);
-      }, 1000);
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      let durationSec = 0;
-      if (sessionStartTime) {
-        durationSec = Math.floor((Date.now() - sessionStartTime.getTime()) / 1000);
+    // ============== ONBOARDING ==============
+    function showOnboarding() {
+      if (!localStorage.getItem(ONBOARD_KEY)) {
+        document.getElementById('onboardOverlay').classList.remove('hidden');
       }
-      timerWrap.classList.add('hidden');
-      return durationSec;
+    }
+    window.closeOnboarding = function() {
+      document.getElementById('onboardOverlay').classList.add('hidden');
+      localStorage.setItem(ONBOARD_KEY, '1');
+    };
+
+    // ============== COMPLETION & FEEDBACK ==============
+    let feedbackRating = 0;
+
+    window.closeCompletion = function() {
+      document.getElementById('completionOverlay').classList.add('hidden');
+      resetFeedback();
+    };
+
+    function showCompletion(durationStr) {
+      const overlay = document.getElementById('completionOverlay');
+      document.getElementById('completionDuration').textContent = durationStr;
+      document.getElementById('completionMsg').textContent = randomFrom(COMPLETION_MSGS);
+      resetFeedback();
+      overlay.classList.remove('hidden');
+      spawnConfetti();
     }
 
-    function resetToIdle(statusText, statusColor) {
-      stopTimer();
-      showOpenButton();
-      setBoothState('idle');
-      if (statusText) {
-        showStatus(statusText, statusColor || '#888');
-        setTimeout(() => showStatus('', ''), 5000);
+    function spawnConfetti() {
+      const emojis = ['&#127881;', '&#127882;', '&#11088;', '&#128156;', '&#9889;', '&#127942;', '&#128640;', '&#127775;'];
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'confetti';
+          el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+          el.style.left = Math.random() * 100 + 'vw';
+          el.style.fontSize = (16 + Math.random() * 20) + 'px';
+          el.style.animationDuration = (2 + Math.random() * 2) + 's';
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 4500);
+        }, i * 120);
       }
     }
 
-    // ============== DATA ==============
-    async function loadCount() {
-      const { count, error } = await db.from('sessions').select('*', { count: 'exact', head: true });
-      countEl.textContent = error ? '0' : count;
+    function resetFeedback() {
+      feedbackRating = 0;
+      document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('feedbackText').value = '';
+      document.getElementById('btnSendFeedback').disabled = true;
+      document.getElementById('feedbackSection').classList.remove('hidden');
+      document.getElementById('feedbackThanks').classList.add('hidden');
     }
 
-    async function loadRecentLogs() {
-      const { data, error } = await db.from('booth_logs')
-        .select('event, note, created_at')
-        .order('created_at', { ascending: false })
-        .limit(20);
+    // Star rating
+    document.getElementById('feedbackStars').addEventListener('click', function(e) {
+      const btn = e.target.closest('.star-btn');
+      if (!btn) return;
+      feedbackRating = parseInt(btn.dataset.val);
+      document.querySelectorAll('.star-btn').forEach(b => {
+        const v = parseInt(b.dataset.val);
+        b.classList.toggle('selected', v <= feedbackRating);
+      });
+      document.getElementById('btnSendFeedback').disabled = false;
+    });
 
-      if (error || !data) {
-        logList.innerHTML = '<div class="log-item"><div class="log-text">Không tải được</div></div>';
-        return;
+    window.sendFeedback = async function() {
+      const btn = document.getElementById('btnSendFeedback');
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi...';
+
+      const text = document.getElementById('feedbackText').value.trim();
+      const note = feedbackRating + '/5' + (text ? ' - ' + text : '');
+
+      try {
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+        await db.from('booth_logs').insert({
+          booth_id: BOOTH_ID,
+          event: 'user_feedback',
+          note: note
+        });
+      } catch (e) {
+        // Silent fail - don't block user
       }
 
-      renderLogs(data);
-      if (data.length > 0) syncStateFromLog(data[0]);
-    }
+      document.getElementById('feedbackSection').classList.add('hidden');
+      document.getElementById('feedbackThanks').classList.remove('hidden');
+    };
 
-    function renderLogItem(log, isNew) {
-      const d = new Date(log.created_at);
-      const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      const label = eventLabels[log.event] || log.event;
-      const note = log.note ? `<span class="log-note"> — ${log.note}</span>` : '';
-      const cls = isNew ? 'log-item log-item-new' : 'log-item';
-      return `<div class="${cls}"><div class="log-time">${time}</div><div class="log-text">${label}${note}</div></div>`;
-    }
+    // ============== BOOTH CONTROL ==============
+    function initBooth() {
+      const { createClient } = supabase;
+      const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function renderLogs(logs) {
-      if (logs.length === 0) {
-        logList.innerHTML = '<div class="log-item"><div class="log-text">Chưa có hoạt động</div></div>';
-        return;
+      const btnStart = document.getElementById('btnStart');
+      const btnEnd = document.getElementById('btnEnd');
+      const statusEl = document.getElementById('status');
+      const timerEl = document.getElementById('timer');
+      const timerSection = document.getElementById('timerSection');
+      const stateVisual = document.getElementById('stateVisual');
+      const stateIcon = document.getElementById('stateIcon');
+      const stateLabel = document.getElementById('stateLabel');
+      const stateMsg = document.getElementById('stateMsg');
+      const activeRing = document.getElementById('activeRing');
+      const connBar = document.getElementById('connBar');
+      const connText = document.getElementById('connText');
+      const motiMsg = document.getElementById('motiMsg');
+
+      let timerInterval = null;
+      let motiInterval = null;
+      let activeSessionStart = null;
+      let lastDurationStr = '00:00';
+      let boothOnline = false;
+      let wasActive = false;
+
+      function showStatus(text, color) {
+        statusEl.textContent = text;
+        statusEl.style.color = color || '#888';
       }
-      logList.innerHTML = logs.map(l => renderLogItem(l, false)).join('');
-    }
 
-    // ============== STATE SYNC ==============
-    function syncStateFromLog(log) {
-      const ev = log.event;
-      console.log('[Sync]', ev);
-
-      if (resetEvents.includes(ev)) {
-        const messages = {
-          'session_ended_manual': ['Phiên kết thúc. Cửa mở để ra.', '#f97316'],
-          'session_ended_auto': ['Phiên tự kết thúc — không có người.', '#f97316'],
-          'session_ended_timeout': ['Hết giờ. Phiên đã kết thúc.', '#f97316'],
-          'opened_no_entry': ['Không có ai vào. Sẵn sàng.', '#888'],
-          'emergency_button': ['Khẩn cấp! Cửa đã mở.', '#ef4444'],
-        };
-        const [msg, color] = messages[ev] || ['', '#888'];
-        resetToIdle(msg, color);
-        loadCount();
-      } else if (ev === 'session_started') {
-        setBoothState('inuse');
-        showStopButton();
-        if (!timerInterval) startTimer();
-      } else if (ev === 'entry_detected') {
-        setBoothState('opening', 'Đang vào...');
-      } else if (ev === 'cmd_open_received') {
-        setBoothState('opening');
-      } else if (ev === 'door_opened') {
-        if (currentBoothState !== 'idle') {
-          setBoothState('opening', 'Cửa đang mở...');
+      function setConnection(state) {
+        connBar.className = 'conn-bar ' + state;
+        if (state === 'online') {
+          connText.textContent = 'Booth online';
+          boothOnline = true;
+        } else if (state === 'offline') {
+          connText.textContent = 'Booth offline';
+          boothOnline = false;
+        } else {
+          connText.textContent = 'Đang kết nối...';
         }
-      } else if (ev === 'door_closed') {
-        if (currentBoothState === 'idle') {
-          showStatus('Cửa đã đóng.', '#888');
-          setTimeout(() => showStatus('', ''), 3000);
-        }
-      } else if (ev === 'system_ready') {
-        resetToIdle('Hệ thống sẵn sàng.', '#22c55e');
-      } else if (ev === 'session_overtime_occupied') {
-        setBoothState('inuse', 'Quá giờ — có người');
-        showStatus('Quá giờ, vẫn có người bên trong', '#f97316');
-      } else if (ev === 'wifi_disconnected') {
-        setBoothState('offline');
-      } else if (ev === 'wifi_reconnected') {
-        if (currentBoothState === 'offline') setBoothState('idle');
       }
-    }
 
-    // ============== REALTIME ==============
-    function subscribeRealtime() {
-      db.channel('booth-logs-realtime')
-        .on('postgres_changes', {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'booth_logs'
-        }, (payload) => {
-          console.log('[Realtime]', payload.new.event);
-          syncStateFromLog(payload.new);
-          const html = renderLogItem(payload.new, true);
-          logList.insertAdjacentHTML('afterbegin', html);
-          // Giới hạn 20 log items
-          while (logList.children.length > 20) {
-            logList.removeChild(logList.lastChild);
+      function setBoothState(isActive) {
+        if (isActive) {
+          stateVisual.className = 'state-visual active';
+          stateIcon.innerHTML = '&#9889;';
+          activeRing.classList.remove('hidden');
+          stateLabel.className = 'state-label active';
+          stateLabel.textContent = 'ĐANG SỬ DỤNG';
+          stateMsg.textContent = '';
+          btnStart.classList.add('hidden');
+          btnEnd.classList.remove('hidden');
+          btnEnd.disabled = false;
+          timerSection.classList.remove('hidden');
+
+          if (!motiInterval) {
+            motiMsg.innerHTML = randomFrom(MOTI_ACTIVE);
+            motiInterval = setInterval(() => {
+              motiMsg.style.opacity = '0';
+              setTimeout(() => {
+                motiMsg.innerHTML = randomFrom(MOTI_ACTIVE);
+                motiMsg.style.opacity = '1';
+              }, 300);
+            }, 8000);
           }
-        })
-        .subscribe((status) => {
-          console.log('[Realtime] Status:', status);
+        } else {
+          stateVisual.className = 'state-visual ' + (boothOnline ? 'idle' : 'offline');
+          stateIcon.innerHTML = boothOnline ? '&#128274;' : '&#128308;';
+          activeRing.classList.add('hidden');
+          stateLabel.className = 'state-label ' + (boothOnline ? 'idle' : 'offline');
+          stateLabel.textContent = boothOnline ? 'SẴN SÀNG' : 'MẤT KẾT NỐI';
+          stateMsg.textContent = boothOnline
+            ? 'Booth đang trống. Nhấn nút bên dưới để bắt đầu phiên của bạn.'
+            : 'Booth đang offline. Vui lòng thử lại sau.';
+          btnEnd.classList.add('hidden');
+          btnStart.classList.remove('hidden');
+          btnStart.disabled = !boothOnline;
+          timerSection.classList.add('hidden');
+          stopTimer();
+
+          if (motiInterval) {
+            clearInterval(motiInterval);
+            motiInterval = null;
+          }
+          motiMsg.innerHTML = boothOnline ? randomFrom(MOTI_IDLE) : '';
+        }
+      }
+
+      function formatDuration(seconds) {
+        if (seconds == null) return '00:00';
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        return m + ':' + s;
+      }
+
+      function startTimer(startTime) {
+        activeSessionStart = startTime;
+        clearInterval(timerInterval);
+        const tick = () => {
+          const elapsed = Math.floor((Date.now() - activeSessionStart.getTime()) / 1000);
+          lastDurationStr = formatDuration(elapsed);
+          timerEl.textContent = lastDurationStr;
+        };
+        tick();
+        timerInterval = setInterval(tick, 1000);
+      }
+
+      function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        activeSessionStart = null;
+      }
+
+      // Heartbeat
+      async function checkHeartbeat() {
+        const { data } = await db.from('booths')
+          .select('last_seen, name')
+          .eq('booth_id', BOOTH_ID)
+          .limit(1);
+
+        if (!data || data.length === 0) {
+          setConnection('offline');
+          return;
+        }
+
+        const boothNameEl = document.getElementById('boothName');
+        boothNameEl.textContent = data[0].name || BOOTH_ID;
+
+        const lastSeen = new Date(data[0].last_seen);
+        const diffSec = (Date.now() - lastSeen.getTime()) / 1000;
+        setConnection(diffSec <= HEARTBEAT_TIMEOUT_S ? 'online' : 'offline');
+      }
+
+      // Poll
+      async function pollState() {
+        await checkHeartbeat();
+
+        const { data } = await db.from('sessions')
+          .select('started_at, status')
+          .eq('booth_id', BOOTH_ID)
+          .eq('status', 'active')
+          .limit(1);
+
+        if (data && data.length > 0) {
+          wasActive = true;
+          setBoothState(true);
+          if (!activeSessionStart) {
+            startTimer(new Date(data[0].started_at));
+          }
+        } else {
+          if (wasActive) {
+            // Session just ended - show completion
+            wasActive = false;
+            showCompletion(lastDurationStr);
+          }
+          setBoothState(false);
+        }
+      }
+
+      // Actions
+      window.handleStart = async function() {
+        btnStart.disabled = true;
+        showStatus('Đang gửi lệnh...', '#888');
+
+        if (!boothOnline) {
+          showStatus('Booth đang offline!', '#ef4444');
+          btnStart.disabled = false;
+          setTimeout(() => showStatus('', ''), 3000);
+          return;
+        }
+
+        const { data: active } = await db.from('sessions')
+          .select('id').eq('booth_id', BOOTH_ID).eq('status', 'active').limit(1);
+        if (active && active.length > 0) {
+          showStatus('Booth đang được sử dụng!', '#f97316');
+          btnStart.disabled = false;
+          setTimeout(() => showStatus('', ''), 3000);
+          return;
+        }
+
+        const { count } = await db.from('commands')
+          .select('*', { count: 'exact', head: true })
+          .eq('booth_id', BOOTH_ID).eq('status', 'pending');
+        if (count > 0) {
+          showStatus('Có lệnh đang chờ xử lý...', '#f97316');
+          btnStart.disabled = false;
+          setTimeout(() => showStatus('', ''), 3000);
+          return;
+        }
+
+        const { error } = await db.from('commands').insert({
+          booth_id: BOOTH_ID, action: 'open', status: 'pending'
         });
-    }
 
-    // ============== ACTIONS ==============
-    async function handleOpen() {
-      console.log('[UI] open');
-      btnOpen.disabled = true;
-      showStatus('Đang gửi lệnh...', '#888');
-      setBoothState('opening');
+        if (error) {
+          showStatus('Lỗi: ' + error.message, '#ef4444');
+          btnStart.disabled = false;
+          return;
+        }
 
-      const { error } = await db.from('commands').insert({ action: 'open', executed: false });
+        showStatus('Cửa đang mở... Bước vào nào!', '#10069F');
+      };
 
-      if (error) {
-        console.error('[UI] Error:', error);
-        showStatus('Lỗi kết nối. Thử lại.', '#ef4444');
-        btnOpen.disabled = false;
-        setBoothState('idle');
-        return;
-      }
+      window.handleEnd = async function() {
+        btnEnd.disabled = true;
+        showStatus('Đang kết thúc...', '#888');
 
-      showStatus('Lệnh đã gửi. Đang mở cửa...', '#22c55e');
-    }
-
-    async function handleStop() {
-      console.log('[UI] stop');
-      btnStop.disabled = true;
-      showStatus('Đang gửi lệnh dừng...', '#888');
-
-      const { error } = await db.from('commands').insert({ action: 'stop', executed: false });
-
-      if (error) {
-        console.error('[UI] Error:', error);
-        showStatus('Lỗi kết nối. Thử lại.', '#ef4444');
-        btnStop.disabled = false;
-        return;
-      }
-
-      if (sessionStartTime) {
-        const durationSec = stopTimer();
-        await db.from('sessions').insert({
-          started_at: sessionStartTime.toISOString(),
-          ended_at: new Date().toISOString(),
-          duration_seconds: durationSec
+        const { error } = await db.from('commands').insert({
+          booth_id: BOOTH_ID, action: 'close', status: 'pending'
         });
-      }
 
-      showStatus('Đang mở cửa để ra ngoài...', '#f97316');
+        if (error) {
+          showStatus('Lỗi: ' + error.message, '#ef4444');
+          btnEnd.disabled = false;
+          return;
+        }
+
+        showStatus('Cửa đang mở... Bước ra nhé!', '#10069F');
+      };
+
+      // Init
+      (async function() {
+        try {
+          const { error } = await db.from('booths')
+            .select('booth_id').eq('booth_id', BOOTH_ID).limit(1);
+          if (error) {
+            showStatus('Lỗi kết nối: ' + error.message, '#ef4444');
+            return;
+          }
+          pollState();
+          setInterval(pollState, POLL_MS);
+          showOnboarding();
+        } catch (e) {
+          showStatus('Lỗi: ' + e.message, '#ef4444');
+        }
+      })();
     }
-
-    // ============== INIT ==============
-    loadCount();
-    loadRecentLogs();
-    subscribeRealtime();
   </script>
 </body>
 </html>
