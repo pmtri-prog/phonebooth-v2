@@ -82,6 +82,7 @@
     .booth-card.online { border-left-color: #22c55e; }
     .booth-card.offline { border-left-color: #ef4444; }
     .booth-card.busy { border-left-color: #10069F; }
+    .booth-card.paused { border-left-color: #f59e0b; }
 
     .booth-header {
       display: flex;
@@ -102,6 +103,7 @@
     .s-online { background: #dcfce7; color: #16a34a; }
     .s-offline { background: #fee2e2; color: #dc2626; }
     .s-busy { background: #e8e6f8; color: #10069F; }
+    .s-paused { background: #fef3c7; color: #d97706; }
 
     .booth-meta { display: flex; gap: 16px; font-size: 11px; color: #999; }
     .booth-meta strong { color: #555; font-weight: 600; }
@@ -320,7 +322,8 @@
       filter.value = currentVal;
 
       const { data: activeSessions } = await db.from('sessions')
-        .select('booth_id, started_at').eq('status', 'active');
+        .select('booth_id, started_at, status, paused_at, total_paused_seconds, pause_count')
+        .in('status', ['active', 'paused']);
       const activeMap = {};
       if (activeSessions) activeSessions.forEach(s => { activeMap[s.booth_id] = s; });
 
@@ -342,7 +345,9 @@
         const todayCount = todayMap[b.booth_id] || 0;
 
         let cardClass = 'offline', statusClass = 's-offline', statusText = 'Offline';
-        if (isOnline && hasActive) {
+        if (isOnline && hasActive && hasActive.status === 'paused') {
+          cardClass = 'paused'; statusClass = 's-paused'; statusText = 'Tạm dừng';
+        } else if (isOnline && hasActive) {
           cardClass = 'busy'; statusClass = 's-busy'; statusText = 'Đang dùng';
         } else if (isOnline) {
           cardClass = 'online'; statusClass = 's-online'; statusText = 'Online';
@@ -350,13 +355,18 @@
 
         let sessionHtml = '';
         if (hasActive) {
-          sessionHtml = `<div class="booth-session-info">
-            <span>Phiên đang chạy</span>
-            <span class="timer" id="timer-${b.booth_id}">--:--</span>
+          const isPaused = hasActive.status === 'paused';
+          const pauseLabel = hasActive.pause_count ? ` (pause: ${hasActive.pause_count}x)` : '';
+          sessionHtml = `<div class="booth-session-info" style="${isPaused ? 'background:#fef3c7;color:#d97706;' : ''}">
+            <span>${isPaused ? 'Đang tạm dừng' : 'Phiên đang chạy'}${pauseLabel}</span>
+            <span class="timer" id="timer-${b.booth_id}">${isPaused ? '||' : '--:--'}</span>
           </div>`;
           const startTime = new Date(hasActive.started_at);
           if (!activeTimers[b.booth_id]) activeTimers[b.booth_id] = { startTime, interval: null };
           activeTimers[b.booth_id].startTime = startTime;
+          activeTimers[b.booth_id].isPaused = isPaused;
+          activeTimers[b.booth_id].totalPausedSec = hasActive.total_paused_seconds || 0;
+          activeTimers[b.booth_id].pausedAt = hasActive.paused_at;
         } else {
           if (activeTimers[b.booth_id]) {
             clearInterval(activeTimers[b.booth_id].interval);
@@ -385,14 +395,26 @@
       Object.keys(activeTimers).forEach(boothId => {
         const t = activeTimers[boothId];
         clearInterval(t.interval);
-        const tick = () => {
+
+        if (t.isPaused) {
+          // Timer frozen khi paused - hiển thị thời gian active tính đến lúc pause
           const el = document.getElementById('timer-' + boothId);
-          if (!el) return;
-          const elapsed = Math.floor((Date.now() - t.startTime.getTime()) / 1000);
-          el.textContent = formatDuration(elapsed);
-        };
-        tick();
-        t.interval = setInterval(tick, 1000);
+          if (el && t.pausedAt) {
+            const totalElapsed = Math.floor((new Date(t.pausedAt).getTime() - t.startTime.getTime()) / 1000);
+            const activeElapsed = totalElapsed - (t.totalPausedSec || 0);
+            el.textContent = formatDuration(Math.max(0, activeElapsed)) + ' ||';
+          }
+        } else {
+          const tick = () => {
+            const el = document.getElementById('timer-' + boothId);
+            if (!el) return;
+            const totalElapsed = Math.floor((Date.now() - t.startTime.getTime()) / 1000);
+            const activeElapsed = totalElapsed - (t.totalPausedSec || 0);
+            el.textContent = formatDuration(Math.max(0, activeElapsed));
+          };
+          tick();
+          t.interval = setInterval(tick, 1000);
+        }
       });
 
       let onlineCount = 0;
@@ -430,7 +452,7 @@
 
     async function loadSessions() {
       const filterBooth = document.getElementById('filterBooth').value;
-      let query = db.from('sessions').select('*')
+      let query = db.from('sessions').select('*, pause_count, total_paused_seconds')
         .order('started_at', { ascending: false }).limit(50);
       if (filterBooth) query = query.eq('booth_id', filterBooth);
 
@@ -446,14 +468,17 @@
       booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
 
       tbody.innerHTML = data.map(s => {
-        const sc = s.status === 'active' ? 'td-active' : 'td-ended';
-        const st = s.status === 'active' ? 'Đang dùng' : 'Đã kết thúc';
+        let sc, st;
+        if (s.status === 'active') { sc = 'td-active'; st = 'Đang dùng'; }
+        else if (s.status === 'paused') { sc = 'td-active'; st = 'Tạm dừng'; }
+        else { sc = 'td-ended'; st = 'Đã kết thúc'; }
+        const pauseInfo = s.pause_count ? ` (${s.pause_count}x pause)` : '';
         return `<tr>
           <td class="td-booth">${nameMap[s.booth_id] || s.booth_id}</td>
           <td>${formatTime(s.started_at)}</td>
           <td>${s.ended_at ? formatTime(s.ended_at) : '--'}</td>
-          <td>${s.duration_seconds != null ? formatDuration(s.duration_seconds) : '--'}</td>
-          <td class="${sc}">${st}</td>
+          <td>${s.duration_seconds != null ? formatDuration(s.duration_seconds) : '--'}${pauseInfo}</td>
+          <td class="${sc}" style="${s.status === 'paused' ? 'color:#d97706;' : ''}">${st}</td>
         </tr>`;
       }).join('');
     }

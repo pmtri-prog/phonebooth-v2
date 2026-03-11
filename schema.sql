@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS booth_logs CASCADE;
 CREATE TABLE commands (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   booth_id    text NOT NULL,
-  action      text NOT NULL CHECK (action IN ('open', 'close')),
+  action      text NOT NULL CHECK (action IN ('open', 'close', 'pause', 'resume')),
   status      text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'executed')),
   created_at  timestamptz NOT NULL DEFAULT now()
 );
@@ -22,17 +22,20 @@ CREATE TABLE sessions (
   booth_id          text NOT NULL,
   started_at        timestamptz NOT NULL DEFAULT now(),
   ended_at          timestamptz,
-  duration_seconds  int,
-  status            text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'ended'))
+  duration_seconds      int,
+  status                text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'paused', 'ended')),
+  paused_at             timestamptz,
+  total_paused_seconds  int NOT NULL DEFAULT 0,
+  pause_count           int NOT NULL DEFAULT 0
 );
 
 -- Index để ESP32 poll nhanh
 CREATE INDEX idx_commands_pending ON commands (booth_id, status, created_at)
   WHERE status = 'pending';
 
--- Index để tìm session active nhanh
+-- Index để tìm session active/paused nhanh
 CREATE INDEX idx_sessions_active ON sessions (booth_id, status)
-  WHERE status = 'active';
+  WHERE status IN ('active', 'paused');
 
 -- Bảng booth_logs: ghi lại sự kiện đặc biệt (emergency, etc.)
 CREATE TABLE booth_logs (

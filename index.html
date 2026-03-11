@@ -181,6 +181,18 @@
       background: #10069F;
       box-shadow: 0 0 0 16px rgba(16,6,159,0.08), 0 0 0 32px rgba(16,6,159,0.04);
     }
+    .state-visual.paused {
+      background: #f59e0b;
+      box-shadow: 0 0 0 16px rgba(245,158,11,0.08), 0 0 0 32px rgba(245,158,11,0.04);
+    }
+    .state-visual.paused .ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.4);
+      animation: none;
+    }
     .state-visual.active .ring {
       position: absolute;
       width: 100%;
@@ -211,6 +223,7 @@
     }
     .state-label.idle { color: #888; }
     .state-label.active { color: #10069F; }
+    .state-label.paused { color: #f59e0b; }
     .state-label.offline { color: #ef4444; }
 
     .state-msg {
@@ -289,6 +302,27 @@
       border: 2px solid #282828;
     }
     .btn-end:active { background: #EDEDED; }
+    .btn-pause {
+      background: #FFFFFF;
+      color: #f59e0b;
+      border: 2px solid #f59e0b;
+      margin-bottom: 10px;
+    }
+    .btn-pause:active { background: #fffbeb; }
+    .btn-resume {
+      background: #f59e0b;
+      color: #FFFFFF;
+      box-shadow: 0 4px 20px rgba(245,158,11,0.25);
+      margin-bottom: 10px;
+    }
+    .btn-resume:active { background: #d97706; }
+    .pause-info {
+      text-align: center;
+      font-size: 12px;
+      color: #f59e0b;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
 
     .status-msg {
       text-align: center;
@@ -601,6 +635,9 @@
       <div class="actions">
         <div class="status-msg" id="status"></div>
         <button class="btn btn-start" id="btnStart" onclick="handleStart()">Bắt đầu phiên</button>
+        <button class="btn btn-pause hidden" id="btnPause" onclick="handlePause()">Tạm dừng</button>
+        <button class="btn btn-resume hidden" id="btnResume" onclick="handleResume()">Tiếp tục phiên</button>
+        <div class="pause-info hidden" id="pauseInfo"></div>
         <button class="btn btn-end hidden" id="btnEnd" onclick="handleEnd()">Kết thúc phiên</button>
       </div>
     </div>
@@ -688,6 +725,12 @@
       'No distraction zone &#128526;',
       'Năng suất x100 &#128200;',
       'Work smarter, live better',
+    ];
+    const MOTI_PAUSED = [
+      'Đang tạm dừng... Quay lại sớm nhé!',
+      'Booth đang giữ chỗ cho bạn',
+      'Nghỉ tý rồi tiếp tục nào!',
+      'Đừng quên quay lại nhé!',
     ];
     const COMPLETION_MSGS = [
       'Bạn đã tập trung thật tốt. Hẹn gặp lại!',
@@ -796,6 +839,9 @@
 
       const btnStart = document.getElementById('btnStart');
       const btnEnd = document.getElementById('btnEnd');
+      const btnPause = document.getElementById('btnPause');
+      const btnResume = document.getElementById('btnResume');
+      const pauseInfo = document.getElementById('pauseInfo');
       const statusEl = document.getElementById('status');
       const timerEl = document.getElementById('timer');
       const timerSection = document.getElementById('timerSection');
@@ -814,6 +860,9 @@
       let lastDurationStr = '00:00';
       let boothOnline = false;
       let wasActive = false;
+      let wasPaused = false;
+      let pauseCountdownInterval = null;
+      let sessionTotalPausedSeconds = 0;
 
       function showStatus(text, color) {
         statusEl.textContent = text;
@@ -833,8 +882,20 @@
         }
       }
 
-      function setBoothState(isActive) {
-        if (isActive) {
+      // state: 'idle' | 'active' | 'paused'
+      function setBoothState(state) {
+        // Clear moti interval for all transitions
+        if (motiInterval) {
+          clearInterval(motiInterval);
+          motiInterval = null;
+        }
+        // Clear pause countdown
+        if (pauseCountdownInterval) {
+          clearInterval(pauseCountdownInterval);
+          pauseCountdownInterval = null;
+        }
+
+        if (state === 'active') {
           stateVisual.className = 'state-visual active';
           stateIcon.innerHTML = '&#9889;';
           activeRing.classList.remove('hidden');
@@ -842,21 +903,50 @@
           stateLabel.textContent = 'ĐANG SỬ DỤNG';
           stateMsg.textContent = '';
           btnStart.classList.add('hidden');
+          btnPause.classList.remove('hidden');
+          btnPause.disabled = false;
+          btnResume.classList.add('hidden');
+          pauseInfo.classList.add('hidden');
           btnEnd.classList.remove('hidden');
           btnEnd.disabled = false;
           timerSection.classList.remove('hidden');
 
-          if (!motiInterval) {
-            motiMsg.innerHTML = randomFrom(MOTI_ACTIVE);
-            motiInterval = setInterval(() => {
-              motiMsg.style.opacity = '0';
-              setTimeout(() => {
-                motiMsg.innerHTML = randomFrom(MOTI_ACTIVE);
-                motiMsg.style.opacity = '1';
-              }, 300);
-            }, 8000);
-          }
+          motiMsg.innerHTML = randomFrom(MOTI_ACTIVE);
+          motiInterval = setInterval(() => {
+            motiMsg.style.opacity = '0';
+            setTimeout(() => {
+              motiMsg.innerHTML = randomFrom(MOTI_ACTIVE);
+              motiMsg.style.opacity = '1';
+            }, 300);
+          }, 8000);
+
+        } else if (state === 'paused') {
+          stateVisual.className = 'state-visual paused';
+          stateIcon.innerHTML = '&#9208;';
+          activeRing.classList.remove('hidden');
+          stateLabel.className = 'state-label paused';
+          stateLabel.textContent = 'TẠM DỪNG';
+          stateMsg.textContent = 'Booth đang giữ chỗ cho bạn';
+          btnStart.classList.add('hidden');
+          btnPause.classList.add('hidden');
+          btnResume.classList.remove('hidden');
+          btnResume.disabled = false;
+          pauseInfo.classList.remove('hidden');
+          btnEnd.classList.remove('hidden');
+          btnEnd.disabled = false;
+          timerSection.classList.remove('hidden');
+
+          motiMsg.innerHTML = randomFrom(MOTI_PAUSED);
+          motiInterval = setInterval(() => {
+            motiMsg.style.opacity = '0';
+            setTimeout(() => {
+              motiMsg.innerHTML = randomFrom(MOTI_PAUSED);
+              motiMsg.style.opacity = '1';
+            }, 300);
+          }, 8000);
+
         } else {
+          // idle
           stateVisual.className = 'state-visual ' + (boothOnline ? 'idle' : 'offline');
           stateIcon.innerHTML = boothOnline ? '&#128274;' : '&#128308;';
           activeRing.classList.add('hidden');
@@ -866,15 +956,13 @@
             ? 'Booth đang trống. Nhấn nút bên dưới để bắt đầu phiên của bạn.'
             : 'Booth đang offline. Vui lòng thử lại sau.';
           btnEnd.classList.add('hidden');
+          btnPause.classList.add('hidden');
+          btnResume.classList.add('hidden');
+          pauseInfo.classList.add('hidden');
           btnStart.classList.remove('hidden');
           btnStart.disabled = !boothOnline;
           timerSection.classList.add('hidden');
           stopTimer();
-
-          if (motiInterval) {
-            clearInterval(motiInterval);
-            motiInterval = null;
-          }
           motiMsg.innerHTML = boothOnline ? randomFrom(MOTI_IDLE) : '';
         }
       }
@@ -886,16 +974,47 @@
         return m + ':' + s;
       }
 
-      function startTimer(startTime) {
+      function startTimer(startTime, pausedSec) {
         activeSessionStart = startTime;
+        sessionTotalPausedSeconds = pausedSec || 0;
         clearInterval(timerInterval);
         const tick = () => {
-          const elapsed = Math.floor((Date.now() - activeSessionStart.getTime()) / 1000);
-          lastDurationStr = formatDuration(elapsed);
+          const totalElapsed = Math.floor((Date.now() - activeSessionStart.getTime()) / 1000);
+          const activeElapsed = totalElapsed - sessionTotalPausedSeconds;
+          lastDurationStr = formatDuration(Math.max(0, activeElapsed));
           timerEl.textContent = lastDurationStr;
         };
         tick();
         timerInterval = setInterval(tick, 1000);
+      }
+
+      function freezeTimer(startTime, pausedSec, pausedAt) {
+        // Timer đóng băng: chỉ hiển thị thời gian active tính đến lúc pause
+        activeSessionStart = startTime;
+        clearInterval(timerInterval);
+        const totalElapsed = Math.floor((new Date(pausedAt).getTime() - startTime.getTime()) / 1000);
+        const activeElapsed = totalElapsed - (pausedSec || 0);
+        lastDurationStr = formatDuration(Math.max(0, activeElapsed));
+        timerEl.textContent = lastDurationStr;
+      }
+
+      function startPauseCountdown(pausedAt) {
+        clearInterval(pauseCountdownInterval);
+        const PAUSE_TIMEOUT = 600; // 10 phút
+        const tick = () => {
+          const pausedSec = Math.floor((Date.now() - new Date(pausedAt).getTime()) / 1000);
+          const remaining = PAUSE_TIMEOUT - pausedSec;
+          if (remaining <= 0) {
+            pauseInfo.textContent = 'Hết thời gian giữ chỗ...';
+            clearInterval(pauseCountdownInterval);
+          } else {
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+            pauseInfo.textContent = 'Tự kết thúc sau ' + m + ':' + s.toString().padStart(2, '0');
+          }
+        };
+        tick();
+        pauseCountdownInterval = setInterval(tick, 1000);
       }
 
       function stopTimer() {
@@ -929,24 +1048,42 @@
         await checkHeartbeat();
 
         const { data } = await db.from('sessions')
-          .select('started_at, status')
+          .select('started_at, status, paused_at, total_paused_seconds')
           .eq('booth_id', BOOTH_ID)
-          .eq('status', 'active')
+          .in('status', ['active', 'paused'])
           .limit(1);
 
         if (data && data.length > 0) {
-          wasActive = true;
-          setBoothState(true);
-          if (!activeSessionStart) {
-            startTimer(new Date(data[0].started_at));
+          const session = data[0];
+
+          if (session.status === 'active') {
+            wasActive = true;
+            wasPaused = false;
+            setBoothState('active');
+            if (!activeSessionStart || timerInterval === null) {
+              startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
+            }
+          } else if (session.status === 'paused') {
+            wasActive = true;
+            if (!wasPaused) {
+              wasPaused = true;
+              setBoothState('paused');
+              freezeTimer(
+                new Date(session.started_at),
+                session.total_paused_seconds || 0,
+                session.paused_at
+              );
+              startPauseCountdown(session.paused_at);
+            }
           }
         } else {
-          if (wasActive) {
+          if (wasActive || wasPaused) {
             // Session just ended - show completion
             wasActive = false;
+            wasPaused = false;
             showCompletion(lastDurationStr);
           }
-          setBoothState(false);
+          setBoothState('idle');
         }
       }
 
@@ -963,9 +1100,12 @@
         }
 
         const { data: active } = await db.from('sessions')
-          .select('id').eq('booth_id', BOOTH_ID).eq('status', 'active').limit(1);
+          .select('id, status').eq('booth_id', BOOTH_ID).in('status', ['active', 'paused']).limit(1);
         if (active && active.length > 0) {
-          showStatus('Booth đang được sử dụng!', '#f97316');
+          const msg = active[0].status === 'paused'
+            ? 'Booth đang được giữ chỗ!'
+            : 'Booth đang được sử dụng!';
+          showStatus(msg, '#f97316');
           btnStart.disabled = false;
           setTimeout(() => showStatus('', ''), 3000);
           return;
@@ -992,6 +1132,40 @@
         }
 
         showStatus('Cửa đang mở... Bước vào nào!', '#10069F');
+      };
+
+      window.handlePause = async function() {
+        btnPause.disabled = true;
+        showStatus('Đang tạm dừng...', '#888');
+
+        const { error } = await db.from('commands').insert({
+          booth_id: BOOTH_ID, action: 'pause', status: 'pending'
+        });
+
+        if (error) {
+          showStatus('Lỗi: ' + error.message, '#ef4444');
+          btnPause.disabled = false;
+          return;
+        }
+
+        showStatus('Cửa đang mở... Bước ra tạm nhé!', '#f59e0b');
+      };
+
+      window.handleResume = async function() {
+        btnResume.disabled = true;
+        showStatus('Đang mở cửa...', '#888');
+
+        const { error } = await db.from('commands').insert({
+          booth_id: BOOTH_ID, action: 'resume', status: 'pending'
+        });
+
+        if (error) {
+          showStatus('Lỗi: ' + error.message, '#ef4444');
+          btnResume.disabled = false;
+          return;
+        }
+
+        showStatus('Cửa đang mở... Chào mừng trở lại!', '#10069F');
       };
 
       window.handleEnd = async function() {
