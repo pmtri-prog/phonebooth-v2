@@ -863,7 +863,6 @@
       let wasPaused = false;
       let pauseCountdownInterval = null;
       let sessionTotalPausedSeconds = 0;
-      let clientPausedAt = null;
 
       function showStatus(text, color) {
         statusEl.textContent = text;
@@ -1059,10 +1058,12 @@
           const session = data[0];
 
           if (session.status === 'active') {
+            const justResumed = wasPaused;
             wasActive = true;
             wasPaused = false;
             setBoothState('active');
-            if (!activeSessionStart || timerInterval === null) {
+            // Start timer nếu chưa có, hoặc restart khi vừa resume từ pause
+            if (!activeSessionStart || timerInterval === null || justResumed) {
               startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
             }
           } else if (session.status === 'paused') {
@@ -1134,11 +1135,6 @@
         }
 
         showStatus('Cửa đang mở... Bước vào nào!', '#10069F');
-
-        // Immediately update UI - timer starts from now
-        wasActive = true;
-        setBoothState('active');
-        startTimer(new Date(), 0);
       };
 
       window.handlePause = async function() {
@@ -1156,13 +1152,6 @@
         }
 
         showStatus('Cửa đang mở... Bước ra tạm nhé!', '#f59e0b');
-
-        // Immediately update UI - freeze timer
-        clientPausedAt = new Date();
-        wasPaused = true;
-        setBoothState('paused');
-        freezeTimer(activeSessionStart, sessionTotalPausedSeconds, clientPausedAt.toISOString());
-        startPauseCountdown(clientPausedAt.toISOString());
       };
 
       window.handleResume = async function() {
@@ -1180,15 +1169,6 @@
         }
 
         showStatus('Cửa đang mở... Chào mừng trở lại!', '#10069F');
-
-        // Immediately update UI - resume timer
-        if (clientPausedAt) {
-          sessionTotalPausedSeconds += Math.floor((Date.now() - clientPausedAt.getTime()) / 1000);
-          clientPausedAt = null;
-        }
-        wasPaused = false;
-        setBoothState('active');
-        startTimer(activeSessionStart, sessionTotalPausedSeconds);
       };
 
       window.handleEnd = async function() {
