@@ -1058,12 +1058,10 @@
           const session = data[0];
 
           if (session.status === 'active') {
-            const justResumed = wasPaused;
             wasActive = true;
             wasPaused = false;
             setBoothState('active');
-            // Start timer nếu chưa có, hoặc restart khi vừa resume từ pause
-            if (!activeSessionStart || timerInterval === null || justResumed) {
+            if (!activeSessionStart || timerInterval === null) {
               startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
             }
           } else if (session.status === 'paused') {
