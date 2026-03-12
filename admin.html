@@ -504,15 +504,30 @@
         const eventLabel = isFeedback ? 'Feedback' : l.event;
         let noteHtml = l.note || '';
 
-        // Parse feedback rating into stars
+        // Parse feedback ratings
         if (isFeedback && l.note) {
-          const match = l.note.match(/^(\d)\/5/);
-          if (match) {
-            const rating = parseInt(match[1]);
-            const stars = '\u2605'.repeat(rating) + '\u2606'.repeat(5 - rating);
-            const comment = l.note.replace(/^\d\/5\s*-?\s*/, '');
-            noteHtml = '<span class="log-stars">' + stars + '</span> ' + comment;
-          }
+          // New format: "Cach am:4/5 | Thoai mai:5/5 | App:3/5 | comment"
+          const parts = l.note.split(' | ');
+          const ratings = [];
+          let comment = '';
+          parts.forEach(p => {
+            const m = p.match(/^(.+?):(\d)\/5$/);
+            if (m) {
+              const stars = '\u2605'.repeat(parseInt(m[2])) + '\u2606'.repeat(5 - parseInt(m[2]));
+              ratings.push(m[1] + ' <span class="log-stars">' + stars + '</span>');
+            } else if (!p.match(/^\d\/5/)) {
+              comment = p;
+            } else {
+              // Old format fallback: "4/5 - comment"
+              const old = p.match(/^(\d)\/5/);
+              if (old) {
+                const stars = '\u2605'.repeat(parseInt(old[1])) + '\u2606'.repeat(5 - parseInt(old[1]));
+                ratings.push('<span class="log-stars">' + stars + '</span>');
+                comment = l.note.replace(/^\d\/5\s*-?\s*/, '');
+              }
+            }
+          });
+          noteHtml = ratings.join(' &middot; ') + (comment ? ' &mdash; ' + comment : '');
         }
 
         return `<div class="log-item">
