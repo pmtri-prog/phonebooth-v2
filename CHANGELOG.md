@@ -1,5 +1,16 @@
 # Phonebooth MVP - Changelog
 
+## [2026-03-12] WiFi logging cho admin giám sát
+
+### Tinh nang
+- **ESP32 log WiFi events lên Supabase**: `wifi_reconnect` (kèm downtime, retry count, RSSI), `wifi_weak_signal` (RSSI < -75 dBm, cảnh báo mỗi 5 phút)
+- **Admin dashboard - section "WiFi Log"**: Hiển thị riêng sự cố WiFi, filter theo booth, badge màu (xanh = reconnect OK, vàng = tín hiệu yếu)
+
+### File thay doi
+- `booth_esp32_3/booth_esp32_3.ino`, `admin.html`
+
+---
+
 ## [2026-03-12] Tắt WiFi power saving + nới heartbeat timeout
 
 ### Bug fix
