@@ -200,6 +200,148 @@
     .logs-wrap { max-height: 280px; overflow-y: auto; }
     .empty-msg { padding: 20px; text-align: center; color: #ddd; font-size: 12px; }
 
+    /* Location filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .filter-bar label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .filter-chip {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #EDEDED;
+      background: #fff;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-chip:hover { border-color: #10069F; color: #10069F; }
+    .filter-chip.active { background: #10069F; color: #fff; border-color: #10069F; }
+
+    /* Booth location label */
+    .booth-location {
+      font-size: 10px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    /* Remote control buttons */
+    .booth-controls {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .btn-ctrl {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .btn-ctrl:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .btn-unlock {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    .btn-unlock:hover:not(:disabled) { background: #bbf7d0; }
+    .btn-end {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    .btn-end:hover:not(:disabled) { background: #fecaca; }
+    .btn-lock {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+    .btn-lock:hover:not(:disabled) { background: #e5e7eb; }
+
+    /* Confirm modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #282828;
+      margin-bottom: 8px;
+    }
+    .modal-desc {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .modal-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 24px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-cancel { background: #f3f4f6; color: #555; }
+    .modal-confirm { background: #10069F; color: #fff; }
+    .modal-confirm.danger { background: #dc2626; }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #282828;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 10px;
+      z-index: 1100;
+      transition: transform 0.3s;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
     @media (max-width: 640px) {
       .stats-row { grid-template-columns: 1fr 1fr; }
       .booths-grid { grid-template-columns: 1fr; }
@@ -235,7 +377,26 @@
     </div>
 
     <div class="section-title">Booths</div>
+    <div class="filter-bar" id="locationFilter">
+      <label>Địa điểm:</label>
+      <button class="filter-chip active" data-location="">Tất cả</button>
+    </div>
     <div class="booths-grid" id="boothsGrid"></div>
+
+    <!-- Confirm modal -->
+    <div class="modal-overlay" id="confirmModal">
+      <div class="modal-box">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-desc" id="modalDesc"></div>
+        <div class="modal-actions">
+          <button class="modal-btn modal-cancel" onclick="closeModal()">Huỷ</button>
+          <button class="modal-btn modal-confirm" id="modalConfirm">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
     <div class="section">
       <div class="section-header">
@@ -282,6 +443,84 @@
 
     let booths = [];
     let activeTimers = {};
+    let selectedLocation = '';
+
+    // --- Modal & Toast ---
+    let pendingAction = null;
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2500);
+    }
+
+    function showModal(title, desc, isDanger, onConfirm) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalDesc').textContent = desc;
+      const btn = document.getElementById('modalConfirm');
+      btn.className = 'modal-btn modal-confirm' + (isDanger ? ' danger' : '');
+      btn.textContent = 'Xác nhận';
+      pendingAction = onConfirm;
+      btn.onclick = async () => {
+        btn.textContent = '...';
+        btn.disabled = true;
+        try { await pendingAction(); }
+        catch (e) { console.error(e); showToast('Lỗi: ' + e.message); }
+        closeModal();
+        btn.disabled = false;
+        refresh();
+      };
+      document.getElementById('confirmModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('confirmModal').classList.remove('show');
+      pendingAction = null;
+    }
+
+    // --- Remote Control ---
+    async function sendCommand(boothId, action) {
+      await db.from('commands').insert({ booth_id: boothId, action, status: 'pending' });
+      await db.from('booth_logs').insert({
+        booth_id: boothId,
+        event: 'admin_' + action,
+        note: 'Admin remote: ' + action
+      });
+    }
+
+    function confirmUnlock(boothId, boothName) {
+      showModal(
+        'Mở cửa ' + boothName + '?',
+        'Cửa sẽ mở trong 5 giây. Hành động này được ghi log.',
+        false,
+        async () => {
+          await sendCommand(boothId, 'open');
+          showToast('Đã gửi lệnh mở cửa ' + boothName);
+        }
+      );
+    }
+
+    function confirmEndSession(boothId, boothName) {
+      showModal(
+        'Kết thúc phiên ' + boothName + '?',
+        'Phiên hiện tại sẽ bị kết thúc và cửa sẽ mở. Người dùng sẽ bị ngắt phiên.',
+        true,
+        async () => {
+          await sendCommand(boothId, 'close');
+          showToast('Đã gửi lệnh kết thúc phiên ' + boothName);
+        }
+      );
+    }
+
+    // --- Location filter ---
+    function selectLocation(loc) {
+      selectedLocation = loc;
+      document.querySelectorAll('.filter-chip').forEach(el => {
+        el.classList.toggle('active', el.dataset.location === loc);
+      });
+      renderBooths();
+    }
 
     function formatDuration(seconds) {
       if (seconds == null) return '--';
@@ -307,11 +546,16 @@
       });
     }
 
+    // Cached data for rendering
+    let activeMap = {};
+    let todayMap = {};
+
     async function loadBooths() {
       const { data } = await db.from('booths').select('*');
       if (!data) return;
       booths = data;
 
+      // Update booth filter dropdown
       const filter = document.getElementById('filterBooth');
       const currentVal = filter.value;
       filter.innerHTML = '<option value="">Tất cả booth</option>';
@@ -323,23 +567,46 @@
       });
       filter.value = currentVal;
 
+      // Build location filter chips
+      const locations = [...new Set(booths.map(b => b.location).filter(Boolean))];
+      const filterBar = document.getElementById('locationFilter');
+      filterBar.innerHTML = '<label>Địa điểm:</label><button class="filter-chip' + (selectedLocation === '' ? ' active' : '') + '" data-location="" onclick="selectLocation(\'\')">Tất cả</button>';
+      locations.forEach(loc => {
+        filterBar.innerHTML += `<button class="filter-chip${selectedLocation === loc ? ' active' : ''}" data-location="${loc}" onclick="selectLocation('${loc}')">${loc}</button>`;
+      });
+
+      // Load active sessions
       const { data: activeSessions } = await db.from('sessions')
         .select('booth_id, started_at, status, paused_at, total_paused_seconds, pause_count')
         .in('status', ['active', 'paused']);
-      const activeMap = {};
+      activeMap = {};
       if (activeSessions) activeSessions.forEach(s => { activeMap[s.booth_id] = s; });
 
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
       const { data: todaySessions } = await db.from('sessions')
         .select('booth_id').gte('started_at', todayStart.toISOString());
-      const todayMap = {};
+      todayMap = {};
       if (todaySessions) todaySessions.forEach(s => {
         todayMap[s.booth_id] = (todayMap[s.booth_id] || 0) + 1;
       });
 
+      renderBooths();
+
+      let onlineCount = 0;
+      booths.forEach(b => {
+        if ((Date.now() - new Date(b.last_seen).getTime()) / 1000 <= HEARTBEAT_TIMEOUT_S) onlineCount++;
+      });
+      document.getElementById('statOnline').textContent = onlineCount + '/' + booths.length;
+    }
+
+    function renderBooths() {
+      const filtered = selectedLocation
+        ? booths.filter(b => b.location === selectedLocation)
+        : booths;
+
       const grid = document.getElementById('boothsGrid');
-      grid.innerHTML = booths.map(b => {
+      grid.innerHTML = filtered.map(b => {
         const lastSeen = new Date(b.last_seen);
         const diffSec = (Date.now() - lastSeen.getTime()) / 1000;
         const isOnline = diffSec <= HEARTBEAT_TIMEOUT_S;
@@ -355,6 +622,7 @@
           cardClass = 'online'; statusClass = 's-online'; statusText = 'Online';
         }
 
+        // Session info
         let sessionHtml = '';
         if (hasActive) {
           const isPaused = hasActive.status === 'paused';
@@ -377,12 +645,23 @@
         }
 
         const lastSeenStr = isOnline ? 'Vừa xong' : Math.floor(diffSec) + 's trước';
+        const locationStr = b.location ? `<div class="booth-location">${b.location}${b.address ? ' · ' + b.address : ''}</div>` : '';
+
+        // Control buttons
+        const hasSession = !!hasActive;
+        const controlsHtml = isOnline ? `<div class="booth-controls">
+          <button class="btn-ctrl btn-unlock" onclick="confirmUnlock('${b.booth_id}', '${b.name || b.booth_id}')">Mở cửa</button>
+          <button class="btn-ctrl btn-end" ${hasSession ? '' : 'disabled'} onclick="confirmEndSession('${b.booth_id}', '${b.name || b.booth_id}')">Kết thúc phiên</button>
+        </div>` : `<div class="booth-controls">
+          <button class="btn-ctrl btn-lock" disabled>Offline</button>
+        </div>`;
 
         return `<div class="booth-card ${cardClass}">
           <div class="booth-header">
             <div>
               <div class="booth-name">${b.name || b.booth_id}</div>
               <div class="booth-id">${b.booth_id}</div>
+              ${locationStr}
             </div>
             <div class="booth-status ${statusClass}">${statusText}</div>
           </div>
@@ -391,15 +670,16 @@
             <div>Hôm nay: <strong>${todayCount} phiên</strong></div>
           </div>
           ${sessionHtml}
+          ${controlsHtml}
         </div>`;
       }).join('');
 
+      // Update timers
       Object.keys(activeTimers).forEach(boothId => {
         const t = activeTimers[boothId];
         clearInterval(t.interval);
 
         if (t.isPaused) {
-          // Timer frozen khi paused - hiển thị thời gian active tính đến lúc pause
           const el = document.getElementById('timer-' + boothId);
           if (el && t.pausedAt) {
             const totalElapsed = Math.floor((new Date(t.pausedAt).getTime() - t.startTime.getTime()) / 1000);
@@ -418,12 +698,6 @@
           t.interval = setInterval(tick, 1000);
         }
       });
-
-      let onlineCount = 0;
-      booths.forEach(b => {
-        if ((Date.now() - new Date(b.last_seen).getTime()) / 1000 <= HEARTBEAT_TIMEOUT_S) onlineCount++;
-      });
-      document.getElementById('statOnline').textContent = onlineCount + '/' + booths.length;
     }
 
     async function loadStats() {

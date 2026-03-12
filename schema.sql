@@ -50,12 +50,14 @@ CREATE TABLE booth_logs (
 CREATE TABLE booths (
   booth_id    text PRIMARY KEY,
   name        text NOT NULL DEFAULT '',
+  location    text NOT NULL DEFAULT '',
+  address     text NOT NULL DEFAULT '',
   last_seen   timestamptz NOT NULL DEFAULT now()
 );
 
 -- Tạo sẵn booth mặc định
-INSERT INTO booths (booth_id, name) VALUES ('BOOTH_001', 'PhoneBooth 1');
-INSERT INTO booths (booth_id, name) VALUES ('BOOTH_002', 'PhoneBooth 2');
+INSERT INTO booths (booth_id, name, location, address) VALUES ('BOOTH_001', 'PhoneBooth 1', '', '');
+INSERT INTO booths (booth_id, name, location, address) VALUES ('BOOTH_002', 'PhoneBooth 2', '', '');
 
 -- RLS: cho phép anon key đọc/ghi (MVP - không cần auth)
 ALTER TABLE commands ENABLE ROW LEVEL SECURITY;
