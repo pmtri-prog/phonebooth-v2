@@ -1,5 +1,21 @@
 # Phonebooth MVP - Changelog
 
+## [2026-03-12] Tắt WiFi power saving + nới heartbeat timeout
+
+### Bug fix
+- **WiFi power saving gây mất kết nối**: ESP32 mặc định bật modem sleep -> tự tắt WiFi radio -> mất kết nối ngẫu nhiên. Booth cắm điện 24/7 không cần tiết kiệm pin
+- **Heartbeat threshold quá chặt (10s)**: Khi mạng hơi chậm, ESP32 heartbeat bị trễ vài giây -> web app báo offline sai
+
+### Thay doi
+- `esp_wifi_set_ps(WIFI_PS_NONE)` - tắt WiFi power saving hoàn toàn
+- `#include <esp_wifi.h>` - header cho hàm trên
+- `HEARTBEAT_TIMEOUT_S`: 10 -> 20 (cả index.html và admin.html)
+
+### File thay doi
+- `booth_esp32_3/booth_esp32_3.ino`, `index.html`, `admin.html`
+
+---
+
 ## [2026-03-12] WiFi Reconnect cải thiện
 
 ### Bug fix
