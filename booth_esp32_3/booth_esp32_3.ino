@@ -10,8 +10,8 @@
 #include <time.h>
 
 // ======================== CREDENTIALS ========================
-#define WIFI_SSID       "UYEN TRI"
-#define WIFI_PASS       "30101994"
+#define WIFI_SSID       "Epione VP 2.4G"
+#define WIFI_PASS       "vpepione2025"
 #define SUPABASE_URL    "https://iwczjfomyybszwdlzwjs.supabase.co"
 #define SUPABASE_KEY    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3Y3pqZm9teXlic3p3ZGx6d2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDIzODgsImV4cCI6MjA4ODcxODM4OH0.dvGSX8N5_tHpGqWL5rCreCdGpASxOK2nwwcbCpILew4"
 #define BOOTH_ID        "BOOTH_001"
