@@ -200,6 +200,21 @@
     .logs-wrap { max-height: 280px; overflow-y: auto; }
     .empty-msg { padding: 20px; text-align: center; color: #ddd; font-size: 12px; }
 
+    /* WiFi log */
+    .log-event.wifi-disconnect { color: #dc2626; }
+    .log-event.wifi-reconnect { color: #16a34a; }
+    .log-event.wifi-weak { color: #d97706; }
+    .wifi-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+    .wifi-badge.down { background: #fee2e2; color: #dc2626; }
+    .wifi-badge.ok { background: #dcfce7; color: #16a34a; }
+    .wifi-badge.warn { background: #fef3c7; color: #d97706; }
+
     /* Location filter bar */
     .filter-bar {
       display: flex;
@@ -418,6 +433,18 @@
           </thead>
           <tbody id="sessionsBody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h3>WiFi Log</h3>
+        <select id="filterWifiBooth">
+          <option value="">Tất cả booth</option>
+        </select>
+      </div>
+      <div class="logs-wrap" id="wifiLogsWrap">
+        <div class="empty-msg">Đang tải...</div>
       </div>
     </div>
 
@@ -759,6 +786,59 @@
       }).join('');
     }
 
+    async function loadWifiLogs() {
+      const filterBooth = document.getElementById('filterWifiBooth').value;
+      let query = db.from('booth_logs').select('*')
+        .in('event', ['wifi_reconnect', 'wifi_weak_signal'])
+        .order('created_at', { ascending: false }).limit(50);
+      if (filterBooth) query = query.eq('booth_id', filterBooth);
+
+      const { data } = await query;
+      const wrap = document.getElementById('wifiLogsWrap');
+
+      // Update filter dropdown
+      const filter = document.getElementById('filterWifiBooth');
+      const currentVal = filter.value;
+      filter.innerHTML = '<option value="">Tất cả booth</option>';
+      booths.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.booth_id;
+        opt.textContent = b.name || b.booth_id;
+        filter.appendChild(opt);
+      });
+      filter.value = currentVal;
+
+      if (!data || data.length === 0) {
+        wrap.innerHTML = '<div class="empty-msg">Chưa có sự cố WiFi nào</div>';
+        return;
+      }
+
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      wrap.innerHTML = data.map(l => {
+        let eventClass, eventLabel, badgeClass, badgeText;
+        if (l.event === 'wifi_reconnect') {
+          eventClass = 'wifi-reconnect';
+          eventLabel = 'Reconnected';
+          badgeClass = 'ok';
+          badgeText = 'OK';
+        } else {
+          eventClass = 'wifi-weak';
+          eventLabel = 'Tín hiệu yếu';
+          badgeClass = 'warn';
+          badgeText = 'WEAK';
+        }
+
+        return `<div class="log-item">
+          <span class="log-time">${formatTimeShort(l.created_at)}</span>
+          <span class="log-booth">${nameMap[l.booth_id] || l.booth_id}</span>
+          <span class="log-event ${eventClass}">${eventLabel}<span class="wifi-badge ${badgeClass}">${badgeText}</span></span>
+          <span class="log-note">${l.note || ''}</span>
+        </div>`;
+      }).join('');
+    }
+
     async function loadLogs() {
       const { data } = await db.from('booth_logs').select('*')
         .order('created_at', { ascending: false }).limit(30);
@@ -818,6 +898,7 @@
         await loadBooths();
         await loadStats();
         await loadSessions();
+        await loadWifiLogs();
         await loadLogs();
       } catch (e) {
         console.error('refresh error:', e);
@@ -825,6 +906,7 @@
     }
 
     document.getElementById('filterBooth').addEventListener('change', loadSessions);
+    document.getElementById('filterWifiBooth').addEventListener('change', loadWifiLogs);
     refresh();
     setInterval(refresh, POLL_MS);
   </script>

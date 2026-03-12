@@ -51,6 +51,8 @@ unsigned long lastWifiRetry = 0;
 unsigned long lastButtonPress = 0;
 bool ntpSynced = false;
 int wifiFailCount = 0;              // Đếm số lần reconnect thất bại
+bool wifiWasConnected = true;       // Theo dõi trạng thái trước đó để log disconnect
+unsigned long wifiDisconnectAt = 0; // Thời điểm mất WiFi
 
 // ======================== SETUP ==============================
 void setup() {
@@ -228,16 +230,32 @@ void connectWiFi() {
 
 void handleWiFi(unsigned long now) {
   if (WiFi.status() == WL_CONNECTED) {
-    if (wifiFailCount > 0) {
-      // Vừa reconnect thành công
+    if (!wifiWasConnected) {
+      // Vừa reconnect thành công - log lên Supabase
+      unsigned long downtime = (now - wifiDisconnectAt) / 1000;
+      int rssi = WiFi.RSSI();
       Serial.println("[wifi] reconnected " + WiFi.localIP().toString());
-      Serial.printf("[wifi] RSSI: %d dBm (after %d retries)\n", WiFi.RSSI(), wifiFailCount);
-      wifiFailCount = 0;
+      Serial.printf("[wifi] RSSI: %d dBm (after %d retries, down %lus)\n", rssi, wifiFailCount, downtime);
 
       // Re-sync NTP sau khi reconnect
       configTime(7 * 3600, 0, "pool.ntp.org");
+
+      // Log reconnect event lên Supabase
+      char note[128];
+      snprintf(note, sizeof(note), "reconnected after %lus, %d retries, RSSI: %d dBm", downtime, wifiFailCount, rssi);
+      logEvent("wifi_reconnect", note);
+
+      wifiFailCount = 0;
+      wifiWasConnected = true;
     }
     return;
+  }
+
+  // Phát hiện mất WiFi lần đầu
+  if (wifiWasConnected) {
+    wifiWasConnected = false;
+    wifiDisconnectAt = now;
+    Serial.println("[wifi] disconnected!");
   }
 
   // WiFi đang mất - retry mỗi 5 giây
@@ -264,8 +282,23 @@ void handleWiFi(unsigned long now) {
 }
 
 // ======================== HEARTBEAT ==========================
+unsigned long lastRssiWarnAt = 0;
+#define RSSI_WARN_THRESHOLD -75     // dBm - dưới mức này là tín hiệu yếu
+#define RSSI_WARN_INTERVAL  300000  // Chỉ log cảnh báo RSSI mỗi 5 phút
+
 void sendHeartbeat() {
   if (!ntpSynced) return;  // Chờ NTP sync xong mới gửi heartbeat
+
+  // Cảnh báo RSSI yếu (mỗi 5 phút)
+  int rssi = WiFi.RSSI();
+  unsigned long now = millis();
+  if (rssi < RSSI_WARN_THRESHOLD && now - lastRssiWarnAt >= RSSI_WARN_INTERVAL) {
+    lastRssiWarnAt = now;
+    Serial.printf("[wifi] weak signal: %d dBm\n", rssi);
+    char note[64];
+    snprintf(note, sizeof(note), "RSSI: %d dBm (weak signal)", rssi);
+    logEvent("wifi_weak_signal", note);
+  }
 
   HTTPClient http;
   http.begin(String(SUPABASE_URL) + "/rest/v1/booths?booth_id=eq." + BOOTH_ID);
