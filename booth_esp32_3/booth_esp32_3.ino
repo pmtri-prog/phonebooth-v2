@@ -23,7 +23,8 @@
 
 // ======================== TIMING =============================
 #define POLL_INTERVAL_MS   2000
-#define WIFI_RETRY_MS      30000
+#define WIFI_RETRY_MS      5000    // Retry WiFi mỗi 5 giây (giảm từ 30s)
+#define WIFI_FULL_RESET_AFTER 3    // Sau 3 lần reconnect fail → full reset WiFi
 #define DEBOUNCE_MS        300
 #define UNLOCK_DURATION_MS 5000   // Mở khóa 5 giây
 #define SESSION_TIMEOUT_MS 3600000UL  // Auto-end session sau 60 phút
@@ -48,6 +49,7 @@ unsigned long lastPoll = 0;
 unsigned long lastWifiRetry = 0;
 unsigned long lastButtonPress = 0;
 bool ntpSynced = false;
+int wifiFailCount = 0;              // Đếm số lần reconnect thất bại
 
 // ======================== SETUP ==============================
 void setup() {
@@ -199,29 +201,63 @@ void loop() {
 
 // ======================== WIFI ===============================
 void connectWiFi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.setAutoReconnect(true);    // ESP32 tự reconnect ở tầng driver
+  WiFi.persistent(true);          // Lưu credentials vào flash
+
   Serial.print("[wifi] connecting");
   WiFi.begin(WIFI_SSID, WIFI_PASS);
 
   unsigned long t0 = millis();
   while (WiFi.status() != WL_CONNECTED && millis() - t0 < 15000) {
-    unsigned long w = millis();
-    while (millis() - w < 500) {}
+    delay(500);  // Dùng delay() để WiFi stack xử lý event
     Serial.print(".");
   }
   Serial.println();
 
   if (WiFi.status() == WL_CONNECTED) {
+    wifiFailCount = 0;
     Serial.println("[wifi] connected " + WiFi.localIP().toString());
+    Serial.printf("[wifi] RSSI: %d dBm\n", WiFi.RSSI());
   } else {
     Serial.println("[wifi] failed");
   }
 }
 
 void handleWiFi(unsigned long now) {
-  if (WiFi.status() != WL_CONNECTED && now - lastWifiRetry >= WIFI_RETRY_MS) {
-    lastWifiRetry = now;
-    Serial.println("[wifi] reconnecting...");
+  if (WiFi.status() == WL_CONNECTED) {
+    if (wifiFailCount > 0) {
+      // Vừa reconnect thành công
+      Serial.println("[wifi] reconnected " + WiFi.localIP().toString());
+      Serial.printf("[wifi] RSSI: %d dBm (after %d retries)\n", WiFi.RSSI(), wifiFailCount);
+      wifiFailCount = 0;
+
+      // Re-sync NTP sau khi reconnect
+      configTime(7 * 3600, 0, "pool.ntp.org");
+    }
+    return;
+  }
+
+  // WiFi đang mất - retry mỗi 5 giây
+  if (now - lastWifiRetry < WIFI_RETRY_MS) return;
+  lastWifiRetry = now;
+  wifiFailCount++;
+
+  if (wifiFailCount <= WIFI_FULL_RESET_AFTER) {
+    // Giai đoạn 1: disconnect sạch rồi reconnect
+    Serial.printf("[wifi] reconnecting... (attempt %d)\n", wifiFailCount);
+    WiFi.disconnect();
+    delay(100);
     WiFi.reconnect();
+  } else {
+    // Giai đoạn 2: full reset WiFi stack - begin() lại từ đầu
+    Serial.printf("[wifi] full reset WiFi (attempt %d)\n", wifiFailCount);
+    WiFi.disconnect(true);  // true = xóa credentials khỏi RAM
+    delay(500);
+    WiFi.mode(WIFI_OFF);
+    delay(500);
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(WIFI_SSID, WIFI_PASS);
   }
 }
 
