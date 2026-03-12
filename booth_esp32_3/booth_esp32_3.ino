@@ -69,11 +69,12 @@ void setup() {
   connectWiFi();
 
   if (WiFi.status() == WL_CONNECTED) {
-    configTime(7 * 3600, 0, "pool.ntp.org");
+    delay(1000);  // Đợi router ổn định DNS sau khi WiFi connect
+    configTime(7 * 3600, 0, "pool.ntp.org", "time.google.com", "time.cloudflare.com");
     Serial.print("[boot] NTP syncing");
     struct tm timeinfo;
     int retry = 0;
-    while (!getLocalTime(&timeinfo, 1000) && retry < 10) {
+    while (!getLocalTime(&timeinfo, 2000) && retry < 10) {
       Serial.print(".");
       retry++;
     }
@@ -167,7 +168,7 @@ void loop() {
   // --- NTP retry nếu chưa sync ---
   if (!ntpSynced && WiFi.status() == WL_CONNECTED) {
     struct tm timeinfo;
-    if (getLocalTime(&timeinfo, 100)) {
+    if (getLocalTime(&timeinfo, 500)) {
       ntpSynced = true;
       char buf[30];
       strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &timeinfo);
@@ -238,7 +239,7 @@ void handleWiFi(unsigned long now) {
       Serial.printf("[wifi] RSSI: %d dBm (after %d retries, down %lus)\n", rssi, wifiFailCount, downtime);
 
       // Re-sync NTP sau khi reconnect
-      configTime(7 * 3600, 0, "pool.ntp.org");
+      configTime(7 * 3600, 0, "pool.ntp.org", "time.google.com", "time.cloudflare.com");
 
       // Log reconnect event lên Supabase
       char note[128];
