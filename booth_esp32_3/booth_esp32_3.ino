@@ -5,6 +5,7 @@
 // ============================================================
 
 #include <WiFi.h>
+#include <esp_wifi.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <time.h>
@@ -204,6 +205,7 @@ void connectWiFi() {
   WiFi.mode(WIFI_STA);
   WiFi.setAutoReconnect(true);    // ESP32 tự reconnect ở tầng driver
   WiFi.persistent(true);          // Lưu credentials vào flash
+  esp_wifi_set_ps(WIFI_PS_NONE);  // Tắt power saving - booth cắm điện 24/7
 
   Serial.print("[wifi] connecting");
   WiFi.begin(WIFI_SSID, WIFI_PASS);
