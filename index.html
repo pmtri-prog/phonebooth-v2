@@ -1994,36 +1994,42 @@
 
       window.handlePause = async function() {
         btnPause.disabled = true;
-        showStatus('Đang tạm dừng...', '#888');
+        // Optimistic UI: chuyển sang paused ngay
+        wasPaused = true;
+        setBoothState('paused');
+        var pauseNow = new Date().toISOString();
+        freezeTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds || 0, pauseNow);
+        startPauseCountdown(pauseNow);
+        showStatus('', '');
 
-        const { data: inserted, error } = await db.from('commands').insert({
-          booth_id: BOOTH_ID, action: 'pause', status: 'pending'
-        }).select('id');
-
-        if (error) {
-          showStatus('Lỗi: ' + error.message, '#ef4444');
-          btnPause.disabled = false;
-          return;
-        }
-
-        startLatencyTracking(inserted[0].id);
+        // Gửi command ngầm
+        try {
+          const { data: inserted, error } = await db.from('commands').insert({
+            booth_id: BOOTH_ID, action: 'pause', status: 'pending'
+          }).select('id');
+          if (!error && inserted && inserted[0]) {
+            startLatencyTracking(inserted[0].id);
+          }
+        } catch (e) { /* silent - UI đã chuyển rồi */ }
       };
 
       window.handleResume = async function() {
         btnResume.disabled = true;
-        showStatus('Đang mở cửa...', '#888');
+        // Optimistic UI: chuyển sang active ngay
+        wasPaused = false;
+        setBoothState('active');
+        startTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds || 0);
+        showStatus('', '');
 
-        const { data: inserted, error } = await db.from('commands').insert({
-          booth_id: BOOTH_ID, action: 'resume', status: 'pending'
-        }).select('id');
-
-        if (error) {
-          showStatus('Lỗi: ' + error.message, '#ef4444');
-          btnResume.disabled = false;
-          return;
-        }
-
-        startLatencyTracking(inserted[0].id);
+        // Gửi command ngầm
+        try {
+          const { data: inserted, error } = await db.from('commands').insert({
+            booth_id: BOOTH_ID, action: 'resume', status: 'pending'
+          }).select('id');
+          if (!error && inserted && inserted[0]) {
+            startLatencyTracking(inserted[0].id);
+          }
+        } catch (e) { /* silent - UI đã chuyển rồi */ }
       };
 
       window.handleEnd = async function() {
