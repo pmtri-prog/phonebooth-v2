@@ -1876,8 +1876,11 @@
           optimisticUntil = 0;
           optimisticState = null;
           if (serverState === 'active' && session && session.started_at) {
+            wasActive = true; // Server confirmed → giờ mới đánh dấu
             startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
           } else if (serverState === 'paused' && session && session.paused_at) {
+            wasActive = true;
+            wasPaused = true;
             freezeTimer(new Date(session.started_at), session.total_paused_seconds || 0, session.paused_at);
             startPauseCountdown(session.paused_at);
           }
@@ -1993,11 +1996,10 @@
         }
 
         // Optimistic UI: chuyển sang active ngay
-        optimisticUntil = Date.now() + 10000;
+        optimisticUntil = Date.now() + 30000;
         optimisticState = 'active';
         currentState = 'active';
-        wasActive = true;
-        wasPaused = false;
+        // KHÔNG set wasActive ở đây - chỉ set khi server confirm (tránh false completion)
         setBoothState('active');
         startTimer(new Date(), 0);
         showStatus('', '');
@@ -2011,7 +2013,6 @@
           if (resp.error) {
             optimisticUntil = 0; optimisticState = null;
             currentState = 'idle';
-            wasActive = false;
             setBoothState('idle');
             showStatus('Lỗi: ' + resp.error.message, '#ef4444');
             btnStart.disabled = false;
@@ -2021,7 +2022,6 @@
         } catch (e) {
           optimisticUntil = 0; optimisticState = null;
           currentState = 'idle';
-          wasActive = false;
           setBoothState('idle');
           showStatus('Lỗi kết nối!', '#ef4444');
           btnStart.disabled = false;
@@ -2032,10 +2032,9 @@
       window.handlePause = async function() {
         btnPause.disabled = true;
         // Optimistic UI: chuyển sang paused ngay
-        optimisticUntil = Date.now() + 10000;
+        optimisticUntil = Date.now() + 30000;
         optimisticState = 'paused';
         currentState = 'paused';
-        wasPaused = true;
         optimisticPauseAt = Date.now();
         setBoothState('paused');
         var pauseNow = new Date().toISOString();
@@ -2057,10 +2056,9 @@
       window.handleResume = async function() {
         btnResume.disabled = true;
         // Optimistic UI: chuyển sang active ngay
-        optimisticUntil = Date.now() + 10000;
+        optimisticUntil = Date.now() + 30000;
         optimisticState = 'active';
         currentState = 'active';
-        wasPaused = false;
         // Cộng thời gian pause vừa rồi vào tổng
         if (optimisticPauseAt) {
           sessionTotalPausedSeconds += Math.floor((Date.now() - optimisticPauseAt) / 1000);
@@ -2084,7 +2082,7 @@
       window.handleEnd = async function() {
         btnEnd.disabled = true;
         // Optimistic UI: chuyển màn đánh giá ngay
-        optimisticUntil = Date.now() + 10000;
+        optimisticUntil = Date.now() + 30000;
         optimisticState = 'idle';
         currentState = 'idle';
         wasActive = false;
@@ -2134,17 +2132,6 @@
                 }
               }
             })
-            .on('postgres_changes', {
-              event: 'UPDATE',
-              schema: 'public',
-              table: 'commands',
-              filter: 'booth_id=eq.' + BOOTH_ID
-            }, function(payload) {
-              // Command executed → poll để lấy session state mới nhất
-              if (payload.new && payload.new.status === 'executed') {
-                pollState().catch(function(){});
-              }
-            })
             .subscribe();
 
           // Heartbeat check riêng, mỗi 10s
@@ -2153,10 +2140,10 @@
           }, 10000);
           checkHeartbeat().catch(function(){});
 
-          // Poll backup: giãn ra 5s vì Realtime đã handle instant updates
+          // Poll backup: 15s vì Realtime đã handle instant updates
           async function pollLoop() {
             try { await pollState(); } catch(e) { /* silent */ }
-            setTimeout(pollLoop, 5000);
+            setTimeout(pollLoop, 15000);
           }
           pollLoop();
           showOnboarding();
