@@ -1877,7 +1877,10 @@
           optimisticState = null;
           if (serverState === 'active' && session && session.started_at) {
             wasActive = true; // Server confirmed → giờ mới đánh dấu
-            startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
+            // Chỉ sync timer nếu chưa chạy (tránh reset khi resume từ pause)
+            if (!activeSessionStart || timerInterval === null) {
+              startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
+            }
           } else if (serverState === 'paused' && session && session.paused_at) {
             wasActive = true;
             wasPaused = true;
