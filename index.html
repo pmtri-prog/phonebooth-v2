@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Epione PhoneBooth</title>
+  <title>Focus by Epione</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -14,6 +14,9 @@
       --color-gray: #EDEDED;
       --color-white: #FFFFFF;
       --color-accent: #10069F;
+      --color-splash-bg: #0A0520;
+      --color-splash-text: #7070CC;
+      --color-splash-muted: #5050AA;
       --color-text-primary: #282828;
       --color-text-secondary: #888888;
       --color-text-hint: #BBBBBB;
@@ -28,6 +31,8 @@
       --color-warning: #f59e0b;
       --color-error: #ef4444;
       --color-success: #22c55e;
+      --color-glow-1: rgba(16,6,159,0.08);
+      --color-glow-2: rgba(16,6,159,0.04);
       --font-family: 'Nunito Sans', sans-serif;
       --radius-card: 12px;
       --radius-button: 24px;
@@ -55,23 +60,60 @@
 
     /* ===== HEADER ===== */
     .header {
-      background: var(--color-black);
-      padding: var(--space-page) 20px;
-      text-align: center;
+      background: var(--color-white);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-bottom: 0.5px solid var(--color-border);
     }
-    .logo {
-      font-size: 20px;
+    .header-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .header-logo-text .logo-focus {
+      font-size: 16px;
       font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.3px;
+      color: var(--color-text-primary);
+      letter-spacing: 3px;
+      line-height: 1.2;
     }
-    .logo span { color: var(--color-gray); font-weight: 400; }
+    .header-logo-text .logo-epione {
+      font-size: 9px;
+      font-weight: 400;
+      color: var(--color-text-secondary);
+      letter-spacing: 1.5px;
+    }
     .booth-name-bar {
-      font-size: 12px;
-      color: rgba(255,255,255,0.6);
-      margin-top: 4px;
+      font-size: 11px;
+      color: var(--color-text-hint);
       font-weight: 500;
+      margin-left: auto;
     }
+
+    /* Pulse Logo SVG (header size 24px) */
+    .pulse-logo-sm svg { width: 24px; height: 24px; }
+    .pulse-logo-lg svg { width: 120px; height: 120px; }
+
+    /* Pulse animation */
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: var(--ring-opacity); }
+      50% { transform: scale(1.04); opacity: calc(var(--ring-opacity) * 1.3); }
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s ease-in-out infinite;
+      transform-origin: center;
+    }
+    .pulse-ring:nth-child(1) { --ring-opacity: 0.25; animation-delay: 0s; }
+    .pulse-ring:nth-child(2) { --ring-opacity: 0.4; animation-delay: 0.15s; }
+    .pulse-ring:nth-child(3) { --ring-opacity: 0.65; animation-delay: 0.3s; }
 
     /* ===== CONNECTION BAR ===== */
     .conn-bar {
@@ -100,94 +142,76 @@
       50% { opacity: 0.3; transform: scale(0.8); }
     }
 
-    /* ===== LANDING PAGE ===== */
+    /* ===== SPLASH / LANDING PAGE ===== */
     .landing {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: calc(100vh - 56px);
+      min-height: 100vh;
       padding: 40px 24px;
       text-align: center;
-      background: var(--color-white);
+      background: var(--color-splash-bg);
     }
-    .landing-visual {
-      width: 120px;
-      height: 120px;
-      background: var(--color-gray);
-      border-radius: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 56px;
-      margin-bottom: 28px;
-      animation: float 3s ease-in-out infinite;
+    .landing .pulse-logo-lg {
+      margin-bottom: 32px;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-    .landing h1 {
-      font-size: 26px;
+    .landing-brand {
+      font-size: 22px;
       font-weight: 700;
-      color: var(--color-text-primary);
-      margin-bottom: var(--space-gap);
-      line-height: 1.2;
+      color: #FFFFFF;
+      letter-spacing: 4px;
+      margin-bottom: 4px;
     }
-    .landing-sub {
-      font-size: 15px;
-      color: var(--color-text-secondary);
-      line-height: 1.6;
-      max-width: 280px;
-      margin-bottom: 36px;
+    .landing-brand-sub {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--color-splash-muted);
+      letter-spacing: 2px;
+      margin-bottom: 40px;
     }
-    .how-to {
-      width: 100%;
-      max-width: 320px;
-      text-align: left;
+    .landing-tagline {
+      margin-bottom: 48px;
     }
-    .how-to-title {
-      font-size: 11px;
+    .landing-tagline p {
+      font-size: 16px;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+    .landing-tagline p:nth-child(1) { color: var(--color-splash-text); }
+    .landing-tagline p:nth-child(2) { color: var(--color-splash-muted); }
+    .landing-tagline p:nth-child(3) { color: #4040AA; }
+    .btn-enter {
+      background: var(--color-accent);
+      color: #FFFFFF;
+      border: none;
+      font-family: var(--font-family);
+      font-size: 16px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--color-accent);
-      margin-bottom: var(--space-section);
+      padding: 16px 48px;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
     }
-    .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    .step-circle {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--color-black);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .step-content {
-      padding-top: 5px;
-    }
-    .step-content strong {
-      display: block;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--color-text-primary);
-      margin-bottom: 2px;
-    }
-    .step-content p {
+    .btn-enter:active { opacity: 0.9; transform: scale(0.97); }
+    .landing-footer {
       font-size: 13px;
-      color: var(--color-text-secondary);
-      line-height: 1.4;
+      color: #4040AA;
     }
+    .landing-footer a {
+      color: var(--color-splash-text);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    /* Fade in stagger for tagline */
+    @keyframes fade-in-up {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-stagger > *:nth-child(1) { animation: fade-in-up 0.6s ease both 0.2s; }
+    .fade-stagger > *:nth-child(2) { animation: fade-in-up 0.6s ease both 0.5s; }
+    .fade-stagger > *:nth-child(3) { animation: fade-in-up 0.6s ease both 0.8s; }
 
     /* ===== BOOTH CONTROL PAGE ===== */
     .main-area {
@@ -215,11 +239,11 @@
     }
     .state-visual.active {
       background: var(--color-accent);
-      box-shadow: 0 0 0 16px rgba(16,6,159,0.08), 0 0 0 32px rgba(16,6,159,0.04);
+      box-shadow: 0 0 0 16px var(--color-glow-1), 0 0 0 32px var(--color-glow-2);
     }
     .state-visual.paused {
-      background: var(--color-warning);
-      box-shadow: 0 0 0 16px rgba(245,158,11,0.08), 0 0 0 32px rgba(245,158,11,0.04);
+      background: var(--color-gray);
+      border: 2px dashed var(--color-text-hint);
     }
     .state-visual.paused .ring {
       position: absolute;
@@ -259,7 +283,7 @@
     }
     .state-label.idle { color: var(--color-text-secondary); }
     .state-label.active { color: var(--color-accent); }
-    .state-label.paused { color: var(--color-warning); }
+    .state-label.paused { color: var(--color-text-secondary); }
     .state-label.offline { color: var(--color-error); }
 
     .state-msg {
@@ -328,34 +352,34 @@
     .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
     .btn-start {
-      background: var(--color-black);
+      background: var(--color-accent);
       color: var(--color-white);
-      box-shadow: 0 4px 20px rgba(40,40,40,0.25);
+      box-shadow: 0 4px 20px rgba(16,6,159,0.25);
     }
     .btn-end {
-      background: var(--color-white);
-      color: var(--color-black);
-      border: 2px solid var(--color-black);
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 0.5px solid var(--color-border);
     }
     .btn-end:active { background: var(--color-gray); }
     .btn-pause {
-      background: var(--color-white);
-      color: var(--color-warning);
-      border: 2px solid var(--color-warning);
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 0.5px solid var(--color-border);
       margin-bottom: 10px;
     }
-    .btn-pause:active { background: #fffbeb; }
+    .btn-pause:active { background: var(--color-gray); }
     .btn-resume {
-      background: var(--color-warning);
+      background: var(--color-accent);
       color: var(--color-white);
-      box-shadow: 0 4px 20px rgba(245,158,11,0.25);
+      box-shadow: 0 4px 20px rgba(16,6,159,0.25);
       margin-bottom: 10px;
     }
-    .btn-resume:active { background: #d97706; }
+    .btn-resume:active { opacity: 0.85; }
     .pause-info {
       text-align: center;
       font-size: 12px;
-      color: var(--color-warning);
+      color: var(--color-text-secondary);
       font-weight: 600;
       margin-bottom: var(--space-gap);
     }
@@ -446,11 +470,11 @@
     }
     .btn-onboard:active { opacity: 0.9; }
 
-    /* ===== FUN COMPLETION ===== */
+    /* ===== COMPLETION ===== */
     .completion-overlay {
       position: fixed;
       inset: 0;
-      background: linear-gradient(160deg, #f0edff 0%, #fff7e6 50%, #e8faf0 100%);
+      background: var(--color-white);
       z-index: 100;
       display: flex;
       flex-direction: column;
@@ -466,37 +490,26 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    .confetti {
-      position: fixed;
-      top: -10px;
-      font-size: 24px;
-      animation: confettiFall linear forwards;
-      pointer-events: none;
-      z-index: 101;
+    .completion-pulse {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 24px;
+      animation: completion-zoom 0.8s ease-out;
     }
-    @keyframes confettiFall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-    .completion-icon {
-      font-size: 80px;
-      margin-bottom: var(--space-section);
-      animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes bounceIn {
-      0% { transform: scale(0) rotate(-20deg); }
-      60% { transform: scale(1.3) rotate(5deg); }
-      100% { transform: scale(1) rotate(0deg); }
+    @keyframes completion-zoom {
+      0% { transform: scale(0.3); opacity: 0; }
+      60% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
     }
     .completion-title {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 700;
       color: var(--color-text-primary);
       margin-bottom: 4px;
     }
     .completion-sub {
       font-size: 14px;
-      color: #999;
+      color: var(--color-text-secondary);
       margin-bottom: 4px;
     }
     .completion-duration {
@@ -515,18 +528,17 @@
       margin-bottom: 20px;
     }
     .btn-done {
-      background: var(--color-black);
-      color: #fff;
-      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 0.5px solid var(--color-border);
       font-family: var(--font-family);
-      font-size: 16px;
-      font-weight: 700;
-      padding: 16px 48px;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 48px;
       border-radius: var(--radius-button);
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(40,40,40,0.2);
     }
-    .btn-done:active { transform: scale(0.97); }
+    .btn-done:active { background: var(--color-gray); }
 
     /* Feedback */
     .feedback-section {
@@ -601,9 +613,9 @@
       border: none;
       font-family: var(--font-family);
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 600;
       padding: 12px 28px;
-      border-radius: var(--radius-input);
+      border-radius: var(--radius-button);
       cursor: pointer;
       transition: opacity 0.2s;
       width: 100%;
@@ -647,9 +659,13 @@
     }
     .pd-card {
       background: var(--color-white);
-      border: 1px solid var(--color-border);
+      border: 0.5px solid var(--color-border);
       border-radius: var(--radius-card);
       overflow: hidden;
+    }
+    .pd-card.card-in-focus {
+      border: 0.5px solid var(--color-accent);
+      box-shadow: 0 0 0 1px var(--color-accent), 0 0 0 4px var(--color-glow-1), 0 0 0 8px var(--color-glow-2);
     }
     .pd-card-img {
       width: 100%;
@@ -691,9 +707,9 @@
       color: #fff;
       font-family: var(--font-family);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       padding: 10px 20px;
-      border-radius: var(--radius-input);
+      border-radius: var(--radius-button);
       border: none;
       cursor: pointer;
       flex: 1;
@@ -708,13 +724,13 @@
       white-space: nowrap;
     }
     .btn-pd-done {
-      background: var(--color-black);
-      color: #fff;
-      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 0.5px solid var(--color-border);
       font-family: var(--font-family);
-      font-size: 16px;
-      font-weight: 700;
-      padding: 16px 0;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px 0;
       border-radius: var(--radius-button);
       cursor: pointer;
       width: 100%;
@@ -722,7 +738,7 @@
       margin-top: 20px;
       flex-shrink: 0;
     }
-    .btn-pd-done:active { transform: scale(0.97); }
+    .btn-pd-done:active { background: var(--color-gray); }
 
     /* ===== PRODUCT DETAIL ===== */
     .product-detail-overlay {
@@ -868,7 +884,17 @@
       animation: slideUp 0.3s ease;
       text-align: center;
     }
-    .lead-icon { font-size: 48px; margin-bottom: var(--space-card); }
+    .lead-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--color-voucher-active-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto var(--space-card);
+    }
     .lead-title {
       font-size: 18px;
       font-weight: 700;
@@ -882,17 +908,18 @@
       margin-bottom: var(--space-section);
     }
     .voucher-box {
-      background: var(--color-voucher-active-bg);
-      border: 2px dashed var(--color-accent);
+      background: var(--color-gray);
+      border: none;
       border-radius: var(--radius-card);
       padding: var(--space-section);
       margin-bottom: var(--space-section);
     }
     .voucher-code {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--color-voucher-active-text);
-      letter-spacing: 2px;
+      font-family: 'Courier New', monospace;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      letter-spacing: 3px;
       margin-bottom: var(--space-gap);
     }
     .voucher-copy-btn {
@@ -908,18 +935,18 @@
     }
     .voucher-copy-btn:active { background: var(--color-voucher-active-bg); }
     .btn-lead-done {
-      background: var(--color-black);
+      background: var(--color-accent);
       color: #fff;
       border: none;
       font-family: var(--font-family);
-      font-size: 16px;
-      font-weight: 700;
-      padding: 16px 0;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px 0;
       border-radius: var(--radius-button);
       cursor: pointer;
       width: 100%;
     }
-    .btn-lead-done:active { transform: scale(0.97); }
+    .btn-lead-done:active { opacity: 0.85; }
 
     /* ===== CHECK-IN PRODUCTS ===== */
     .checkin-products {
@@ -928,11 +955,11 @@
       margin-top: 24px;
     }
     .checkin-title {
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 10px;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--color-accent);
+      letter-spacing: 1px;
+      color: var(--color-text-secondary);
       margin-bottom: 10px;
     }
     .checkin-card {
@@ -973,49 +1000,53 @@
 
   <!-- ==================== LANDING ==================== -->
   <div id="pageLanding" class="hidden">
-    <div class="header">
-      <div class="logo">Epione <span>PhoneBooth</span></div>
-    </div>
     <div class="landing">
-      <div class="landing-visual">&#128222;</div>
-      <h1>Không gian riêng,<br>ngay tầm tay</h1>
-      <div class="landing-sub">Quét mã QR trên cửa PhoneBooth để bắt đầu phiên làm việc tập trung của bạn.</div>
-      <div class="how-to">
-        <div class="how-to-title">Cách sử dụng</div>
-        <div class="step">
-          <div class="step-circle">1</div>
-          <div class="step-content">
-            <strong>Tìm PhoneBooth</strong>
-            <p>Đến gần booth và quét mã QR trên cửa</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-circle">2</div>
-          <div class="step-content">
-            <strong>Bắt đầu phiên</strong>
-            <p>Nhấn nút để mở cửa, bước vào và tập trung</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-circle">3</div>
-          <div class="step-content">
-            <strong>Kết thúc khi xong</strong>
-            <p>Nhấn kết thúc, cửa mở để bạn ra ngoài</p>
-          </div>
-        </div>
+      <div class="pulse-logo-lg">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="56" fill="none" stroke="#10069F" stroke-width="0.5" opacity="0.06" stroke-dasharray="6 4" class="pulse-ring"/>
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#10069F" stroke-width="0.5" opacity="0.1" stroke-dasharray="4 3" class="pulse-ring"/>
+          <circle cx="60" cy="60" r="36" fill="none" stroke="#10069F" stroke-width="0.8" opacity="0.15" stroke-dasharray="3 2" class="pulse-ring"/>
+          <circle cx="60" cy="60" r="27" fill="none" stroke="#10069F" stroke-width="1" opacity="0.25" class="pulse-ring"/>
+          <circle cx="60" cy="60" r="19" fill="none" stroke="#10069F" stroke-width="1.5" opacity="0.4" class="pulse-ring"/>
+          <circle cx="60" cy="60" r="12" fill="none" stroke="#10069F" stroke-width="2.5" opacity="0.65" class="pulse-ring"/>
+          <circle cx="60" cy="60" r="6" fill="#10069F"/>
+          <circle cx="60" cy="60" r="2" fill="#FFFFFF"/>
+        </svg>
       </div>
+      <div class="landing-brand">FOCUS</div>
+      <div class="landing-brand-sub">by EPIONE</div>
+      <div class="landing-tagline fade-stagger">
+        <p>Go deep.</p>
+        <p>Your private workspace</p>
+        <p>in the heart of the city.</p>
+      </div>
+      <button class="btn-enter" onclick="window.location.href='/?booth='">Enter the zone</button>
+      <div class="landing-footer">Already focused? <a href="#">Sign in</a></div>
     </div>
   </div>
 
   <!-- ==================== BOOTH CONTROL ==================== -->
   <div id="pageBooth" class="hidden">
     <div class="header">
-      <div class="logo">Epione <span>PhoneBooth</span></div>
+      <div class="header-logo-wrap">
+        <div class="pulse-logo-sm">
+          <svg viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="19" fill="none" stroke="#10069F" stroke-width="1.5" opacity="0.4" class="pulse-ring"/>
+            <circle cx="24" cy="24" r="12" fill="none" stroke="#10069F" stroke-width="2.5" opacity="0.65" class="pulse-ring"/>
+            <circle cx="24" cy="24" r="6" fill="#10069F"/>
+            <circle cx="24" cy="24" r="2" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <div class="header-logo-text">
+          <span class="logo-focus">FOCUS</span>
+          <span class="logo-epione">by EPIONE</span>
+        </div>
+      </div>
       <div class="booth-name-bar" id="boothName"></div>
     </div>
     <div class="conn-bar checking" id="connBar">
       <div class="conn-dot"></div>
-      <span class="conn-label" id="connText">Đang kết nối...</span>
+      <span class="conn-label" id="connText">Connecting...</span>
     </div>
 
     <div class="main-area">
@@ -1024,13 +1055,13 @@
         <div class="ring hidden" id="activeRing"></div>
         <div class="state-icon" id="stateIcon">&#128274;</div>
       </div>
-      <div class="state-label idle" id="stateLabel">SẴN SÀNG</div>
-      <div class="state-msg" id="stateMsg">Booth đang trống. Nhấn nút bên dưới để bắt đầu phiên của bạn.</div>
+      <div class="state-label idle" id="stateLabel">READY</div>
+      <div class="state-msg" id="stateMsg">Your private workspace awaits. Tap below to enter.</div>
 
       <!-- Timer (hidden khi idle) -->
       <div class="timer-section hidden" id="timerSection">
         <div class="timer" id="timer">00:00</div>
-        <div class="timer-label">Thời gian phiên</div>
+        <div class="timer-label">Session time</div>
       </div>
 
       <!-- Motivational message -->
@@ -1039,16 +1070,16 @@
       <!-- Actions -->
       <div class="actions">
         <div class="status-msg" id="status"></div>
-        <button class="btn btn-start" id="btnStart" onclick="handleStart()">Bắt đầu phiên</button>
-        <button class="btn btn-pause hidden" id="btnPause" onclick="handlePause()">Tạm dừng</button>
-        <button class="btn btn-resume hidden" id="btnResume" onclick="handleResume()">Tiếp tục phiên</button>
+        <button class="btn btn-start" id="btnStart" onclick="handleStart()">Go deep</button>
+        <button class="btn btn-pause hidden" id="btnPause" onclick="handlePause()">Pause</button>
+        <button class="btn btn-resume hidden" id="btnResume" onclick="handleResume()">Resume</button>
         <div class="pause-info hidden" id="pauseInfo"></div>
-        <button class="btn btn-end hidden" id="btnEnd" onclick="handleEnd()">Kết thúc phiên</button>
+        <button class="btn btn-end hidden" id="btnEnd" onclick="handleEnd()">Surface</button>
       </div>
 
       <!-- Check-in product notification -->
       <div class="checkin-products hidden" id="checkinProducts">
-        <div class="checkin-title">Booth này đang có</div>
+        <div class="checkin-title">Available in this booth</div>
         <div id="checkinCards"></div>
       </div>
     </div>
@@ -1057,40 +1088,48 @@
   <!-- ==================== ONBOARDING OVERLAY ==================== -->
   <div class="onboard-overlay hidden" id="onboardOverlay">
     <div class="onboard-sheet">
-      <h2>Chào bạn! &#128075;</h2>
-      <div class="sub">Đây là lần đầu bạn sử dụng PhoneBooth. Một vài điều cần biết:</div>
+      <h2>Welcome to Focus</h2>
+      <div class="sub">Your first time here. A few things to know:</div>
       <div class="onboard-tips">
         <div class="tip">
           <div class="tip-icon">&#128274;</div>
-          <div class="tip-text"><strong>Cửa tự mở 5 giây</strong> để bạn vào, sau đó tự đóng lại</div>
+          <div class="tip-text"><strong>Door opens for 5 seconds</strong> to let you in, then auto-locks</div>
         </div>
         <div class="tip">
           <div class="tip-icon">&#9200;</div>
-          <div class="tip-text"><strong>Thời gian tối đa 60 phút.</strong> Hệ thống sẽ tự kết thúc nếu quá giờ</div>
+          <div class="tip-text"><strong>Max 60 minutes per session.</strong> Auto-ends if exceeded</div>
         </div>
         <div class="tip">
           <div class="tip-icon">&#128682;</div>
-          <div class="tip-text"><strong>Nút vật lý bên trong</strong> booth luôn mở được cửa nếu cần ra ngoài</div>
+          <div class="tip-text"><strong>Physical button inside</strong> the booth always unlocks the door</div>
         </div>
       </div>
-      <button class="btn-onboard" onclick="closeOnboarding()">Đã hiểu, bắt đầu thôi!</button>
+      <button class="btn-onboard" onclick="closeOnboarding()">Got it, let's go!</button>
     </div>
   </div>
 
   <!-- ==================== COMPLETION OVERLAY ==================== -->
   <div class="completion-overlay hidden" id="completionOverlay">
-    <div class="completion-icon">&#127942;</div>
-    <div class="completion-title">Tuyệt vời!</div>
-    <div class="completion-sub">Phiên làm việc đã kết thúc</div>
+    <div class="completion-pulse">
+      <svg viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="27" fill="none" stroke="#10069F" stroke-width="1" opacity="0.25"/>
+        <circle cx="40" cy="40" r="19" fill="none" stroke="#10069F" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="40" cy="40" r="12" fill="none" stroke="#10069F" stroke-width="2.5" opacity="0.65"/>
+        <circle cx="40" cy="40" r="6" fill="#10069F"/>
+        <circle cx="40" cy="40" r="2" fill="#FFFFFF"/>
+      </svg>
+    </div>
+    <div class="completion-title">You surfaced!</div>
+    <div class="completion-sub">Session complete</div>
     <div class="completion-duration" id="completionDuration">00:00</div>
-    <div class="completion-msg" id="completionMsg">Bạn đã tập trung thật tốt. Hẹn gặp lại lần sau!</div>
+    <div class="completion-msg" id="completionMsg">You went deep. See you next time!</div>
 
     <div class="feedback-section" id="feedbackSection">
-      <div class="feedback-label">Cho mình xin review nhanh nha!</div>
+      <div class="feedback-label">Quick review</div>
 
       <div class="rating-row" data-criteria="soundproof">
         <div class="rating-icon">&#128264;</div>
-        <div class="rating-label">Cách âm</div>
+        <div class="rating-label">Soundproof</div>
         <div class="rating-stars">
           <button class="star-btn" data-val="1">&#11088;</button>
           <button class="star-btn" data-val="2">&#11088;</button>
@@ -1102,7 +1141,7 @@
 
       <div class="rating-row" data-criteria="comfort">
         <div class="rating-icon">&#128186;</div>
-        <div class="rating-label">Thoải mái</div>
+        <div class="rating-label">Comfort</div>
         <div class="rating-stars">
           <button class="star-btn" data-val="1">&#11088;</button>
           <button class="star-btn" data-val="2">&#11088;</button>
@@ -1114,7 +1153,7 @@
 
       <div class="rating-row" data-criteria="app">
         <div class="rating-icon">&#128241;</div>
-        <div class="rating-label">App mượt</div>
+        <div class="rating-label">App experience</div>
         <div class="rating-stars">
           <button class="star-btn" data-val="1">&#11088;</button>
           <button class="star-btn" data-val="2">&#11088;</button>
@@ -1124,19 +1163,19 @@
         </div>
       </div>
 
-      <textarea class="feedback-input" id="feedbackText" rows="2" placeholder="Muốn chia sẻ gì thêm không?"></textarea>
-      <button class="btn-send-feedback" id="btnSendFeedback" onclick="sendFeedback()" disabled>Gửi review</button>
+      <textarea class="feedback-input" id="feedbackText" rows="2" placeholder="Anything else to share?"></textarea>
+      <button class="btn-send-feedback" id="btnSendFeedback" onclick="sendFeedback()" disabled>Submit</button>
     </div>
-    <div class="feedback-thanks hidden" id="feedbackThanks">Cảm ơn bạn đã góp ý!</div>
+    <div class="feedback-thanks hidden" id="feedbackThanks">Thanks for your feedback!</div>
 
-    <button class="btn-done" onclick="closeCompletion()" style="margin-top:16px;">Xong</button>
+    <button class="btn-done" onclick="closeCompletion()" style="margin-top:16px;">Surface</button>
   </div>
 
   <!-- ==================== PRODUCT DISCOVERY ==================== -->
   <div class="product-discovery-overlay hidden" id="productDiscoveryOverlay">
-    <div class="pd-title">Hôm nay bạn đã trải nghiệm</div>
+    <div class="pd-title">Today you went deep with</div>
     <div class="pd-cards" id="pdCards"></div>
-    <button class="btn-pd-done" onclick="closeProductDiscovery()">Xong</button>
+    <button class="btn-pd-done" onclick="closeProductDiscovery()">Surface</button>
   </div>
 
   <!-- ==================== PRODUCT DETAIL ==================== -->
@@ -1163,9 +1202,9 @@
       <div class="lead-desc" id="leadDesc"></div>
       <div class="voucher-box hidden" id="voucherBox">
         <div class="voucher-code" id="voucherCode"></div>
-        <button class="voucher-copy-btn" onclick="copyVoucher()">Sao chép mã</button>
+        <button class="voucher-copy-btn" onclick="copyVoucher()">Copy code</button>
       </div>
-      <button class="btn-lead-done" onclick="closeLeadConfirmation()">Xong</button>
+      <button class="btn-lead-done" onclick="closeLeadConfirmation()">Done</button>
     </div>
   </div>
 
@@ -1198,31 +1237,28 @@
 
     // ============== MOTIVATIONAL MESSAGES ==============
     const MOTI_IDLE = [
-      'Sẵn sàng cho một phiên tập trung?',
-      'Không gian yên tĩnh đang chờ bạn',
-      'Focus mode: ON &#128640;',
+      'Ready to go deep?',
+      'Your quiet space awaits',
+      'Focus mode: ON',
     ];
     const MOTI_ACTIVE = [
-      'Deep work mode &#128293;',
-      'Bạn đang làm rất tốt!',
-      'Tập trung = Siêu năng lực &#9889;',
-      'Keep going! &#128170;',
-      'Flow state activated &#127912;',
-      'No distraction zone &#128526;',
-      'Năng suất x100 &#128200;',
+      'Deep work mode',
+      'You\'re doing great!',
+      'Flow state activated',
+      'Keep going!',
+      'No distraction zone',
+      'Deep in the zone',
       'Work smarter, live better',
     ];
     const MOTI_PAUSED = [
-      'Đang tạm dừng... Quay lại sớm nhé!',
-      'Booth đang giữ chỗ cho bạn',
-      'Nghỉ tý rồi tiếp tục nào!',
-      'Đừng quên quay lại nhé!',
+      'Taking a break... Come back soon!',
+      'Your booth is reserved',
+      'Quick break, then back to focus!',
     ];
     const COMPLETION_MSGS = [
-      'Bạn đã tập trung thật tốt. Hẹn gặp lại!',
-      'Một phiên làm việc hiệu quả. Great job!',
-      'Deep work xong rồi. Nghỉ ngơi tý nhé!',
-      'Tuyệt vời! Bạn thật giỏi.',
+      'You went deep. See you next time!',
+      'Great focus session. Well done!',
+      'Deep work complete. Time to recharge.',
     ];
 
     function randomFrom(arr) {
@@ -1257,23 +1293,6 @@
       document.getElementById('completionMsg').textContent = randomFrom(COMPLETION_MSGS);
       resetFeedback();
       overlay.classList.remove('hidden');
-      spawnConfetti();
-    }
-
-    function spawnConfetti() {
-      const emojis = ['&#127881;', '&#127882;', '&#11088;', '&#128156;', '&#9889;', '&#127942;', '&#128640;', '&#127775;'];
-      for (let i = 0; i < 20; i++) {
-        setTimeout(() => {
-          const el = document.createElement('div');
-          el.className = 'confetti';
-          el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-          el.style.left = Math.random() * 100 + 'vw';
-          el.style.fontSize = (16 + Math.random() * 20) + 'px';
-          el.style.animationDuration = (2 + Math.random() * 2) + 's';
-          document.body.appendChild(el);
-          setTimeout(() => el.remove(), 4500);
-        }, i * 120);
-      }
     }
 
     function resetFeedback() {
@@ -1309,7 +1328,7 @@
     window.sendFeedback = async function() {
       const btn = document.getElementById('btnSendFeedback');
       btn.disabled = true;
-      btn.textContent = 'Đang gửi...';
+      btn.textContent = 'Sending...';
 
       const text = document.getElementById('feedbackText').value.trim();
       const note = 'Cach am:' + feedbackRatings.soundproof + '/5 | Thoai mai:' + feedbackRatings.comfort + '/5 | App:' + feedbackRatings.app + '/5' + (text ? ' | ' + text : '');
@@ -1428,15 +1447,16 @@
 
       currentProductSource = 'post_session';
       const container = document.getElementById('pdCards');
-      container.innerHTML = products.map(bp => {
+      container.innerHTML = products.map((bp, idx) => {
         const p = bp.products;
         const brand = p.brands || {};
         const imgUrl = (p.images && p.images.length > 0) ? p.images[0] : '';
         const ctaText = p.cta_type === 'get_voucher'
-          ? (p.voucher_description || 'Nhận ưu đãi')
-          : 'Tôi quan tâm';
+          ? (p.voucher_description || 'Get voucher')
+          : 'I\'m interested';
         const priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
-        return '<div class="pd-card">' +
+        const focusClass = idx === 0 ? ' card-in-focus' : '';
+        return '<div class="pd-card' + focusClass + '">' +
           (imgUrl ? '<img class="pd-card-img" src="' + imgUrl + '" alt="">' : '<div class="pd-card-img"></div>') +
           '<div class="pd-card-body">' +
             '<div class="pd-card-brand">' + (brand.name || '') + '</div>' +
@@ -1444,7 +1464,7 @@
             (priceStr ? '<div class="pd-card-price">' + priceStr + '</div>' : '') +
             '<div class="pd-card-row">' +
               '<button class="pd-card-cta" onclick="event.stopPropagation(); handleDiscoveryCta(\'' + bp.id + '\')">' + ctaText + '</button>' +
-              '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Tìm hiểu thêm →</span>' +
+              '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Learn more →</span>' +
             '</div>' +
           '</div></div>';
       }).join('');
@@ -1505,7 +1525,7 @@
       const link = document.getElementById('pdetLink');
       if (p.cta_link) {
         link.href = p.cta_link;
-        link.textContent = 'Mua ngay →';
+        link.textContent = 'Buy now →';
         link.classList.remove('hidden');
       } else {
         link.classList.add('hidden');
@@ -1513,8 +1533,8 @@
 
       const ctaBtn = document.getElementById('pdetCtaBtn');
       ctaBtn.textContent = p.cta_type === 'get_voucher'
-        ? (p.voucher_description || 'Nhận ưu đãi')
-        : 'Tôi quan tâm';
+        ? (p.voucher_description || 'Get voucher')
+        : 'I\'m interested';
 
       document.getElementById('productDetailOverlay').classList.remove('hidden');
       const detailSource = source === 'post_session' ? 'post_session_detail' : (source === 'check_in' ? 'check_in_detail' : 'qr_scan');
@@ -1548,14 +1568,14 @@
       const p = bp.products;
       if (p.cta_type === 'get_voucher') {
         document.getElementById('leadIcon').textContent = '🎉';
-        document.getElementById('leadTitle').textContent = 'Nhận ưu đãi thành công!';
-        document.getElementById('leadDesc').textContent = p.voucher_description || 'Đây là mã ưu đãi của bạn:';
+        document.getElementById('leadTitle').textContent = 'Your voucher';
+        document.getElementById('leadDesc').textContent = p.voucher_description || 'Here\'s your exclusive code:';
         document.getElementById('voucherCode').textContent = p.voucher_code || '';
         document.getElementById('voucherBox').classList.remove('hidden');
       } else {
         document.getElementById('leadIcon').textContent = '✅';
-        document.getElementById('leadTitle').textContent = 'Đã ghi nhận!';
-        document.getElementById('leadDesc').textContent = 'Cảm ơn bạn đã quan tâm. Epione sẽ liên hệ bạn sớm nhất.';
+        document.getElementById('leadTitle').textContent = 'Noted!';
+        document.getElementById('leadDesc').textContent = 'Thanks for your interest. We\'ll be in touch.';
         document.getElementById('voucherBox').classList.add('hidden');
       }
       document.getElementById('leadOverlay').classList.remove('hidden');
@@ -1565,8 +1585,8 @@
       const code = document.getElementById('voucherCode').textContent;
       navigator.clipboard.writeText(code).then(function() {
         const btn = document.querySelector('.voucher-copy-btn');
-        btn.textContent = 'Đã sao chép!';
-        setTimeout(function() { btn.textContent = 'Sao chép mã'; }, 2000);
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy code'; }, 2000);
       });
     };
 
@@ -1583,15 +1603,16 @@
         } else {
           // Re-render
           const container = document.getElementById('pdCards');
-          container.innerHTML = products.map(function(bp) {
+          container.innerHTML = products.map(function(bp, idx) {
             const p = bp.products;
             const brand = p.brands || {};
             const imgUrl = (p.images && p.images.length > 0) ? p.images[0] : '';
             const ctaText = p.cta_type === 'get_voucher'
-              ? (p.voucher_description || 'Nhận ưu đãi')
-              : 'Tôi quan tâm';
+              ? (p.voucher_description || 'Get voucher')
+              : 'I\'m interested';
             const priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
-            return '<div class="pd-card">' +
+            const focusClass = idx === 0 ? ' card-in-focus' : '';
+            return '<div class="pd-card' + focusClass + '">' +
               (imgUrl ? '<img class="pd-card-img" src="' + imgUrl + '" alt="">' : '<div class="pd-card-img"></div>') +
               '<div class="pd-card-body">' +
                 '<div class="pd-card-brand">' + (brand.name || '') + '</div>' +
@@ -1599,7 +1620,7 @@
                 (priceStr ? '<div class="pd-card-price">' + priceStr + '</div>' : '') +
                 '<div class="pd-card-row">' +
                   '<button class="pd-card-cta" onclick="event.stopPropagation(); handleDiscoveryCta(\'' + bp.id + '\')">' + ctaText + '</button>' +
-                  '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Tìm hiểu thêm →</span>' +
+                  '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Learn more →</span>' +
                 '</div>' +
               '</div></div>';
           }).join('');
@@ -1693,7 +1714,7 @@
           connText.textContent = 'Booth offline';
           boothOnline = false;
         } else {
-          connText.textContent = 'Đang kết nối...';
+          connText.textContent = 'Connecting...';
         }
       }
 
@@ -1715,7 +1736,7 @@
           stateIcon.innerHTML = '&#9889;';
           activeRing.classList.remove('hidden');
           stateLabel.className = 'state-label active';
-          stateLabel.textContent = 'ĐANG SỬ DỤNG';
+          stateLabel.textContent = 'IN THE ZONE';
           stateMsg.textContent = '';
           btnStart.classList.add('hidden');
           btnPause.classList.remove('hidden');
@@ -1741,8 +1762,8 @@
           stateIcon.innerHTML = '&#9208;';
           activeRing.classList.remove('hidden');
           stateLabel.className = 'state-label paused';
-          stateLabel.textContent = 'TẠM DỪNG';
-          stateMsg.textContent = 'Booth đang giữ chỗ cho bạn';
+          stateLabel.textContent = 'PAUSED';
+          stateMsg.textContent = 'Your booth is reserved';
           btnStart.classList.add('hidden');
           btnPause.classList.add('hidden');
           btnResume.classList.remove('hidden');
@@ -1768,10 +1789,10 @@
           stateIcon.innerHTML = boothOnline ? '&#128274;' : '&#128308;';
           activeRing.classList.add('hidden');
           stateLabel.className = 'state-label ' + (boothOnline ? 'idle' : 'offline');
-          stateLabel.textContent = boothOnline ? 'SẴN SÀNG' : 'MẤT KẾT NỐI';
+          stateLabel.textContent = boothOnline ? 'READY' : 'OFFLINE';
           stateMsg.textContent = boothOnline
-            ? 'Booth đang trống. Nhấn nút bên dưới để bắt đầu phiên của bạn.'
-            : 'Booth đang offline. Vui lòng thử lại sau.';
+            ? 'Your private workspace awaits. Tap below to enter.'
+            : 'Booth is offline. Please try again later.';
           btnEnd.classList.add('hidden');
           btnPause.classList.add('hidden');
           btnResume.classList.add('hidden');
@@ -1825,12 +1846,12 @@
           const pausedSec = Math.floor((Date.now() - new Date(pausedAt).getTime()) / 1000);
           const remaining = PAUSE_TIMEOUT - pausedSec;
           if (remaining <= 0) {
-            pauseInfo.textContent = 'Hết thời gian giữ chỗ...';
+            pauseInfo.textContent = 'Reservation expired...';
             clearInterval(pauseCountdownInterval);
           } else {
             const m = Math.floor(remaining / 60);
             const s = remaining % 60;
-            pauseInfo.textContent = 'Tự kết thúc sau ' + m + ':' + s.toString().padStart(2, '0');
+            pauseInfo.textContent = 'Auto-end in ' + m + ':' + s.toString().padStart(2, '0');
           }
         };
         tick();
@@ -1948,7 +1969,7 @@
         if (latencyPollTimer) { clearTimeout(latencyPollTimer); latencyPollTimer = null; }
         cmdSentAt = Date.now();
         cmdId = id;
-        var label = actionLabel || 'Đang xử lý';
+        var label = actionLabel || 'Processing';
         var polling = true;
 
         async function poll() {
@@ -1989,10 +2010,10 @@
 
       window.handleStart = async function() {
         btnStart.disabled = true;
-        showStatus('Đang gửi lệnh...', '#888');
+        showStatus('Sending...', '#888');
 
         if (!boothOnline) {
-          showStatus('Booth đang offline!', '#ef4444');
+          showStatus('Booth is offline!', '#ef4444');
           btnStart.disabled = false;
           setTimeout(function() { showStatus('', ''); }, 3000);
           return;
@@ -2017,16 +2038,16 @@
             optimisticUntil = 0; optimisticState = null;
             currentState = 'idle';
             setBoothState('idle');
-            showStatus('Lỗi: ' + resp.error.message, '#ef4444');
+            showStatus('Error: ' + resp.error.message, '#ef4444');
             btnStart.disabled = false;
             return;
           }
-          startLatencyTracking(resp.data[0].id, 'Đã mở cửa');
+          startLatencyTracking(resp.data[0].id, 'Door opened');
         } catch (e) {
           optimisticUntil = 0; optimisticState = null;
           currentState = 'idle';
           setBoothState('idle');
-          showStatus('Lỗi kết nối!', '#ef4444');
+          showStatus('Connection error!', '#ef4444');
           btnStart.disabled = false;
           setTimeout(function() { showStatus('', ''); }, 3000);
         }
@@ -2051,7 +2072,7 @@
             booth_id: BOOTH_ID, action: 'pause', status: 'pending'
           }).select('id');
           if (!resp.error && resp.data && resp.data[0]) {
-            startLatencyTracking(resp.data[0].id, 'Đã tạm dừng');
+            startLatencyTracking(resp.data[0].id, 'Paused');
           }
         } catch (e) { /* silent */ }
       };
@@ -2077,7 +2098,7 @@
             booth_id: BOOTH_ID, action: 'resume', status: 'pending'
           }).select('id');
           if (!resp.error && resp.data && resp.data[0]) {
-            startLatencyTracking(resp.data[0].id, 'Đã tiếp tục');
+            startLatencyTracking(resp.data[0].id, 'Resumed');
           }
         } catch (e) { /* silent */ }
       };
@@ -2100,7 +2121,7 @@
             booth_id: BOOTH_ID, action: 'close', status: 'pending'
           }).select('id');
           if (!resp.error && resp.data && resp.data[0]) {
-            startLatencyTracking(resp.data[0].id, 'Đã kết thúc');
+            startLatencyTracking(resp.data[0].id, 'Surfaced');
           }
         } catch (e) { /* silent */ }
       };
@@ -2111,7 +2132,7 @@
           const { error } = await db.from('booths')
             .select('booth_id').eq('booth_id', BOOTH_ID).limit(1);
           if (error) {
-            showStatus('Lỗi kết nối: ' + error.message, '#ef4444');
+            showStatus('Connection error: ' + error.message, '#ef4444');
             return;
           }
           // Supabase Realtime: nhận update sessions tức thì (không chờ poll)
@@ -2162,7 +2183,7 @@
             }, 1500);
           }
         } catch (e) {
-          showStatus('Lỗi: ' + e.message, '#ef4444');
+          showStatus('Error: ' + e.message, '#ef4444');
         }
       })();
     }
