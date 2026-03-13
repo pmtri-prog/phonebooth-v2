@@ -1667,6 +1667,7 @@
       let sessionTotalPausedSeconds = 0;
       let optimisticUntil = 0;    // Timestamp: bỏ qua stale data cho đến thời điểm này
       let optimisticState = null; // State mong đợi: 'active', 'paused', 'idle'
+      let currentState = 'idle';  // State hiện tại trên UI, tránh re-render trùng
 
       function showStatus(text, color) {
         statusEl.textContent = text;
@@ -1855,27 +1856,40 @@
       // Poll
       // Xử lý session data (dùng chung cho cả Realtime và Poll)
       function handleSessionData(session) {
-        var sessionState = (session && (session.status === 'active' || session.status === 'paused'))
+        var serverState = (session && (session.status === 'active' || session.status === 'paused'))
           ? session.status : 'idle';
 
         // Optimistic guard: bỏ qua data không khớp state mong đợi
         if (Date.now() < optimisticUntil && optimisticState) {
-          if (sessionState !== optimisticState) return; // stale data → skip
-          optimisticUntil = 0; // data khớp → confirmed, dùng data thật
+          if (serverState !== optimisticState) return; // stale → skip
+          // Data confirmed! Sync timer với data thật, KHÔNG re-render UI
+          optimisticUntil = 0;
           optimisticState = null;
+          if (serverState === 'active' && session && session.started_at) {
+            startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
+          } else if (serverState === 'paused' && session && session.paused_at) {
+            freezeTimer(new Date(session.started_at), session.total_paused_seconds || 0, session.paused_at);
+            startPauseCountdown(session.paused_at);
+          }
+          return; // UI đã đúng rồi, không cần làm gì thêm
         }
 
-        if (sessionState === 'active') {
+        // Chỉ update UI khi state THỰC SỰ thay đổi
+        if (serverState === 'active') {
           wasActive = true;
           wasPaused = false;
-          setBoothState('active');
+          if (currentState !== 'active') {
+            currentState = 'active';
+            setBoothState('active');
+          }
           if (!activeSessionStart || timerInterval === null) {
             startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
           }
-        } else if (sessionState === 'paused') {
+        } else if (serverState === 'paused') {
           wasActive = true;
-          if (!wasPaused) {
+          if (currentState !== 'paused') {
             wasPaused = true;
+            currentState = 'paused';
             setBoothState('paused');
             freezeTimer(
               new Date(session.started_at),
@@ -1886,12 +1900,15 @@
           }
         } else {
           // idle
-          if (wasActive || wasPaused) {
-            wasActive = false;
-            wasPaused = false;
-            showCompletion(lastDurationStr);
+          if (currentState !== 'idle') {
+            if (wasActive || wasPaused) {
+              wasActive = false;
+              wasPaused = false;
+              showCompletion(lastDurationStr);
+            }
+            currentState = 'idle';
+            setBoothState('idle');
           }
-          setBoothState('idle');
         }
       }
 
@@ -1974,6 +1991,7 @@
         // Optimistic UI: chuyển sang active ngay
         optimisticUntil = Date.now() + 10000;
         optimisticState = 'active';
+        currentState = 'active';
         wasActive = true;
         wasPaused = false;
         setBoothState('active');
@@ -1988,6 +2006,7 @@
 
           if (resp.error) {
             optimisticUntil = 0; optimisticState = null;
+            currentState = 'idle';
             wasActive = false;
             setBoothState('idle');
             showStatus('Lỗi: ' + resp.error.message, '#ef4444');
@@ -1996,6 +2015,7 @@
           }
         } catch (e) {
           optimisticUntil = 0; optimisticState = null;
+          currentState = 'idle';
           wasActive = false;
           setBoothState('idle');
           showStatus('Lỗi kết nối!', '#ef4444');
@@ -2009,6 +2029,7 @@
         // Optimistic UI: chuyển sang paused ngay
         optimisticUntil = Date.now() + 10000;
         optimisticState = 'paused';
+        currentState = 'paused';
         wasPaused = true;
         setBoothState('paused');
         var pauseNow = new Date().toISOString();
@@ -2029,6 +2050,7 @@
         // Optimistic UI: chuyển sang active ngay
         optimisticUntil = Date.now() + 10000;
         optimisticState = 'active';
+        currentState = 'active';
         wasPaused = false;
         setBoothState('active');
         startTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds || 0);
@@ -2047,6 +2069,7 @@
         // Optimistic UI: chuyển màn đánh giá ngay
         optimisticUntil = Date.now() + 10000;
         optimisticState = 'idle';
+        currentState = 'idle';
         wasActive = false;
         wasPaused = false;
         showCompletion(lastDurationStr);
