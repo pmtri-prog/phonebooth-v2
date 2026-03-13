@@ -1665,6 +1665,7 @@
       let wasPaused = false;
       let pauseCountdownInterval = null;
       let sessionTotalPausedSeconds = 0;
+      let optimisticUntil = 0; // Timestamp: bỏ qua null session data cho đến thời điểm này
 
       function showStatus(text, color) {
         statusEl.textContent = text;
@@ -1854,6 +1855,8 @@
       // Xử lý session data (dùng chung cho cả Realtime và Poll)
       function handleSessionData(session) {
         if (session && (session.status === 'active' || session.status === 'paused')) {
+          // Có session thật từ DB → clear optimistic guard
+          optimisticUntil = 0;
           if (session.status === 'active') {
             wasActive = true;
             wasPaused = false;
@@ -1875,6 +1878,8 @@
             }
           }
         } else {
+          // Không có active session → nhưng nếu đang optimistic thì bỏ qua
+          if (Date.now() < optimisticUntil) return;
           if (wasActive || wasPaused) {
             wasActive = false;
             wasPaused = false;
@@ -1961,6 +1966,7 @@
         }
 
         // Optimistic UI: chuyển sang active ngay, không chờ ESP32 tạo session
+        optimisticUntil = Date.now() + 8000; // 8s grace: bỏ qua null session từ poll
         wasActive = true;
         wasPaused = false;
         setBoothState('active');
@@ -1995,6 +2001,7 @@
       window.handlePause = async function() {
         btnPause.disabled = true;
         // Optimistic UI: chuyển sang paused ngay
+        optimisticUntil = Date.now() + 8000;
         wasPaused = true;
         setBoothState('paused');
         var pauseNow = new Date().toISOString();
@@ -2016,6 +2023,7 @@
       window.handleResume = async function() {
         btnResume.disabled = true;
         // Optimistic UI: chuyển sang active ngay
+        optimisticUntil = Date.now() + 8000;
         wasPaused = false;
         setBoothState('active');
         startTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds || 0);
