@@ -1960,13 +1960,23 @@
           return;
         }
 
-        // Gửi command ngay, không validation (ESP32 tự dedup + reject nếu đang busy)
+        // Optimistic UI: chuyển sang active ngay, không chờ ESP32 tạo session
+        wasActive = true;
+        wasPaused = false;
+        setBoothState('active');
+        startTimer(new Date(), 0);
+        showStatus('', '');
+
+        // Gửi command ngầm
         try {
           var resp = await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'open', status: 'pending'
           }).select('id');
 
           if (resp.error) {
+            // Rollback UI nếu lỗi
+            wasActive = false;
+            setBoothState('idle');
             showStatus('Lỗi: ' + resp.error.message, '#ef4444');
             btnStart.disabled = false;
             return;
@@ -1974,6 +1984,8 @@
 
           startLatencyTracking(resp.data[0].id);
         } catch (e) {
+          wasActive = false;
+          setBoothState('idle');
           showStatus('Lỗi kết nối!', '#ef4444');
           btnStart.disabled = false;
           setTimeout(function() { showStatus('', ''); }, 3000);
