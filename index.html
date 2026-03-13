@@ -1251,6 +1251,8 @@
 
     function showCompletion(durationStr) {
       const overlay = document.getElementById('completionOverlay');
+      // Chống gọi trùng: nếu overlay đang hiện rồi thì bỏ qua
+      if (!overlay.classList.contains('hidden')) return;
       document.getElementById('completionDuration').textContent = durationStr;
       document.getElementById('completionMsg').textContent = randomFrom(COMPLETION_MSGS);
       resetFeedback();
