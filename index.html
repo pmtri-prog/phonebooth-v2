@@ -1670,7 +1670,7 @@
       let optimisticPauseAt = 0;  // Timestamp lúc bấm Pause (để tính pause duration khi Resume)
       let optimisticUntil = 0;    // Timestamp: bỏ qua stale data cho đến thời điểm này
       let optimisticState = null; // State mong đợi: 'active', 'paused', 'idle'
-      let currentState = 'idle';  // State hiện tại trên UI, tránh re-render trùng
+      let currentState = null;  // null = chưa load lần đầu, tránh skip setBoothState('idle')
 
       function showStatus(text, color) {
         statusEl.textContent = text;
