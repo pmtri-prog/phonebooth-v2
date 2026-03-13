@@ -1851,18 +1851,9 @@
       }
 
       // Poll
-      async function pollState() {
-        await checkHeartbeat();
-
-        const { data } = await db.from('sessions')
-          .select('started_at, status, paused_at, total_paused_seconds')
-          .eq('booth_id', BOOTH_ID)
-          .in('status', ['active', 'paused'])
-          .limit(1);
-
-        if (data && data.length > 0) {
-          const session = data[0];
-
+      // Xử lý session data (dùng chung cho cả Realtime và Poll)
+      function handleSessionData(session) {
+        if (session && (session.status === 'active' || session.status === 'paused')) {
           if (session.status === 'active') {
             wasActive = true;
             wasPaused = false;
@@ -1885,13 +1876,22 @@
           }
         } else {
           if (wasActive || wasPaused) {
-            // Session just ended - show completion
             wasActive = false;
             wasPaused = false;
             showCompletion(lastDurationStr);
           }
           setBoothState('idle');
         }
+      }
+
+      async function pollState() {
+        const { data } = await db.from('sessions')
+          .select('started_at, status, paused_at, total_paused_seconds')
+          .eq('booth_id', BOOTH_ID)
+          .in('status', ['active', 'paused'])
+          .limit(1);
+
+        handleSessionData(data && data.length > 0 ? data[0] : null);
       }
 
       // Actions
@@ -1960,34 +1960,8 @@
           return;
         }
 
+        // Gửi command ngay, không validation (ESP32 tự dedup + reject nếu đang busy)
         try {
-          // Chạy 2 validation check song song thay vì tuần tự (tiết kiệm 200-500ms)
-          var results = await Promise.all([
-            db.from('sessions')
-              .select('id, status').eq('booth_id', BOOTH_ID).in('status', ['active', 'paused']).limit(1),
-            db.from('commands')
-              .select('*', { count: 'exact', head: true })
-              .eq('booth_id', BOOTH_ID).eq('status', 'pending')
-          ]);
-
-          var active = results[0].data;
-          if (active && active.length > 0) {
-            var msg = active[0].status === 'paused'
-              ? 'Booth đang được giữ chỗ!'
-              : 'Booth đang được sử dụng!';
-            showStatus(msg, '#f97316');
-            btnStart.disabled = false;
-            setTimeout(function() { showStatus('', ''); }, 3000);
-            return;
-          }
-
-          if (results[1].count > 0) {
-            showStatus('Có lệnh đang chờ xử lý...', '#f97316');
-            btnStart.disabled = false;
-            setTimeout(function() { showStatus('', ''); }, 3000);
-            return;
-          }
-
           var resp = await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'open', status: 'pending'
           }).select('id');
@@ -2042,19 +2016,22 @@
 
       window.handleEnd = async function() {
         btnEnd.disabled = true;
-        showStatus('Đang kết thúc...', '#888');
+        // Optimistic UI: chuyển màn đánh giá ngay, không chờ ESP32
+        wasActive = false;
+        wasPaused = false;
+        showCompletion(lastDurationStr);
+        setBoothState('idle');
+        showStatus('', '');
 
-        const { data: inserted, error } = await db.from('commands').insert({
-          booth_id: BOOTH_ID, action: 'close', status: 'pending'
-        }).select('id');
-
-        if (error) {
-          showStatus('Lỗi: ' + error.message, '#ef4444');
-          btnEnd.disabled = false;
-          return;
-        }
-
-        startLatencyTracking(inserted[0].id);
+        // Gửi command chạy ngầm
+        try {
+          const { data: inserted, error } = await db.from('commands').insert({
+            booth_id: BOOTH_ID, action: 'close', status: 'pending'
+          }).select('id');
+          if (!error && inserted && inserted[0]) {
+            startLatencyTracking(inserted[0].id);
+          }
+        } catch (e) { /* silent - UI đã chuyển rồi */ }
       };
 
       // Init
@@ -2066,10 +2043,50 @@
             showStatus('Lỗi kết nối: ' + error.message, '#ef4444');
             return;
           }
-          // setTimeout chaining thay setInterval → tránh overlap khi network chậm
+          // Supabase Realtime: nhận update sessions tức thì (không chờ poll)
+          const channel = db.channel('booth-sessions')
+            .on('postgres_changes', {
+              event: '*',
+              schema: 'public',
+              table: 'sessions',
+              filter: 'booth_id=eq.' + BOOTH_ID
+            }, function(payload) {
+              // Session thay đổi → xử lý trực tiếp từ payload (không cần query DB)
+              if (payload.eventType === 'DELETE') {
+                handleSessionData(null);
+              } else if (payload.new) {
+                var s = payload.new;
+                if (s.status === 'active' || s.status === 'paused') {
+                  handleSessionData(s);
+                } else {
+                  // completed/ended → treat as no active session
+                  handleSessionData(null);
+                }
+              }
+            })
+            .on('postgres_changes', {
+              event: 'UPDATE',
+              schema: 'public',
+              table: 'commands',
+              filter: 'booth_id=eq.' + BOOTH_ID
+            }, function(payload) {
+              // Command executed → poll để lấy session state mới nhất
+              if (payload.new && payload.new.status === 'executed') {
+                pollState().catch(function(){});
+              }
+            })
+            .subscribe();
+
+          // Heartbeat check riêng, mỗi 10s
+          setInterval(function() {
+            checkHeartbeat().catch(function(){});
+          }, 10000);
+          checkHeartbeat().catch(function(){});
+
+          // Poll backup: giãn ra 5s vì Realtime đã handle instant updates
           async function pollLoop() {
             try { await pollState(); } catch(e) { /* silent */ }
-            setTimeout(pollLoop, POLL_MS);
+            setTimeout(pollLoop, 5000);
           }
           pollLoop();
           showOnboarding();
