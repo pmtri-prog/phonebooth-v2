@@ -1665,6 +1665,7 @@
       let wasPaused = false;
       let pauseCountdownInterval = null;
       let sessionTotalPausedSeconds = 0;
+      let optimisticPauseAt = 0;  // Timestamp lúc bấm Pause (để tính pause duration khi Resume)
       let optimisticUntil = 0;    // Timestamp: bỏ qua stale data cho đến thời điểm này
       let optimisticState = null; // State mong đợi: 'active', 'paused', 'idle'
       let currentState = 'idle';  // State hiện tại trên UI, tránh re-render trùng
@@ -2026,6 +2027,7 @@
         optimisticState = 'paused';
         currentState = 'paused';
         wasPaused = true;
+        optimisticPauseAt = Date.now();
         setBoothState('paused');
         var pauseNow = new Date().toISOString();
         freezeTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds || 0, pauseNow);
@@ -2050,8 +2052,13 @@
         optimisticState = 'active';
         currentState = 'active';
         wasPaused = false;
+        // Cộng thời gian pause vừa rồi vào tổng
+        if (optimisticPauseAt) {
+          sessionTotalPausedSeconds += Math.floor((Date.now() - optimisticPauseAt) / 1000);
+          optimisticPauseAt = 0;
+        }
         setBoothState('active');
-        startTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds || 0);
+        startTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds);
         showStatus('', '');
 
         // Gửi command ngầm
