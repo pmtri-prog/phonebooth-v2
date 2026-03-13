@@ -1665,7 +1665,8 @@
       let wasPaused = false;
       let pauseCountdownInterval = null;
       let sessionTotalPausedSeconds = 0;
-      let optimisticUntil = 0; // Timestamp: bỏ qua null session data cho đến thời điểm này
+      let optimisticUntil = 0;    // Timestamp: bỏ qua stale data cho đến thời điểm này
+      let optimisticState = null; // State mong đợi: 'active', 'paused', 'idle'
 
       function showStatus(text, color) {
         statusEl.textContent = text;
@@ -1854,32 +1855,37 @@
       // Poll
       // Xử lý session data (dùng chung cho cả Realtime và Poll)
       function handleSessionData(session) {
-        if (session && (session.status === 'active' || session.status === 'paused')) {
-          // Có session thật từ DB → clear optimistic guard
-          optimisticUntil = 0;
-          if (session.status === 'active') {
-            wasActive = true;
-            wasPaused = false;
-            setBoothState('active');
-            if (!activeSessionStart || timerInterval === null) {
-              startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
-            }
-          } else if (session.status === 'paused') {
-            wasActive = true;
-            if (!wasPaused) {
-              wasPaused = true;
-              setBoothState('paused');
-              freezeTimer(
-                new Date(session.started_at),
-                session.total_paused_seconds || 0,
-                session.paused_at
-              );
-              startPauseCountdown(session.paused_at);
-            }
+        var sessionState = (session && (session.status === 'active' || session.status === 'paused'))
+          ? session.status : 'idle';
+
+        // Optimistic guard: bỏ qua data không khớp state mong đợi
+        if (Date.now() < optimisticUntil && optimisticState) {
+          if (sessionState !== optimisticState) return; // stale data → skip
+          optimisticUntil = 0; // data khớp → confirmed, dùng data thật
+          optimisticState = null;
+        }
+
+        if (sessionState === 'active') {
+          wasActive = true;
+          wasPaused = false;
+          setBoothState('active');
+          if (!activeSessionStart || timerInterval === null) {
+            startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
+          }
+        } else if (sessionState === 'paused') {
+          wasActive = true;
+          if (!wasPaused) {
+            wasPaused = true;
+            setBoothState('paused');
+            freezeTimer(
+              new Date(session.started_at),
+              session.total_paused_seconds || 0,
+              session.paused_at
+            );
+            startPauseCountdown(session.paused_at);
           }
         } else {
-          // Không có active session → nhưng nếu đang optimistic thì bỏ qua
-          if (Date.now() < optimisticUntil) return;
+          // idle
           if (wasActive || wasPaused) {
             wasActive = false;
             wasPaused = false;
@@ -1965,8 +1971,9 @@
           return;
         }
 
-        // Optimistic UI: chuyển sang active ngay, không chờ ESP32 tạo session
-        optimisticUntil = Date.now() + 8000; // 8s grace: bỏ qua null session từ poll
+        // Optimistic UI: chuyển sang active ngay
+        optimisticUntil = Date.now() + 10000;
+        optimisticState = 'active';
         wasActive = true;
         wasPaused = false;
         setBoothState('active');
@@ -1980,16 +1987,15 @@
           }).select('id');
 
           if (resp.error) {
-            // Rollback UI nếu lỗi
+            optimisticUntil = 0; optimisticState = null;
             wasActive = false;
             setBoothState('idle');
             showStatus('Lỗi: ' + resp.error.message, '#ef4444');
             btnStart.disabled = false;
             return;
           }
-
-          startLatencyTracking(resp.data[0].id);
         } catch (e) {
+          optimisticUntil = 0; optimisticState = null;
           wasActive = false;
           setBoothState('idle');
           showStatus('Lỗi kết nối!', '#ef4444');
@@ -2001,7 +2007,8 @@
       window.handlePause = async function() {
         btnPause.disabled = true;
         // Optimistic UI: chuyển sang paused ngay
-        optimisticUntil = Date.now() + 8000;
+        optimisticUntil = Date.now() + 10000;
+        optimisticState = 'paused';
         wasPaused = true;
         setBoothState('paused');
         var pauseNow = new Date().toISOString();
@@ -2011,19 +2018,17 @@
 
         // Gửi command ngầm
         try {
-          const { data: inserted, error } = await db.from('commands').insert({
+          await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'pause', status: 'pending'
-          }).select('id');
-          if (!error && inserted && inserted[0]) {
-            startLatencyTracking(inserted[0].id);
-          }
-        } catch (e) { /* silent - UI đã chuyển rồi */ }
+          });
+        } catch (e) { /* silent */ }
       };
 
       window.handleResume = async function() {
         btnResume.disabled = true;
         // Optimistic UI: chuyển sang active ngay
-        optimisticUntil = Date.now() + 8000;
+        optimisticUntil = Date.now() + 10000;
+        optimisticState = 'active';
         wasPaused = false;
         setBoothState('active');
         startTimer(activeSessionStart || new Date(), sessionTotalPausedSeconds || 0);
@@ -2031,33 +2036,29 @@
 
         // Gửi command ngầm
         try {
-          const { data: inserted, error } = await db.from('commands').insert({
+          await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'resume', status: 'pending'
-          }).select('id');
-          if (!error && inserted && inserted[0]) {
-            startLatencyTracking(inserted[0].id);
-          }
-        } catch (e) { /* silent - UI đã chuyển rồi */ }
+          });
+        } catch (e) { /* silent */ }
       };
 
       window.handleEnd = async function() {
         btnEnd.disabled = true;
-        // Optimistic UI: chuyển màn đánh giá ngay, không chờ ESP32
+        // Optimistic UI: chuyển màn đánh giá ngay
+        optimisticUntil = Date.now() + 10000;
+        optimisticState = 'idle';
         wasActive = false;
         wasPaused = false;
         showCompletion(lastDurationStr);
         setBoothState('idle');
         showStatus('', '');
 
-        // Gửi command chạy ngầm
+        // Gửi command ngầm
         try {
-          const { data: inserted, error } = await db.from('commands').insert({
+          await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'close', status: 'pending'
-          }).select('id');
-          if (!error && inserted && inserted[0]) {
-            startLatencyTracking(inserted[0].id);
-          }
-        } catch (e) { /* silent - UI đã chuyển rồi */ }
+          });
+        } catch (e) { /* silent */ }
       };
 
       // Init
