@@ -1928,27 +1928,21 @@
       let cmdId = null;
       let latencyPollTimer = null;
 
-      function startLatencyTracking(id) {
-        // Clear timer cũ nếu còn
+      function startLatencyTracking(id, actionLabel) {
         if (latencyPollTimer) { clearTimeout(latencyPollTimer); latencyPollTimer = null; }
         cmdSentAt = Date.now();
         cmdId = id;
-        showStatus('Đang gửi lệnh...', '#888');
+        var label = actionLabel || 'Đang xử lý';
         var polling = true;
 
         async function poll() {
           if (!polling) return;
           var elapsed = ((Date.now() - cmdSentAt) / 1000).toFixed(1);
 
-          // Timeout sau 10s → re-enable buttons
           if (Date.now() - cmdSentAt > 10000) {
             polling = false;
             latencyPollTimer = null;
-            showStatus('Timeout - kiểm tra booth!', '#ef4444');
-            btnStart.disabled = false;
-            btnPause.disabled = false;
-            btnResume.disabled = false;
-            btnEnd.disabled = false;
+            showStatus('Timeout (' + elapsed + 's)', '#ef4444');
             setTimeout(function() { showStatus('', ''); }, 3000);
             return;
           }
@@ -1964,13 +1958,13 @@
                 ? new Date(resp.data[0].relay_at).getTime() - cmdSentAt
                 : Date.now() - cmdSentAt;
               var totalSec = (totalMs / 1000).toFixed(1);
-              showStatus('Cửa đã mở! (' + totalSec + 's)', '#10069F');
+              showStatus(label + ' (' + totalSec + 's)', '#10069F');
+              setTimeout(function() { showStatus('', ''); }, 4000);
               return;
             }
-          } catch (e) { /* network error, continue polling */ }
+          } catch (e) { /* silent */ }
 
-          showStatus('Đang mở cửa... ' + elapsed + 's', '#888');
-          // setTimeout thay vì setInterval → chờ request xong mới poll tiếp
+          showStatus(label + '... ' + elapsed + 's', '#888');
           latencyPollTimer = setTimeout(poll, 500);
         }
 
@@ -2013,6 +2007,7 @@
             btnStart.disabled = false;
             return;
           }
+          startLatencyTracking(resp.data[0].id, 'Đã mở cửa');
         } catch (e) {
           optimisticUntil = 0; optimisticState = null;
           currentState = 'idle';
@@ -2039,9 +2034,12 @@
 
         // Gửi command ngầm
         try {
-          await db.from('commands').insert({
+          var resp = await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'pause', status: 'pending'
-          });
+          }).select('id');
+          if (!resp.error && resp.data && resp.data[0]) {
+            startLatencyTracking(resp.data[0].id, 'Đã tạm dừng');
+          }
         } catch (e) { /* silent */ }
       };
 
@@ -2058,9 +2056,12 @@
 
         // Gửi command ngầm
         try {
-          await db.from('commands').insert({
+          var resp = await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'resume', status: 'pending'
-          });
+          }).select('id');
+          if (!resp.error && resp.data && resp.data[0]) {
+            startLatencyTracking(resp.data[0].id, 'Đã tiếp tục');
+          }
         } catch (e) { /* silent */ }
       };
 
@@ -2078,9 +2079,12 @@
 
         // Gửi command ngầm
         try {
-          await db.from('commands').insert({
+          var resp = await db.from('commands').insert({
             booth_id: BOOTH_ID, action: 'close', status: 'pending'
-          });
+          }).select('id');
+          if (!resp.error && resp.data && resp.data[0]) {
+            startLatencyTracking(resp.data[0].id, 'Đã kết thúc');
+          }
         } catch (e) { /* silent */ }
       };
 
