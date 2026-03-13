@@ -357,10 +357,325 @@
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    @media (max-width: 640px) {
-      .stats-row { grid-template-columns: 1fr 1fr; }
+    /* Admin Tabs */
+    .admin-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: 1.5px solid #EDEDED;
+      background: #fff;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: #10069F; color: #10069F; }
+    .tab-btn.active { background: #10069F; color: #fff; border-color: #10069F; }
+    .tab-content.hidden { display: none; }
+
+    /* Form overlay */
+    .form-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .form-overlay.show { display: flex; }
+    .form-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 520px;
+      width: 100%;
+    }
+    .form-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #282828;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      padding: 9px 12px;
+      border: 1px solid #EDEDED;
+      border-radius: 8px;
+      width: 100%;
+      color: #282828;
+      background: #fff;
+    }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { outline: none; border-color: #10069F; }
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+    .form-row .form-group { flex: 1; }
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-check input[type="checkbox"] { width: auto; }
+    .form-check label { margin-bottom: 0; text-transform: none; font-size: 13px; color: #555; }
+    .badge-epione {
+      font-size: 9px;
+      font-weight: 700;
+      background: #e8e6f8;
+      color: #10069F;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .badge-brand {
+      font-size: 9px;
+      font-weight: 700;
+      background: #dcfce7;
+      color: #16a34a;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .badge-voucher {
+      font-size: 9px;
+      font-weight: 700;
+      background: #fef3c7;
+      color: #d97706;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .badge-interested {
+      font-size: 9px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0284c7;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .badge-active {
+      font-size: 9px;
+      font-weight: 700;
+      background: #dcfce7;
+      color: #16a34a;
+      padding: 2px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .badge-inactive {
+      font-size: 9px;
+      font-weight: 700;
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 2px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .img-thumb {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #F5F5F5;
+    }
+    .qr-thumb {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+    }
+    .qr-thumb:hover { opacity: 0.8; }
+
+    /* Firmware badges */
+    .fw-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      letter-spacing: 0.3px;
+    }
+    .fw-current { background: #dcfce7; color: #16a34a; }
+    .fw-outdated { background: #fef3c7; color: #d97706; }
+    .fw-unknown { background: #f3f4f6; color: #999; }
+    .ota-status {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .ota-downloading { background: #e0f2fe; color: #0284c7; }
+    .ota-success { background: #dcfce7; color: #16a34a; }
+    .ota-failed { background: #fee2e2; color: #dc2626; }
+    .ota-pending { background: #fef3c7; color: #d97706; }
+
+    /* Section header actions */
+    .section-header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Report filters */
+    .report-content { padding: 14px 18px; }
+    .report-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .filter-input {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      padding: 5px 8px;
+      border: 1px solid #EDEDED;
+      border-radius: 6px;
+      color: #555;
+      background: #fff;
+    }
+    .filter-sep { font-size: 11px; color: #999; }
+
+    /* ===== RESPONSIVE ===== */
+
+    /* Tablet */
+    @media (max-width: 768px) {
+      .container { padding: 16px 12px; }
+      .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-value { font-size: 26px; }
       .booths-grid { grid-template-columns: 1fr; }
-      th, td { padding: 7px 12px; }
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      table { min-width: 600px; }
+      .form-row { flex-direction: column; gap: 0; }
+
+      /* Tab buttons bigger for touch */
+      .tab-btn { padding: 10px 14px; font-size: 11px; }
+
+      /* Section header stack on narrow */
+      .section-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+      .section-header-actions { width: 100%; flex-wrap: wrap; }
+      .section-header-actions select { flex: 1; min-width: 0; }
+      .section-header select { width: 100%; }
+
+      /* Filter bars */
+      .filter-bar { gap: 6px; }
+
+      /* Report filters stack */
+      .report-content { padding: 12px 14px; }
+      .report-filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .report-filters .filter-input,
+      .report-filters .btn-ctrl {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+      .filter-sep { display: none; }
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .header { padding: 12px 14px; }
+      .logo { font-size: 16px; }
+      .container { padding: 12px 8px; }
+
+      /* Stats compact */
+      .stats-row { gap: 6px; margin-bottom: 14px; }
+      .stat-card { padding: 12px 14px; border-radius: 10px; }
+      .stat-label { font-size: 10px; letter-spacing: 0.5px; }
+      .stat-value { font-size: 22px; }
+
+      /* Tabs scrollable */
+      .admin-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 6px;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .admin-tabs::-webkit-scrollbar { display: none; }
+      .tab-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 9px 14px;
+        font-size: 11px;
+        border-radius: 8px;
+      }
+
+      /* Section */
+      .section { border-radius: 10px; }
+      .section-header { padding: 12px 14px; }
+      .section-header h3 { font-size: 12px; }
+
+      /* Booth cards */
+      .booth-card { padding: 14px; border-radius: 10px; }
+      .booth-name { font-size: 14px; }
+      .booth-meta { flex-wrap: wrap; gap: 8px; }
+      .booth-controls { flex-wrap: wrap; }
+      .btn-ctrl { padding: 7px 14px; font-size: 11px; }
+
+      /* Tables: smaller text, horizontal scroll */
+      table { min-width: 520px; }
+      th { font-size: 9px; padding: 6px 10px; }
+      td { font-size: 11px; padding: 7px 10px; }
+
+      /* Logs compact */
+      .log-item { padding: 6px 12px; font-size: 10px; flex-wrap: wrap; gap: 4px; }
+      .log-time { font-size: 9px; }
+      .logs-wrap { max-height: 220px; }
+
+      /* Filter bar compact */
+      .filter-bar { gap: 4px; }
+      .filter-chip { padding: 5px 10px; font-size: 10px; }
+
+      /* Form overlay */
+      .form-overlay { padding: 10px; align-items: flex-start; }
+      .form-box { padding: 20px 16px; border-radius: 12px; max-height: 90vh; overflow-y: auto; }
+      .form-title { font-size: 15px; }
+      .form-group input, .form-group textarea, .form-group select { font-size: 14px; padding: 10px 12px; }
+
+      /* Modal */
+      .modal-box { padding: 22px 18px; width: 95%; }
+      .modal-title { font-size: 15px; }
+      .modal-desc { font-size: 12px; }
+      .modal-btn { padding: 10px 20px; font-size: 13px; }
+
+      /* Toast */
+      .toast { font-size: 12px; padding: 9px 18px; bottom: 16px; }
     }
   </style>
 </head>
@@ -391,12 +706,321 @@
       </div>
     </div>
 
-    <div class="section-title">Booths</div>
-    <div class="filter-bar" id="locationFilter">
-      <label>Địa điểm:</label>
-      <button class="filter-chip active" data-location="">Tất cả</button>
+    <!-- Admin Tabs -->
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="booths" onclick="switchTab('booths')">Booths & Sessions</button>
+      <button class="tab-btn" data-tab="brands" onclick="switchTab('brands')">Brands</button>
+      <button class="tab-btn" data-tab="products" onclick="switchTab('products')">Products</button>
+      <button class="tab-btn" data-tab="booth-products" onclick="switchTab('booth-products')">Booth Products</button>
+      <button class="tab-btn" data-tab="reports" onclick="switchTab('reports')">Reports</button>
+      <button class="tab-btn" data-tab="firmware" onclick="switchTab('firmware')">Firmware</button>
     </div>
-    <div class="booths-grid" id="boothsGrid"></div>
+
+    <!-- TAB: Booths & Sessions (existing) -->
+    <div class="tab-content" id="tab-booths">
+      <div class="section-title">Booths</div>
+      <div class="filter-bar" id="locationFilter">
+        <label>Địa điểm:</label>
+        <button class="filter-chip active" data-location="">Tất cả</button>
+      </div>
+      <div class="booths-grid" id="boothsGrid"></div>
+
+      <div class="section">
+        <div class="section-header">
+          <h3>Lịch sử phiên</h3>
+          <select id="filterBooth">
+            <option value="">Tất cả booth</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Booth</th>
+                <th>Bắt đầu</th>
+                <th>Kết thúc</th>
+                <th>Thời lượng</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="sessionsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h3>WiFi Log</h3>
+          <select id="filterWifiBooth">
+            <option value="">Tất cả booth</option>
+          </select>
+        </div>
+        <div class="logs-wrap" id="wifiLogsWrap">
+          <div class="empty-msg">Đang tải...</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h3>Nhật ký sự kiện</h3>
+        </div>
+        <div class="logs-wrap" id="logsWrap">
+          <div class="empty-msg">Đang tải...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Brands -->
+    <div class="tab-content hidden" id="tab-brands">
+      <div class="section">
+        <div class="section-header">
+          <h3>Quản lý thương hiệu</h3>
+          <button class="btn-ctrl btn-unlock" onclick="showBrandForm()">+ Thêm Brand</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Logo</th><th>Tên</th><th>Liên hệ</th><th>Email</th><th>SĐT</th><th></th>
+            </tr></thead>
+            <tbody id="brandsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Products -->
+    <div class="tab-content hidden" id="tab-products">
+      <div class="section">
+        <div class="section-header">
+          <h3>Quản lý sản phẩm</h3>
+          <div class="section-header-actions">
+            <select id="filterProductBrand">
+              <option value="">Tất cả brand</option>
+            </select>
+            <button class="btn-ctrl btn-unlock" onclick="showProductForm()">+ Thêm sản phẩm</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Ảnh</th><th>Tên</th><th>Brand</th><th>Giá</th><th>CTA</th><th>Loại</th><th></th>
+            </tr></thead>
+            <tbody id="productsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Booth Products -->
+    <div class="tab-content hidden" id="tab-booth-products">
+      <div class="section">
+        <div class="section-header">
+          <h3>Gán sản phẩm cho Booth</h3>
+          <div class="section-header-actions">
+            <select id="filterBpBooth">
+              <option value="">Tất cả booth</option>
+            </select>
+            <button class="btn-ctrl btn-unlock" onclick="showBoothProductForm()">+ Gán mới</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Booth</th><th>Sản phẩm</th><th>Brand</th><th>Bắt đầu</th><th>Kết thúc</th><th>Ưu tiên</th><th>Trạng thái</th><th>QR</th><th></th>
+            </tr></thead>
+            <tbody id="boothProductsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Reports -->
+    <div class="tab-content hidden" id="tab-reports">
+      <div class="section">
+        <div class="section-header">
+          <h3>Báo cáo Product Placement</h3>
+        </div>
+        <div class="report-content">
+          <div class="report-filters">
+            <input type="date" id="reportDateFrom" class="filter-input">
+            <span class="filter-sep">đến</span>
+            <input type="date" id="reportDateTo" class="filter-input">
+            <select id="reportBooth" class="filter-input">
+              <option value="">Tất cả booth</option>
+            </select>
+            <select id="reportBrand" class="filter-input">
+              <option value="">Tất cả brand</option>
+            </select>
+            <select id="reportSource" class="filter-input">
+              <option value="">Tất cả nguồn</option>
+              <option value="post_session">Post-session</option>
+              <option value="check_in">Check-in</option>
+              <option value="qr_scan">QR Scan</option>
+            </select>
+            <button class="btn-ctrl btn-unlock" onclick="loadReport()">Lọc</button>
+            <button class="btn-ctrl" style="background:#e8e6f8;color:#10069F;" onclick="exportReportCSV()">Export CSV</button>
+          </div>
+          <div class="stats-row" style="margin-bottom:16px;">
+            <div class="stat-card">
+              <div class="stat-label">Impressions</div>
+              <div class="stat-value" id="rptImpressions">--</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Leads</div>
+              <div class="stat-value" id="rptLeads">--</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Vouchers</div>
+              <div class="stat-value" id="rptVouchers">--</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Conversion</div>
+              <div class="stat-value" id="rptConversion">--</div>
+              <div class="stat-sub">%</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Thời gian</th><th>User</th><th>Booth</th><th>Sản phẩm</th><th>Brand</th><th>CTA</th><th>Nguồn</th><th>Voucher</th>
+              </tr></thead>
+              <tbody id="reportLeadsBody">
+                <tr><td colspan="8" class="empty-msg">Nhấn "Lọc" để xem báo cáo</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Command Latency Report -->
+      <div class="section" style="margin-top:16px;">
+        <div class="section-header">
+          <h3>Command Latency</h3>
+          <button class="btn-ctrl btn-unlock" onclick="loadLatencyReport()">Tải dữ liệu</button>
+        </div>
+        <div class="report-content">
+          <div class="report-filters">
+            <input type="date" id="latencyDateFrom" class="filter-input">
+            <span class="filter-sep">đến</span>
+            <input type="date" id="latencyDateTo" class="filter-input">
+            <select id="latencyBooth" class="filter-input">
+              <option value="">Tất cả booth</option>
+            </select>
+            <select id="latencyAction" class="filter-input">
+              <option value="">Tất cả action</option>
+              <option value="open">Open</option>
+              <option value="close">Close</option>
+              <option value="pause">Pause</option>
+              <option value="resume">Resume</option>
+            </select>
+          </div>
+          <div class="stats-row" style="margin-bottom:16px;">
+            <div class="stat-card">
+              <div class="stat-label">Avg Latency</div>
+              <div class="stat-value" id="latAvg">--</div>
+              <div class="stat-sub">giây</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Min</div>
+              <div class="stat-value" id="latMin">--</div>
+              <div class="stat-sub">giây</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Max</div>
+              <div class="stat-value" id="latMax">--</div>
+              <div class="stat-sub">giây</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Commands</div>
+              <div class="stat-value" id="latCount">--</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Thời gian</th><th>Booth</th><th>Action</th><th>Gửi → Nhận</th><th>Nhận → Relay</th><th>Tổng latency</th>
+              </tr></thead>
+              <tbody id="latencyBody">
+                <tr><td colspan="6" class="empty-msg">Nhấn "Tải dữ liệu" để xem</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Firmware -->
+    <div class="tab-content hidden" id="tab-firmware">
+      <!-- Upload new firmware -->
+      <div class="section">
+        <div class="section-header">
+          <h3>Upload Firmware</h3>
+        </div>
+        <div class="report-content">
+          <div class="report-filters">
+            <input type="text" id="fwVersion" class="filter-input" placeholder="Version (vd: 1.1.0)" style="min-width:120px;">
+            <input type="text" id="fwFileUrl" class="filter-input" placeholder="URL file .bin (Supabase Storage hoặc HTTP)" style="flex:1;min-width:200px;">
+            <input type="number" id="fwFileSize" class="filter-input" placeholder="Size (bytes)" style="min-width:100px;">
+            <button class="btn-ctrl btn-unlock" onclick="uploadFirmware()">Thêm</button>
+          </div>
+          <div class="form-group" style="margin:0;">
+            <textarea id="fwChangelog" placeholder="Changelog (mô tả thay đổi)..." style="font-family:'Inter',sans-serif;font-size:12px;padding:8px 12px;border:1px solid #EDEDED;border-radius:8px;width:100%;min-height:50px;resize:vertical;box-sizing:border-box;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Firmware versions list -->
+      <div class="section" style="margin-top:16px;">
+        <div class="section-header">
+          <h3>Danh sách Firmware</h3>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Version</th><th>Changelog</th><th>Size</th><th>Ngày tạo</th><th>Latest</th><th></th>
+            </tr></thead>
+            <tbody id="firmwaresBody">
+              <tr><td colspan="6" class="empty-msg">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Booth firmware status -->
+      <div class="section" style="margin-top:16px;">
+        <div class="section-header">
+          <h3>Trạng thái Firmware các Booth</h3>
+          <button class="btn-ctrl" style="background:#e8e6f8;color:#10069F;" onclick="updateAllBooths()">Cập nhật tất cả</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Booth</th><th>FW hiện tại</th><th>Trạng thái OTA</th><th></th>
+            </tr></thead>
+            <tbody id="boothFwBody">
+              <tr><td colspan="4" class="empty-msg">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- OTA update history -->
+      <div class="section" style="margin-top:16px;">
+        <div class="section-header">
+          <h3>Lịch sử cập nhật OTA</h3>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Thời gian</th><th>Booth</th><th>Version</th><th>Trạng thái</th><th>Lỗi</th><th>Thời gian</th>
+            </tr></thead>
+            <tbody id="otaHistoryBody">
+              <tr><td colspan="6" class="empty-msg">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
     <!-- Confirm modal -->
     <div class="modal-overlay" id="confirmModal">
@@ -410,55 +1034,17 @@
       </div>
     </div>
 
+    <!-- Form overlay (shared) -->
+    <div class="form-overlay" id="formOverlay">
+      <div class="form-box" id="formBox"></div>
+    </div>
+
     <!-- Toast -->
     <div class="toast" id="toast"></div>
-
-    <div class="section">
-      <div class="section-header">
-        <h3>Lịch sử phiên</h3>
-        <select id="filterBooth">
-          <option value="">Tất cả booth</option>
-        </select>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Booth</th>
-              <th>Bắt đầu</th>
-              <th>Kết thúc</th>
-              <th>Thời lượng</th>
-              <th>Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody id="sessionsBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-header">
-        <h3>WiFi Log</h3>
-        <select id="filterWifiBooth">
-          <option value="">Tất cả booth</option>
-        </select>
-      </div>
-      <div class="logs-wrap" id="wifiLogsWrap">
-        <div class="empty-msg">Đang tải...</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-header">
-        <h3>Nhật ký sự kiện</h3>
-      </div>
-      <div class="logs-wrap" id="logsWrap">
-        <div class="empty-msg">Đang tải...</div>
-      </div>
-    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script>
     const SUPABASE_URL = "https://iwczjfomyybszwdlzwjs.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3Y3pqZm9teXlic3p3ZGx6d2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDIzODgsImV4cCI6MjA4ODcxODM4OH0.dvGSX8N5_tHpGqWL5rCreCdGpASxOK2nwwcbCpILew4";
@@ -508,8 +1094,10 @@
 
     // --- Remote Control ---
     async function sendCommand(boothId, action) {
-      await db.from('commands').insert({ booth_id: boothId, action, status: 'pending' });
-      await db.from('booth_logs').insert({
+      const { error } = await db.from('commands').insert({ booth_id: boothId, action, status: 'pending' });
+      if (error) throw new Error('Gửi lệnh thất bại: ' + error.message);
+      // Log không cần chờ
+      db.from('booth_logs').insert({
         booth_id: boothId,
         event: 'admin_' + action,
         note: 'Admin remote: ' + action
@@ -695,6 +1283,7 @@
           <div class="booth-meta">
             <div>Heartbeat: <strong>${lastSeenStr}</strong></div>
             <div>Hôm nay: <strong>${todayCount} phiên</strong></div>
+            <div>FW: ${b.firmware_version ? '<span class="fw-badge fw-current">v' + b.firmware_version + '</span>' : '<span class="fw-badge fw-unknown">N/A</span>'}</div>
           </div>
           ${sessionHtml}
           ${controlsHtml}
@@ -893,22 +1482,844 @@
       }).join('');
     }
 
-    async function refresh() {
-      try {
-        await loadBooths();
-        await loadStats();
-        await loadSessions();
-        await loadWifiLogs();
-        await loadLogs();
-      } catch (e) {
-        console.error('refresh error:', e);
-      }
-    }
+    async function refresh() {}
 
     document.getElementById('filterBooth').addEventListener('change', loadSessions);
     document.getElementById('filterWifiBooth').addEventListener('change', loadWifiLogs);
-    refresh();
-    setInterval(refresh, POLL_MS);
+    document.getElementById('filterProductBrand').addEventListener('change', loadProducts);
+    document.getElementById('filterBpBooth').addEventListener('change', loadBoothProducts);
+
+    // ============== TAB NAVIGATION ==============
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.toggle('active', el.dataset.tab === tabName));
+    }
+
+    // ============== FORM OVERLAY ==============
+    function showFormOverlay(html) {
+      document.getElementById('formBox').innerHTML = html;
+      document.getElementById('formOverlay').classList.add('show');
+    }
+    function closeForm() {
+      document.getElementById('formOverlay').classList.remove('show');
+    }
+
+    // ============== BRANDS CRUD ==============
+    let brandsCache = [];
+
+    async function loadBrands() {
+      const { data } = await db.from('brands').select('*').order('created_at', { ascending: false });
+      brandsCache = data || [];
+      const tbody = document.getElementById('brandsBody');
+      if (brandsCache.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Chưa có brand nào</td></tr>';
+        return;
+      }
+      tbody.innerHTML = brandsCache.map(b => `<tr>
+        <td>${b.logo_url ? '<img src="' + b.logo_url + '" class="img-thumb">' : '--'}</td>
+        <td class="td-booth">${b.name}</td>
+        <td>${b.contact_person || '--'}</td>
+        <td>${b.contact_email || '--'}</td>
+        <td>${b.contact_phone || '--'}</td>
+        <td>
+          <button class="btn-ctrl btn-unlock" onclick="showBrandForm('${b.id}')">Sửa</button>
+          <button class="btn-ctrl btn-end" onclick="deleteBrand('${b.id}','${b.name}')">Xóa</button>
+        </td>
+      </tr>`).join('');
+
+      // Update brand dropdowns
+      updateBrandDropdowns();
+    }
+
+    function updateBrandDropdowns() {
+      ['filterProductBrand', 'reportBrand'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        const val = sel.value;
+        sel.innerHTML = '<option value="">Tất cả brand</option>';
+        brandsCache.forEach(b => {
+          sel.innerHTML += '<option value="' + b.id + '">' + b.name + '</option>';
+        });
+        sel.value = val;
+      });
+    }
+
+    function showBrandForm(editId) {
+      const b = editId ? brandsCache.find(x => x.id === editId) : null;
+      showFormOverlay(`
+        <div class="form-title">${b ? 'Sửa' : 'Thêm'} Brand</div>
+        <div class="form-group"><label>Tên *</label><input id="fBrandName" value="${b ? b.name : ''}"></div>
+        <div class="form-group"><label>Logo URL</label><input id="fBrandLogo" value="${b ? (b.logo_url || '') : ''}" placeholder="https://..."></div>
+        <div class="form-group"><label>Người liên hệ</label><input id="fBrandContact" value="${b ? (b.contact_person || '') : ''}"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input id="fBrandEmail" value="${b ? (b.contact_email || '') : ''}"></div>
+          <div class="form-group"><label>SĐT</label><input id="fBrandPhone" value="${b ? (b.contact_phone || '') : ''}"></div>
+        </div>
+        <input type="hidden" id="fBrandId" value="${editId || ''}">
+        <div class="form-actions">
+          <button class="modal-btn modal-cancel" onclick="closeForm()">Huỷ</button>
+          <button class="modal-btn modal-confirm" onclick="saveBrand()">Lưu</button>
+        </div>
+      `);
+    }
+
+    async function saveBrand() {
+      const name = document.getElementById('fBrandName').value.trim();
+      if (!name) { showToast('Tên brand không được trống'); return; }
+      const obj = {
+        name,
+        logo_url: document.getElementById('fBrandLogo').value.trim(),
+        contact_person: document.getElementById('fBrandContact').value.trim(),
+        contact_email: document.getElementById('fBrandEmail').value.trim(),
+        contact_phone: document.getElementById('fBrandPhone').value.trim()
+      };
+      const id = document.getElementById('fBrandId').value;
+      if (id) {
+        await db.from('brands').update(obj).eq('id', id);
+        showToast('Đã cập nhật brand');
+      } else {
+        await db.from('brands').insert(obj);
+        showToast('Đã thêm brand');
+      }
+      closeForm();
+      await loadBrands();
+    }
+
+    function deleteBrand(id, name) {
+      showModal('Xóa brand ' + name + '?', 'Tất cả sản phẩm của brand này cũng sẽ bị xóa.', true, async () => {
+        await db.from('brands').delete().eq('id', id);
+        showToast('Đã xóa brand');
+        await loadBrands();
+        await loadProducts();
+      });
+    }
+
+    // ============== PRODUCTS CRUD ==============
+    let productsCache = [];
+
+    async function loadProducts() {
+      const filterBrand = document.getElementById('filterProductBrand').value;
+      let query = db.from('products').select('*, brands(name)').order('created_at', { ascending: false });
+      if (filterBrand) query = query.eq('brand_id', filterBrand);
+
+      const { data } = await query;
+      productsCache = data || [];
+      const tbody = document.getElementById('productsBody');
+      if (productsCache.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-msg">Chưa có sản phẩm nào</td></tr>';
+        return;
+      }
+      tbody.innerHTML = productsCache.map(p => {
+        const thumb = (p.images && p.images.length > 0) ? '<img src="' + p.images[0] + '" class="img-thumb">' : '--';
+        const priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '--';
+        const ctaBadge = p.cta_type === 'get_voucher' ? '<span class="badge-voucher">Voucher</span>' : '<span class="badge-interested">Quan tâm</span>';
+        const typeBadge = p.is_epione ? '<span class="badge-epione">Epione</span>' : '<span class="badge-brand">Brand</span>';
+        return `<tr>
+          <td>${thumb}</td>
+          <td class="td-booth">${p.name}</td>
+          <td>${p.brands ? p.brands.name : '--'}</td>
+          <td>${priceStr}</td>
+          <td>${ctaBadge}</td>
+          <td>${typeBadge}</td>
+          <td>
+            <button class="btn-ctrl btn-unlock" onclick="showProductForm('${p.id}')">Sửa</button>
+            <button class="btn-ctrl btn-end" onclick="deleteProduct('${p.id}','${p.name}')">Xóa</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function showProductForm(editId) {
+      const p = editId ? productsCache.find(x => x.id === editId) : null;
+      const brandOptions = brandsCache.map(b => `<option value="${b.id}" ${p && p.brand_id === b.id ? 'selected' : ''}>${b.name}</option>`).join('');
+      const ctaType = p ? p.cta_type : 'get_voucher';
+      const voucherDisplay = ctaType === 'get_voucher' ? '' : 'display:none;';
+      showFormOverlay(`
+        <div class="form-title">${p ? 'Sửa' : 'Thêm'} sản phẩm</div>
+        <div class="form-row">
+          <div class="form-group"><label>Brand *</label><select id="fProdBrand">${brandOptions}</select></div>
+          <div class="form-group"><label>Tên *</label><input id="fProdName" value="${p ? p.name : ''}"></div>
+        </div>
+        <div class="form-group"><label>Mô tả</label><textarea id="fProdDesc">${p ? (p.description || '') : ''}</textarea></div>
+        <div class="form-group"><label>Ảnh (URL, phân cách bằng dấu phẩy)</label><input id="fProdImages" value="${p && p.images ? p.images.join(', ') : ''}" placeholder="https://img1.jpg, https://img2.jpg"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Giá (VND)</label><input type="number" id="fProdPrice" value="${p && p.price ? p.price : ''}"></div>
+          <div class="form-group"><label>Video URL</label><input id="fProdVideo" value="${p ? (p.video_url || '') : ''}"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>CTA Type</label>
+            <select id="fProdCta" onchange="toggleVoucherFields()">
+              <option value="get_voucher" ${ctaType === 'get_voucher' ? 'selected' : ''}>Voucher</option>
+              <option value="interested" ${ctaType === 'interested' ? 'selected' : ''}>Tôi quan tâm</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Link mua hàng</label><input id="fProdCtaLink" value="${p ? (p.cta_link || '') : ''}" placeholder="https://shopee.vn/..."></div>
+        </div>
+        <div id="voucherFields" style="${voucherDisplay}">
+          <div class="form-row">
+            <div class="form-group"><label>Mã voucher *</label><input id="fProdVoucher" value="${p ? (p.voucher_code || '') : ''}"></div>
+            <div class="form-group"><label>Mô tả ưu đãi *</label><input id="fProdVoucherDesc" value="${p ? (p.voucher_description || '') : ''}" placeholder="Giảm 15% khi mua online"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-check">
+            <input type="checkbox" id="fProdEpione" ${p && p.is_epione ? 'checked' : ''}>
+            <label for="fProdEpione">Sản phẩm Epione (hiển thị sau Brand)</label>
+          </div>
+        </div>
+        <input type="hidden" id="fProdId" value="${editId || ''}">
+        <div class="form-actions">
+          <button class="modal-btn modal-cancel" onclick="closeForm()">Huỷ</button>
+          <button class="modal-btn modal-confirm" onclick="saveProduct()">Lưu</button>
+        </div>
+      `);
+    }
+
+    function toggleVoucherFields() {
+      const el = document.getElementById('voucherFields');
+      el.style.display = document.getElementById('fProdCta').value === 'get_voucher' ? '' : 'none';
+    }
+
+    async function saveProduct() {
+      const name = document.getElementById('fProdName').value.trim();
+      const brandId = document.getElementById('fProdBrand').value;
+      if (!name) { showToast('Tên sản phẩm không được trống'); return; }
+      if (!brandId) { showToast('Chọn brand'); return; }
+
+      const ctaType = document.getElementById('fProdCta').value;
+      const voucherCode = document.getElementById('fProdVoucher').value.trim();
+      if (ctaType === 'get_voucher' && !voucherCode) { showToast('Nhập mã voucher'); return; }
+
+      const imagesStr = document.getElementById('fProdImages').value;
+      const images = imagesStr.split(',').map(s => s.trim()).filter(Boolean);
+
+      const obj = {
+        brand_id: brandId,
+        name,
+        description: document.getElementById('fProdDesc').value.trim(),
+        images,
+        video_url: document.getElementById('fProdVideo').value.trim(),
+        price: document.getElementById('fProdPrice').value ? Number(document.getElementById('fProdPrice').value) : null,
+        cta_type: ctaType,
+        cta_link: document.getElementById('fProdCtaLink').value.trim(),
+        voucher_code: voucherCode,
+        voucher_description: document.getElementById('fProdVoucherDesc').value.trim(),
+        is_epione: document.getElementById('fProdEpione').checked
+      };
+
+      const id = document.getElementById('fProdId').value;
+      if (id) {
+        await db.from('products').update(obj).eq('id', id);
+        showToast('Đã cập nhật sản phẩm');
+      } else {
+        await db.from('products').insert(obj);
+        showToast('Đã thêm sản phẩm');
+      }
+      closeForm();
+      await loadProducts();
+    }
+
+    function deleteProduct(id, name) {
+      showModal('Xóa sản phẩm ' + name + '?', 'Tất cả booth assignment liên quan cũng sẽ bị xóa.', true, async () => {
+        await db.from('products').delete().eq('id', id);
+        showToast('Đã xóa sản phẩm');
+        await loadProducts();
+        await loadBoothProducts();
+      });
+    }
+
+    // ============== BOOTH PRODUCTS ==============
+    let boothProductsCache = [];
+    const BASE_URL = window.location.origin + window.location.pathname.replace('admin.html', '');
+
+    async function loadBoothProducts() {
+      const filterBooth = document.getElementById('filterBpBooth').value;
+      let query = db.from('booth_products').select('*, products(name, brands(name))').order('created_at', { ascending: false });
+      if (filterBooth) query = query.eq('booth_id', filterBooth);
+
+      const { data } = await query;
+      boothProductsCache = data || [];
+
+      // Update booth filter
+      const sel = document.getElementById('filterBpBooth');
+      const val = sel.value;
+      sel.innerHTML = '<option value="">Tất cả booth</option>';
+      booths.forEach(b => { sel.innerHTML += '<option value="' + b.booth_id + '">' + (b.name || b.booth_id) + '</option>'; });
+      sel.value = val;
+
+      // Update report booth filter
+      const rSel = document.getElementById('reportBooth');
+      if (rSel) {
+        const rVal = rSel.value;
+        rSel.innerHTML = '<option value="">Tất cả booth</option>';
+        booths.forEach(b => { rSel.innerHTML += '<option value="' + b.booth_id + '">' + (b.name || b.booth_id) + '</option>'; });
+        rSel.value = rVal;
+      }
+
+      const tbody = document.getElementById('boothProductsBody');
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      if (boothProductsCache.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-msg">Chưa gán sản phẩm nào</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = boothProductsCache.map(bp => {
+        const statusBadge = bp.status === 'active'
+          ? '<span class="badge-active" onclick="toggleBpStatus(\'' + bp.id + '\',\'' + bp.status + '\')">Active</span>'
+          : '<span class="badge-inactive" onclick="toggleBpStatus(\'' + bp.id + '\',\'' + bp.status + '\')">Inactive</span>';
+        const qrHtml = bp.qr_code_url
+          ? '<img src="' + bp.qr_code_url + '" class="qr-thumb" onclick="downloadQR(\'' + bp.id + '\')" title="Click để tải QR">'
+          : '<button class="btn-ctrl" style="font-size:9px;" onclick="generateQR(\'' + bp.id + '\')">Gen QR</button>';
+        const prodName = bp.products ? bp.products.name : '--';
+        const brandName = bp.products && bp.products.brands ? bp.products.brands.name : '--';
+        return `<tr>
+          <td class="td-booth">${nameMap[bp.booth_id] || bp.booth_id}</td>
+          <td>${prodName}</td>
+          <td>${brandName}</td>
+          <td>${bp.start_date || '--'}</td>
+          <td>${bp.end_date || '--'}</td>
+          <td>${bp.priority}</td>
+          <td>${statusBadge}</td>
+          <td>${qrHtml}</td>
+          <td><button class="btn-ctrl btn-end" onclick="deleteBoothProduct('${bp.id}')">Xóa</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function showBoothProductForm() {
+      const boothOptions = booths.map(b => `<option value="${b.booth_id}">${b.name || b.booth_id}</option>`).join('');
+      const prodOptions = productsCache.map(p => {
+        const brandName = p.brands ? p.brands.name : '';
+        return `<option value="${p.id}">${brandName ? brandName + ' - ' : ''}${p.name}</option>`;
+      }).join('');
+
+      const today = new Date().toISOString().split('T')[0];
+      const nextMonth = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
+
+      showFormOverlay(`
+        <div class="form-title">Gán sản phẩm cho Booth</div>
+        <div class="form-row">
+          <div class="form-group"><label>Booth *</label><select id="fBpBooth">${boothOptions}</select></div>
+          <div class="form-group"><label>Sản phẩm *</label><select id="fBpProduct">${prodOptions}</select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Ngày bắt đầu</label><input type="date" id="fBpStart" value="${today}"></div>
+          <div class="form-group"><label>Ngày kết thúc</label><input type="date" id="fBpEnd" value="${nextMonth}"></div>
+        </div>
+        <div class="form-group"><label>Ưu tiên (số nhỏ = ưu tiên cao)</label><input type="number" id="fBpPriority" value="0" min="0"></div>
+        <div class="form-actions">
+          <button class="modal-btn modal-cancel" onclick="closeForm()">Huỷ</button>
+          <button class="modal-btn modal-confirm" onclick="saveBoothProduct()">Lưu & Tạo QR</button>
+        </div>
+      `);
+    }
+
+    async function saveBoothProduct() {
+      const boothId = document.getElementById('fBpBooth').value;
+      const productId = document.getElementById('fBpProduct').value;
+      if (!boothId || !productId) { showToast('Chọn booth và sản phẩm'); return; }
+
+      const obj = {
+        booth_id: boothId,
+        product_id: productId,
+        start_date: document.getElementById('fBpStart').value,
+        end_date: document.getElementById('fBpEnd').value,
+        priority: parseInt(document.getElementById('fBpPriority').value) || 0,
+        status: 'active'
+      };
+
+      const { data, error } = await db.from('booth_products').insert(obj).select().single();
+      if (error) { showToast('Lỗi: ' + error.message); return; }
+
+      // Generate QR
+      if (data) await generateQR(data.id);
+
+      showToast('Đã gán sản phẩm và tạo QR');
+      closeForm();
+      await loadBoothProducts();
+    }
+
+    async function generateQR(bpId) {
+      const bp = boothProductsCache.find(x => x.id === bpId);
+      const boothId = bp ? bp.booth_id : '';
+      const productId = bp ? bp.product_id : '';
+      const qrUrl = BASE_URL + 'index.html?booth=' + boothId + '&product=' + productId;
+      try {
+        const dataUrl = await QRCode.toDataURL(qrUrl, { width: 300, margin: 2 });
+        await db.from('booth_products').update({ qr_code_url: dataUrl }).eq('id', bpId);
+        showToast('Đã tạo QR code');
+        await loadBoothProducts();
+      } catch (e) {
+        showToast('Lỗi tạo QR: ' + e.message);
+      }
+    }
+
+    async function toggleBpStatus(id, currentStatus) {
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+      await db.from('booth_products').update({ status: newStatus }).eq('id', id);
+      showToast('Đã ' + (newStatus === 'active' ? 'bật' : 'tắt') + ' placement');
+      await loadBoothProducts();
+    }
+
+    function downloadQR(bpId) {
+      const bp = boothProductsCache.find(x => x.id === bpId);
+      if (!bp || !bp.qr_code_url) { showToast('Chưa có QR code'); return; }
+      const a = document.createElement('a');
+      a.href = bp.qr_code_url;
+      a.download = 'QR_' + (bp.booth_id || 'booth') + '_' + bpId.substring(0, 8) + '.png';
+      a.click();
+    }
+
+    function deleteBoothProduct(id) {
+      showModal('Xóa placement này?', 'Sản phẩm sẽ không còn hiển thị trong booth.', true, async () => {
+        await db.from('booth_products').delete().eq('id', id);
+        showToast('Đã xóa');
+        await loadBoothProducts();
+      });
+    }
+
+    // ============== REPORTS ==============
+    let reportLeadsData = [];
+
+    async function loadReport() {
+      const dateFrom = document.getElementById('reportDateFrom').value;
+      const dateTo = document.getElementById('reportDateTo').value;
+      const boothFilter = document.getElementById('reportBooth').value;
+      const brandFilter = document.getElementById('reportBrand').value;
+      const sourceFilter = document.getElementById('reportSource').value;
+
+      // Impressions count
+      let impQuery = db.from('product_impressions').select('*', { count: 'exact', head: true });
+      if (dateFrom) impQuery = impQuery.gte('created_at', dateFrom + 'T00:00:00');
+      if (dateTo) impQuery = impQuery.lte('created_at', dateTo + 'T23:59:59');
+      if (sourceFilter) impQuery = impQuery.eq('source', sourceFilter);
+      const { count: impCount } = await impQuery;
+      document.getElementById('rptImpressions').textContent = impCount || 0;
+
+      // Leads
+      let leadQuery = db.from('product_leads')
+        .select('*, booth_products(booth_id, product_id, products(name, brand_id, brands(name)))')
+        .order('created_at', { ascending: false });
+      if (dateFrom) leadQuery = leadQuery.gte('created_at', dateFrom + 'T00:00:00');
+      if (dateTo) leadQuery = leadQuery.lte('created_at', dateTo + 'T23:59:59');
+      if (sourceFilter) leadQuery = leadQuery.eq('source', sourceFilter);
+
+      const { data: leads } = await leadQuery;
+      let filtered = leads || [];
+
+      // Client-side filter for booth and brand (nested FK)
+      if (boothFilter) filtered = filtered.filter(l => l.booth_products && l.booth_products.booth_id === boothFilter);
+      if (brandFilter) filtered = filtered.filter(l => l.booth_products && l.booth_products.products && l.booth_products.products.brand_id === brandFilter);
+
+      reportLeadsData = filtered;
+      const leadCount = filtered.length;
+      const voucherCount = filtered.filter(l => l.voucher_redeemed).length;
+      const conversion = (impCount || 0) > 0 ? ((leadCount / impCount) * 100).toFixed(1) : '0';
+
+      document.getElementById('rptLeads').textContent = leadCount;
+      document.getElementById('rptVouchers').textContent = voucherCount;
+      document.getElementById('rptConversion').textContent = conversion;
+
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      const tbody = document.getElementById('reportLeadsBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-msg">Không có dữ liệu</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(l => {
+        const bp = l.booth_products || {};
+        const prod = bp.products || {};
+        const brand = prod.brands || {};
+        return `<tr>
+          <td>${formatTime(l.created_at)}</td>
+          <td style="font-family:monospace;font-size:10px;">${l.user_id ? l.user_id.substring(0, 8) + '...' : '--'}</td>
+          <td class="td-booth">${nameMap[bp.booth_id] || bp.booth_id || '--'}</td>
+          <td>${prod.name || '--'}</td>
+          <td>${brand.name || '--'}</td>
+          <td>${l.cta_type === 'get_voucher' ? 'Voucher' : 'Quan tâm'}</td>
+          <td>${l.source || '--'}</td>
+          <td>${l.voucher_redeemed ? '✅' : '--'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function exportReportCSV() {
+      if (reportLeadsData.length === 0) { showToast('Không có dữ liệu để export'); return; }
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      let csv = 'Thời gian,User ID,Booth,Sản phẩm,Brand,CTA,Nguồn,Voucher Redeemed\n';
+      reportLeadsData.forEach(l => {
+        const bp = l.booth_products || {};
+        const prod = bp.products || {};
+        const brand = prod.brands || {};
+        csv += [
+          '"' + formatTime(l.created_at) + '"',
+          '"' + (l.user_id || '') + '"',
+          '"' + (nameMap[bp.booth_id] || bp.booth_id || '') + '"',
+          '"' + (prod.name || '') + '"',
+          '"' + (brand.name || '') + '"',
+          '"' + l.cta_type + '"',
+          '"' + l.source + '"',
+          '"' + (l.voucher_redeemed ? 'Yes' : 'No') + '"'
+        ].join(',') + '\n';
+      });
+
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'product_leads_' + new Date().toISOString().split('T')[0] + '.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Đã export CSV');
+    }
+
+    // ============== LATENCY REPORT ==============
+    async function loadLatencyReport() {
+      const dateFrom = document.getElementById('latencyDateFrom').value;
+      const dateTo = document.getElementById('latencyDateTo').value;
+      const boothFilter = document.getElementById('latencyBooth').value;
+      const actionFilter = document.getElementById('latencyAction').value;
+
+      // Populate booth dropdown
+      const boothSel = document.getElementById('latencyBooth');
+      if (boothSel.options.length <= 1) {
+        booths.forEach(b => {
+          const opt = document.createElement('option');
+          opt.value = b.booth_id;
+          opt.textContent = b.name || b.booth_id;
+          boothSel.appendChild(opt);
+        });
+      }
+
+      let query = db.from('commands')
+        .select('*')
+        .eq('status', 'executed')
+        .not('relay_at', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(200);
+
+      if (dateFrom) query = query.gte('created_at', dateFrom + 'T00:00:00');
+      if (dateTo) query = query.lte('created_at', dateTo + 'T23:59:59');
+      if (boothFilter) query = query.eq('booth_id', boothFilter);
+      if (actionFilter) query = query.eq('action', actionFilter);
+
+      const { data } = await query;
+      const cmds = data || [];
+
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      // Tính latency cho từng command
+      const latencies = cmds.map(c => {
+        const created = new Date(c.created_at).getTime();
+        const executed = c.executed_at ? new Date(c.executed_at).getTime() : null;
+        const relay = new Date(c.relay_at).getTime();
+        return {
+          ...c,
+          networkMs: executed ? executed - created : null,
+          processMs: (executed && relay) ? relay - executed : null,
+          totalMs: relay - created
+        };
+      }).filter(c => c.totalMs > 0 && c.totalMs < 30000); // Bỏ outliers > 30s
+
+      // Stats
+      if (latencies.length > 0) {
+        const totals = latencies.map(c => c.totalMs);
+        const avg = (totals.reduce((a, b) => a + b, 0) / totals.length / 1000).toFixed(1);
+        const min = (Math.min(...totals) / 1000).toFixed(1);
+        const max = (Math.max(...totals) / 1000).toFixed(1);
+        document.getElementById('latAvg').textContent = avg;
+        document.getElementById('latMin').textContent = min;
+        document.getElementById('latMax').textContent = max;
+      } else {
+        document.getElementById('latAvg').textContent = '--';
+        document.getElementById('latMin').textContent = '--';
+        document.getElementById('latMax').textContent = '--';
+      }
+      document.getElementById('latCount').textContent = latencies.length;
+
+      // Table
+      const tbody = document.getElementById('latencyBody');
+      if (latencies.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Không có dữ liệu latency</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = latencies.map(c => {
+        const networkSec = c.networkMs != null ? (c.networkMs / 1000).toFixed(2) + 's' : '--';
+        const processSec = c.processMs != null ? (c.processMs / 1000).toFixed(2) + 's' : '--';
+        const totalSec = (c.totalMs / 1000).toFixed(2);
+        const color = c.totalMs < 1500 ? '#059669' : c.totalMs < 3000 ? '#f59e0b' : '#ef4444';
+        return '<tr>' +
+          '<td>' + formatTime(c.created_at) + '</td>' +
+          '<td>' + (nameMap[c.booth_id] || c.booth_id) + '</td>' +
+          '<td>' + c.action + '</td>' +
+          '<td>' + networkSec + '</td>' +
+          '<td>' + processSec + '</td>' +
+          '<td style="font-weight:700;color:' + color + ';">' + totalSec + 's</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    // ============== FIRMWARE MANAGEMENT ==============
+    let firmwaresCache = [];
+    let latestFwVersion = '';
+
+    async function loadFirmwares() {
+      const { data } = await db.from('firmwares').select('*').order('created_at', { ascending: false });
+      firmwaresCache = data || [];
+      latestFwVersion = '';
+      const latest = firmwaresCache.find(f => f.is_latest);
+      if (latest) latestFwVersion = latest.version;
+
+      const tbody = document.getElementById('firmwaresBody');
+      if (firmwaresCache.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Chưa có firmware nào</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = firmwaresCache.map(f => {
+        const sizeStr = f.file_size > 0 ? (f.file_size / 1024).toFixed(0) + ' KB' : '--';
+        const latestBadge = f.is_latest
+          ? '<span class="fw-badge fw-current">Latest</span>'
+          : '<span class="fw-badge fw-unknown" style="cursor:pointer;" onclick="setLatestFw(\'' + f.id + '\')">Set</span>';
+        return '<tr>' +
+          '<td class="td-booth">v' + f.version + '</td>' +
+          '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;">' + (f.changelog || '--') + '</td>' +
+          '<td>' + sizeStr + '</td>' +
+          '<td>' + formatTime(f.created_at) + '</td>' +
+          '<td>' + latestBadge + '</td>' +
+          '<td><button class="btn-ctrl btn-end" onclick="deleteFirmware(\'' + f.id + '\',\'' + f.version + '\')">Xóa</button></td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    async function uploadFirmware() {
+      const version = document.getElementById('fwVersion').value.trim();
+      const fileUrl = document.getElementById('fwFileUrl').value.trim();
+      const fileSize = parseInt(document.getElementById('fwFileSize').value) || 0;
+      const changelog = document.getElementById('fwChangelog').value.trim();
+
+      if (!version || !fileUrl) { showToast('Nhập version và URL file .bin'); return; }
+
+      // Set tất cả firmware cũ is_latest = false
+      await db.from('firmwares').update({ is_latest: false }).eq('is_latest', true);
+
+      const { error } = await db.from('firmwares').insert({
+        version, file_url: fileUrl, file_size: fileSize, changelog, is_latest: true
+      });
+
+      if (error) { showToast('Lỗi: ' + error.message); return; }
+
+      showToast('Đã thêm firmware v' + version);
+      document.getElementById('fwVersion').value = '';
+      document.getElementById('fwFileUrl').value = '';
+      document.getElementById('fwFileSize').value = '';
+      document.getElementById('fwChangelog').value = '';
+      await loadFirmwares();
+      await loadBoothFwStatus();
+    }
+
+    async function setLatestFw(id) {
+      await db.from('firmwares').update({ is_latest: false }).eq('is_latest', true);
+      await db.from('firmwares').update({ is_latest: true }).eq('id', id);
+      showToast('Đã đặt làm firmware mới nhất');
+      await loadFirmwares();
+      await loadBoothFwStatus();
+    }
+
+    function deleteFirmware(id, version) {
+      showModal('Xóa firmware v' + version + '?', 'Firmware sẽ bị xóa khỏi danh sách. Lịch sử OTA liên quan cũng sẽ bị xóa.', true, async () => {
+        await db.from('firmwares').delete().eq('id', id);
+        showToast('Đã xóa firmware');
+        await loadFirmwares();
+      });
+    }
+
+    async function loadBoothFwStatus() {
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      const tbody = document.getElementById('boothFwBody');
+      if (booths.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-msg">Không có booth nào</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = booths.map(b => {
+        const fw = b.firmware_version || '';
+        const isLatest = fw && fw === latestFwVersion;
+        const fwBadge = fw
+          ? '<span class="fw-badge ' + (isLatest ? 'fw-current' : 'fw-outdated') + '">v' + fw + '</span>'
+          : '<span class="fw-badge fw-unknown">Chưa biết</span>';
+
+        let otaBadge = '';
+        if (b.ota_status === 'downloading') otaBadge = '<span class="ota-status ota-downloading">Đang tải...</span>';
+        else if (b.ota_status === 'success') otaBadge = '<span class="ota-status ota-success">Thành công</span>';
+        else if (b.ota_status === 'failed') otaBadge = '<span class="ota-status ota-failed">Lỗi</span>';
+        else if (b.ota_status === 'pending') otaBadge = '<span class="ota-status ota-pending">Chờ...</span>';
+
+        const canUpdate = latestFwVersion && fw !== latestFwVersion;
+        const updateBtn = canUpdate
+          ? '<button class="btn-ctrl btn-unlock" onclick="triggerOta(\'' + b.booth_id + '\',\'' + (b.name || b.booth_id) + '\')">Cập nhật → v' + latestFwVersion + '</button>'
+          : (isLatest ? '<span style="font-size:10px;color:#16a34a;font-weight:600;">Mới nhất</span>' : '');
+
+        return '<tr>' +
+          '<td class="td-booth">' + (nameMap[b.booth_id] || b.booth_id) + '</td>' +
+          '<td>' + fwBadge + '</td>' +
+          '<td>' + otaBadge + '</td>' +
+          '<td>' + updateBtn + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    async function triggerOta(boothId, boothName) {
+      const latest = firmwaresCache.find(f => f.is_latest);
+      if (!latest) { showToast('Chưa có firmware nào được đánh dấu Latest'); return; }
+
+      showModal(
+        'Cập nhật firmware ' + boothName + '?',
+        'ESP32 sẽ tải firmware v' + latest.version + ' và tự khởi động lại. Booth sẽ offline vài giây.',
+        false,
+        async () => {
+          await db.from('ota_updates').insert({
+            booth_id: boothId,
+            firmware_id: latest.id,
+            status: 'pending'
+          });
+          // Update booth ota_status
+          await db.from('booths').update({ ota_status: 'pending', ota_progress: 0 }).eq('booth_id', boothId);
+          showToast('Đã gửi lệnh cập nhật firmware cho ' + boothName);
+          await loadBoothFwStatus();
+          await loadOtaHistory();
+        }
+      );
+    }
+
+    async function updateAllBooths() {
+      const latest = firmwaresCache.find(f => f.is_latest);
+      if (!latest) { showToast('Chưa có firmware nào được đánh dấu Latest'); return; }
+
+      const outdated = booths.filter(b => b.firmware_version !== latest.version);
+      if (outdated.length === 0) { showToast('Tất cả booth đã cập nhật'); return; }
+
+      showModal(
+        'Cập nhật tất cả booth?',
+        outdated.length + ' booth sẽ được cập nhật lên v' + latest.version + '. Mỗi booth sẽ offline vài giây.',
+        false,
+        async () => {
+          for (const b of outdated) {
+            await db.from('ota_updates').insert({
+              booth_id: b.booth_id,
+              firmware_id: latest.id,
+              status: 'pending'
+            });
+            await db.from('booths').update({ ota_status: 'pending', ota_progress: 0 }).eq('booth_id', b.booth_id);
+          }
+          showToast('Đã gửi lệnh cập nhật cho ' + outdated.length + ' booth');
+          await loadBoothFwStatus();
+          await loadOtaHistory();
+        }
+      );
+    }
+
+    async function loadOtaHistory() {
+      const { data } = await db.from('ota_updates')
+        .select('*, firmwares(version)')
+        .order('started_at', { ascending: false })
+        .limit(50);
+
+      const nameMap = {};
+      booths.forEach(b => { nameMap[b.booth_id] = b.name || b.booth_id; });
+
+      const tbody = document.getElementById('otaHistoryBody');
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Chưa có lịch sử OTA</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.map(o => {
+        let statusBadge;
+        if (o.status === 'success') statusBadge = '<span class="ota-status ota-success">Thành công</span>';
+        else if (o.status === 'failed') statusBadge = '<span class="ota-status ota-failed">Lỗi</span>';
+        else if (o.status === 'downloading') statusBadge = '<span class="ota-status ota-downloading">Đang tải</span>';
+        else statusBadge = '<span class="ota-status ota-pending">Chờ</span>';
+
+        const duration = o.completed_at
+          ? ((new Date(o.completed_at).getTime() - new Date(o.started_at).getTime()) / 1000).toFixed(0) + 's'
+          : '--';
+
+        return '<tr>' +
+          '<td>' + formatTime(o.started_at) + '</td>' +
+          '<td class="td-booth">' + (nameMap[o.booth_id] || o.booth_id) + '</td>' +
+          '<td>v' + (o.firmwares ? o.firmwares.version : '--') + '</td>' +
+          '<td>' + statusBadge + '</td>' +
+          '<td style="font-size:10px;color:#999;max-width:150px;overflow:hidden;text-overflow:ellipsis;">' + (o.error_message || '--') + '</td>' +
+          '<td>' + duration + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    // ============== UPDATE REFRESH ==============
+    let refreshing = false;
+    let slowRefreshCount = 0;
+    const SLOW_REFRESH_INTERVAL = 6; // Load data ít thay đổi mỗi 30s (6 x 5s)
+
+    const _origRefresh = refresh;
+    refresh = async function() {
+      if (refreshing) return; // Tránh overlap
+      refreshing = true;
+      try {
+        // Nhóm 1: Data thay đổi thường xuyên → luôn load, chạy song song
+        await Promise.all([
+          loadBooths(),
+          loadStats(),
+          loadSessions()
+        ]);
+
+        // Nhóm 2: Data ít thay đổi → chỉ load mỗi 30s
+        slowRefreshCount++;
+        if (slowRefreshCount >= SLOW_REFRESH_INTERVAL) {
+          slowRefreshCount = 0;
+          await Promise.all([
+            loadWifiLogs(),
+            loadLogs(),
+            loadBrands(),
+            loadProducts(),
+            loadBoothProducts(),
+            loadFirmwares(),
+            loadBoothFwStatus(),
+            loadOtaHistory()
+          ]);
+        }
+      } catch (e) {
+        console.error('refresh error:', e);
+      }
+      refreshing = false;
+    };
+
+    // Set default dates cho reports
+    const today = new Date().toISOString().split('T')[0];
+    ['reportDateFrom', 'reportDateTo', 'latencyDateFrom', 'latencyDateTo'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = today;
+    });
+
+    // setTimeout chaining thay setInterval → tránh overlap
+    slowRefreshCount = SLOW_REFRESH_INTERVAL; // Lần đầu load tất cả
+    async function refreshLoop() {
+      await refresh();
+      setTimeout(refreshLoop, POLL_MS);
+    }
+    refreshLoop();
   </script>
 </body>
 </html>

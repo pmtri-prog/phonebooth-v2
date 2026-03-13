@@ -1,5 +1,128 @@
 # Phonebooth MVP - Changelog
 
+## [2026-03-13] Latency Audit & Stability Fix - FW v1.0.1
+
+### Bug fix
+- **ESP32 HTTP calls block relay**: `createSession()`, `endSession()`, `pauseSession()`, `resumeSession()`, `markExecuted()` chạy blocking trong lúc relay đang mở → relay timing bị lệch, loop bị block 5-9s. **Fix**: Deferred task system — set flag, chạy HTTP ở loop iteration tiếp theo
+- **Heartbeat + Poll stack cùng cycle**: Mỗi 5s heartbeat (3s) + poll (3s) chạy tuần tự = 6s block, ws.loop() không được gọi → command qua WebSocket bị delay 10-20s. **Fix**: Deferred tasks ưu tiên trước heartbeat, heartbeat skip khi có pending task
+- **OTA check quá thường xuyên**: `checkOtaUpdates()` chạy mỗi 5s với timeout 5s → thêm 5s block. **Fix**: Giãn ra 1 giờ/lần, giảm timeout xuống 3s
+- **NTP retry block 500ms mỗi loop**: `getLocalTime(500ms)` chạy mỗi iteration cho đến khi sync. **Fix**: Giảm timeout xuống 50ms
+- **Frontend latency tracking overlap**: `setInterval(300ms)` tạo request chồng chất khi mạng chậm. **Fix**: Đổi sang `setTimeout` chaining — chờ xong mới poll tiếp
+- **Button disabled vĩnh viễn khi timeout**: User bị kẹt không bấm được gì sau 10s timeout. **Fix**: Re-enable tất cả buttons khi timeout
+- **Frontend pollState overlap**: `setInterval(pollState, 3s)` chồng chất khi query chậm. **Fix**: Đổi sang `setTimeout` chaining
+- **handleStart 3 query tuần tự**: Mất 300-900ms trước khi insert command. **Fix**: Chạy 2 validation song song `Promise.all`
+- **Admin 14 query tuần tự mỗi 5s**: Gây chậm + overlap. **Fix**: Song song `Promise.all`, data ít thay đổi chỉ load mỗi 30s, mutex flag chống overlap
+- **Admin sendCommand nuốt lỗi**: Supabase trả error nhưng vẫn hiện "Đã gửi". **Fix**: Check `{ error }` + throw
+
+### Thay doi
+- ESP32: Deferred task queue (pendingCreateSession, pendingEndSession, pendingMarkExecuted...)
+- ESP32: OTA check interval 5s → 3,600s (1 giờ)
+- ESP32: NTP retry timeout 500ms → 50ms
+- ESP32: Firmware version 1.0.0 → 1.0.1
+- Frontend: `startLatencyTracking()` dùng setTimeout + re-enable buttons on timeout
+- Frontend: `handleStart()` dùng Promise.all cho validation
+- Frontend: pollState dùng setTimeout chaining
+- Admin: refresh() song song + tách slow data (30s) + mutex
+- Admin: sendCommand() check error
+
+### File thay doi
+- `booth_esp32_3/booth_esp32_3.ino`, `index.html`, `admin.html`
+
+---
+
+## [2026-03-13] OTA Firmware Update + Admin Responsive + Logitech Seed
+
+### Tinh nang
+- **OTA firmware update**: ESP32 poll ota_updates table mỗi 1 giờ, tải .bin qua HTTP, flash, reboot
+- **Admin Firmware tab**: Upload firmware, quản lý version, trigger OTA per-booth hoặc bulk, OTA history
+- **Admin responsive**: Mobile-friendly CSS với breakpoint 768px (tablet) và 480px (mobile)
+- **Logitech seed data**: Brand Logitech + MX Master 3S + MX Keys S, gán vào BOOTH_001 và BOOTH_002
+- **Heartbeat gửi firmware_version**: Admin thấy FW version mỗi booth
+
+### Database
+- Bảng mới: `firmwares`, `ota_updates`
+- Cột mới trên `booths`: `firmware_version`, `ota_status`, `ota_progress`
+
+### Yeu cau
+- Chạy `migration_ota.sql` trong Supabase SQL Editor
+- Tạo Supabase Storage bucket "firmware" (Public)
+- ESP32 cần partition scheme: Minimal SPIFFS (1.9MB APP with OTA/128KB SPIFFS)
+
+### File thay doi
+- `booth_esp32_3/booth_esp32_3.ino`, `admin.html`, `migration_ota.sql`, `seed_products.sql`
+
+---
+
+## [2026-03-13] Supabase Realtime - Giảm latency mở cửa ~2.5x
+
+### Tinh nang
+- **WebSocket Realtime**: ESP32 nhận command qua Supabase Realtime (WebSocket) thay vì chỉ poll HTTP. Latency giảm từ ~700ms xuống ~200-300ms
+- **Hybrid mode**: WebSocket là primary, HTTP poll mỗi 5s là backup. Nếu WS mất → tự fallback về poll 500ms
+- **Phoenix protocol**: Join channel, heartbeat 25s, auto-reconnect khi WiFi mất/lên lại
+- **Dedup**: Cùng command không bị xử lý 2 lần giữa WS và HTTP poll
+
+### Thay doi
+- Thêm `WebSocketsClient.h` (cần cài library "WebSockets" by Markus Sattler)
+- `connectRealtime()`, `wsEvent()`, `wsJoinChannel()`, `wsPhoenixHeartbeat()`, `handleRealtimeMessage()`
+- `executeCommand()` - shared logic cho cả WS và poll
+- `POLL_FALLBACK_MS = 5000` khi WS hoạt động, `POLL_INTERVAL_MS = 500` khi WS mất
+
+### Yeu cau
+- Cài library: Arduino IDE → Library Manager → "WebSockets" by Markus Sattler
+- Chạy SQL: `ALTER PUBLICATION supabase_realtime ADD TABLE commands;`
+
+### File thay doi
+- `booth_esp32_3/booth_esp32_3.ino`, `migration_realtime.sql`
+
+---
+
+## [2026-03-13] Command Latency Tracking
+
+### Tinh nang
+- **Đo latency realtime**: User thấy "Đang mở cửa... 1.2s" → "Cửa đã mở! (1.8s)" sau khi bấm
+- **ESP32 ghi timestamp**: `executed_at` (thời điểm nhận command), `relay_at` (thời điểm mở relay)
+- **Relay trước, DB sau**: ESP32 mở relay ngay khi nhận command, ghi DB sau → giảm ~300ms
+- **Tách heartbeat**: HTTP heartbeat mỗi 5s riêng, không chặn poll commands
+- **Admin Latency Dashboard**: Avg/Min/Max latency, filter theo booth/action/ngày, bảng chi tiết với màu xanh/vàng/đỏ
+- **Timeout 10s**: Web app tự timeout nếu booth không phản hồi
+
+### Thay doi
+- `commands` table: thêm cột `executed_at`, `relay_at` (timestamptz)
+- ESP32: poll 2s → 500ms, HTTP timeout 5s → 3s, `markExecutedWithTimestamp()`
+- Web: `startLatencyTracking()` cho tất cả actions (open/close/pause/resume)
+- Admin: section "Command Latency" trong tab Reports
+
+### Yeu cau
+- Chạy `migration_latency.sql` trong Supabase SQL Editor
+
+### File thay doi
+- `booth_esp32_3/booth_esp32_3.ino`, `index.html`, `admin.html`, `migration_latency.sql`
+
+---
+
+## [2026-03-12] Product Placement Phase 1 (MVP)
+
+### Tinh nang
+- **3 Brands, 4 Products seed data**: Highlands Coffee, The Coffee House, Epione
+- **Admin CRUD**: Tab navigation, Brand/Product/Booth Product management, QR code generation
+- **Post-session Product Discovery**: Hiển thị max 2 sản phẩm sau khi kết thúc phiên (Brand trước Epione)
+- **Product Detail**: Full-screen overlay với image carousel, swipe, thông tin sản phẩm
+- **Lead Capture**: Voucher CTA (copy mã) hoặc "Tôi quan tâm", dedup cùng ngày
+- **Check-in Products**: Hiển thị sản phẩm khi booth idle
+- **QR Deep Link**: Scan QR → mở thẳng product detail
+- **Report Dashboard**: Impressions, Leads, Vouchers, Conversion rate, export CSV
+- **Device User ID**: `crypto.randomUUID()` + localStorage (không cần auth cho MVP)
+- **Impression dedup**: Cùng user + sản phẩm + source chỉ đếm 1 lần/session
+
+### Database
+- 5 bảng mới: `brands`, `products`, `booth_products`, `product_impressions`, `product_leads`
+- RLS "allow all" cho MVP
+
+### File thay doi
+- `index.html`, `admin.html`, `migration_products.sql`, `seed_products.sql`
+
+---
+
 ## [2026-03-12] WiFi logging cho admin giám sát
 
 ### Tinh nang

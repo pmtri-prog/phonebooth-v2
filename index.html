@@ -5,31 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Epione PhoneBooth</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap');
+
+    :root {
+      --color-black: #282828;
+      --color-gray: #EDEDED;
+      --color-white: #FFFFFF;
+      --color-accent: #10069F;
+      --color-text-primary: #282828;
+      --color-text-secondary: #888888;
+      --color-text-hint: #BBBBBB;
+      --color-border: #EDEDED;
+      --color-border-active: #10069F;
+      --color-voucher-active-bg: #E8E8FF;
+      --color-voucher-active-text: #10069F;
+      --color-voucher-used-bg: #EDEDED;
+      --color-voucher-used-text: #888888;
+      --color-voucher-expired-bg: #FDE8E8;
+      --color-voucher-expired-text: #993333;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+      --color-success: #22c55e;
+      --font-family: 'Nunito Sans', sans-serif;
+      --radius-card: 12px;
+      --radius-button: 24px;
+      --radius-input: 8px;
+      --radius-thumb: 8px;
+      --radius-sheet: 16px;
+      --radius-badge: 6px;
+      --space-page: 16px;
+      --space-card: 12px;
+      --space-gap: 8px;
+      --space-section: 16px;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #FFFFFF;
+      font-family: var(--font-family);
+      background: var(--color-white);
       min-height: 100vh;
-      color: #282828;
+      color: var(--color-text-primary);
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
     }
 
     .hidden { display: none !important; }
 
     /* ===== HEADER ===== */
     .header {
-      background: #282828;
-      padding: 16px 20px;
+      background: var(--color-black);
+      padding: var(--space-page) 20px;
       text-align: center;
     }
     .logo {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 700;
       color: #fff;
       letter-spacing: -0.3px;
     }
-    .logo span { color: #EDEDED; font-weight: 400; }
+    .logo span { color: var(--color-gray); font-weight: 400; }
     .booth-name-bar {
       font-size: 12px;
       color: rgba(255,255,255,0.6);
@@ -43,22 +79,22 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 8px 0;
+      padding: var(--space-gap) 0;
       font-size: 12px;
       font-weight: 600;
-      background: #EDEDED;
+      background: var(--color-gray);
     }
     .conn-dot {
       width: 7px;
       height: 7px;
       border-radius: 50%;
     }
-    .conn-bar.online .conn-dot { background: #22c55e; }
+    .conn-bar.online .conn-dot { background: var(--color-success); }
     .conn-bar.online .conn-label { color: #16a34a; }
-    .conn-bar.offline .conn-dot { background: #ef4444; }
-    .conn-bar.offline .conn-label { color: #ef4444; }
-    .conn-bar.checking .conn-dot { background: #f59e0b; animation: pulse 1.2s infinite; }
-    .conn-bar.checking .conn-label { color: #f59e0b; }
+    .conn-bar.offline .conn-dot { background: var(--color-error); }
+    .conn-bar.offline .conn-label { color: var(--color-error); }
+    .conn-bar.checking .conn-dot { background: var(--color-warning); animation: pulse 1.2s infinite; }
+    .conn-bar.checking .conn-label { color: var(--color-warning); }
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.3; transform: scale(0.8); }
@@ -73,12 +109,12 @@
       min-height: calc(100vh - 56px);
       padding: 40px 24px;
       text-align: center;
-      background: #FFFFFF;
+      background: var(--color-white);
     }
     .landing-visual {
       width: 120px;
       height: 120px;
-      background: #EDEDED;
+      background: var(--color-gray);
       border-radius: 32px;
       display: flex;
       align-items: center;
@@ -93,14 +129,14 @@
     }
     .landing h1 {
       font-size: 26px;
-      font-weight: 800;
-      color: #282828;
-      margin-bottom: 8px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-gap);
       line-height: 1.2;
     }
     .landing-sub {
       font-size: 15px;
-      color: #888;
+      color: var(--color-text-secondary);
       line-height: 1.6;
       max-width: 280px;
       margin-bottom: 36px;
@@ -115,8 +151,8 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #10069F;
-      margin-bottom: 16px;
+      color: var(--color-accent);
+      margin-bottom: var(--space-section);
     }
     .step {
       display: flex;
@@ -128,7 +164,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: #282828;
+      background: var(--color-black);
       color: #fff;
       font-size: 14px;
       font-weight: 700;
@@ -144,12 +180,12 @@
       display: block;
       font-size: 14px;
       font-weight: 700;
-      color: #282828;
+      color: var(--color-text-primary);
       margin-bottom: 2px;
     }
     .step-content p {
       font-size: 13px;
-      color: #888;
+      color: var(--color-text-secondary);
       line-height: 1.4;
     }
 
@@ -175,14 +211,14 @@
       transition: all 0.4s ease;
     }
     .state-visual.idle {
-      background: #EDEDED;
+      background: var(--color-gray);
     }
     .state-visual.active {
-      background: #10069F;
+      background: var(--color-accent);
       box-shadow: 0 0 0 16px rgba(16,6,159,0.08), 0 0 0 32px rgba(16,6,159,0.04);
     }
     .state-visual.paused {
-      background: #f59e0b;
+      background: var(--color-warning);
       box-shadow: 0 0 0 16px rgba(245,158,11,0.08), 0 0 0 32px rgba(245,158,11,0.04);
     }
     .state-visual.paused .ring {
@@ -206,7 +242,7 @@
       100% { transform: scale(1.3); opacity: 0; }
     }
     .state-visual.offline {
-      background: #EDEDED;
+      background: var(--color-gray);
       opacity: 0.5;
     }
     .state-icon {
@@ -221,14 +257,14 @@
       letter-spacing: 1px;
       margin-bottom: 6px;
     }
-    .state-label.idle { color: #888; }
-    .state-label.active { color: #10069F; }
-    .state-label.paused { color: #f59e0b; }
-    .state-label.offline { color: #ef4444; }
+    .state-label.idle { color: var(--color-text-secondary); }
+    .state-label.active { color: var(--color-accent); }
+    .state-label.paused { color: var(--color-warning); }
+    .state-label.offline { color: var(--color-error); }
 
     .state-msg {
       font-size: 15px;
-      color: #888;
+      color: var(--color-text-secondary);
       text-align: center;
       max-width: 260px;
       line-height: 1.5;
@@ -242,15 +278,15 @@
     }
     .timer {
       font-size: 56px;
-      font-weight: 800;
-      color: #282828;
+      font-weight: 700;
+      color: var(--color-text-primary);
       font-variant-numeric: tabular-nums;
       line-height: 1;
       letter-spacing: -2px;
     }
     .timer-label {
       font-size: 11px;
-      color: #aaa;
+      color: var(--color-text-hint);
       margin-top: 6px;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -260,10 +296,10 @@
     /* Motivational message */
     .moti-msg {
       font-size: 14px;
-      color: #10069F;
+      color: var(--color-accent);
       font-weight: 600;
       text-align: center;
-      margin: 8px 0 16px;
+      margin: var(--space-gap) 0 var(--space-section);
       min-height: 20px;
       transition: opacity 0.3s;
     }
@@ -279,11 +315,11 @@
       display: block;
       width: 100%;
       border: none;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-family);
       font-size: 17px;
       font-weight: 700;
       padding: 18px 0;
-      border-radius: 14px;
+      border-radius: var(--radius-button);
       cursor: pointer;
       transition: transform 0.1s, opacity 0.2s;
       -webkit-tap-highlight-color: transparent;
@@ -292,26 +328,26 @@
     .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
     .btn-start {
-      background: #282828;
-      color: #FFFFFF;
+      background: var(--color-black);
+      color: var(--color-white);
       box-shadow: 0 4px 20px rgba(40,40,40,0.25);
     }
     .btn-end {
-      background: #FFFFFF;
-      color: #282828;
-      border: 2px solid #282828;
+      background: var(--color-white);
+      color: var(--color-black);
+      border: 2px solid var(--color-black);
     }
-    .btn-end:active { background: #EDEDED; }
+    .btn-end:active { background: var(--color-gray); }
     .btn-pause {
-      background: #FFFFFF;
-      color: #f59e0b;
-      border: 2px solid #f59e0b;
+      background: var(--color-white);
+      color: var(--color-warning);
+      border: 2px solid var(--color-warning);
       margin-bottom: 10px;
     }
     .btn-pause:active { background: #fffbeb; }
     .btn-resume {
-      background: #f59e0b;
-      color: #FFFFFF;
+      background: var(--color-warning);
+      color: var(--color-white);
       box-shadow: 0 4px 20px rgba(245,158,11,0.25);
       margin-bottom: 10px;
     }
@@ -319,18 +355,18 @@
     .pause-info {
       text-align: center;
       font-size: 12px;
-      color: #f59e0b;
+      color: var(--color-warning);
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: var(--space-gap);
     }
 
     .status-msg {
       text-align: center;
-      padding: 12px 0;
+      padding: var(--space-card) 0;
       font-size: 13px;
       min-height: 40px;
       font-weight: 500;
-      color: #888;
+      color: var(--color-text-secondary);
     }
 
     /* ===== ONBOARDING OVERLAY ===== */
@@ -346,8 +382,8 @@
       justify-content: center;
     }
     .onboard-sheet {
-      background: #fff;
-      border-radius: 24px 24px 0 0;
+      background: var(--color-white);
+      border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
       padding: 28px 24px 36px;
       width: 100%;
       max-width: 420px;
@@ -359,13 +395,13 @@
     }
     .onboard-sheet h2 {
       font-size: 22px;
-      font-weight: 800;
-      color: #282828;
+      font-weight: 700;
+      color: var(--color-text-primary);
       margin-bottom: 6px;
     }
     .onboard-sheet .sub {
       font-size: 14px;
-      color: #888;
+      color: var(--color-text-secondary);
       margin-bottom: 24px;
       line-height: 1.5;
     }
@@ -378,10 +414,10 @@
     .tip {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
+      gap: var(--space-card);
+      padding: var(--space-card) 14px;
       background: #F8F8F8;
-      border-radius: 12px;
+      border-radius: var(--radius-card);
     }
     .tip-icon {
       font-size: 24px;
@@ -393,18 +429,18 @@
       font-weight: 500;
       line-height: 1.4;
     }
-    .tip-text strong { color: #282828; }
+    .tip-text strong { color: var(--color-text-primary); }
     .btn-onboard {
       display: block;
       width: 100%;
-      background: #10069F;
+      background: var(--color-accent);
       color: #fff;
       border: none;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-family);
       font-size: 16px;
       font-weight: 700;
       padding: 16px 0;
-      border-radius: 14px;
+      border-radius: var(--radius-button);
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
@@ -420,7 +456,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #282828;
+      color: var(--color-text-primary);
       text-align: center;
       padding: 40px 24px;
       animation: fadeIn 0.3s ease;
@@ -444,7 +480,7 @@
     }
     .completion-icon {
       font-size: 80px;
-      margin-bottom: 16px;
+      margin-bottom: var(--space-section);
       animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     @keyframes bounceIn {
@@ -454,8 +490,8 @@
     }
     .completion-title {
       font-size: 32px;
-      font-weight: 800;
-      color: #282828;
+      font-weight: 700;
+      color: var(--color-text-primary);
       margin-bottom: 4px;
     }
     .completion-sub {
@@ -465,28 +501,28 @@
     }
     .completion-duration {
       font-size: 52px;
-      font-weight: 800;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
-      margin: 12px 0;
-      color: #10069F;
+      margin: var(--space-card) 0;
+      color: var(--color-accent);
       letter-spacing: -2px;
     }
     .completion-msg {
       font-size: 15px;
-      color: #888;
+      color: var(--color-text-secondary);
       max-width: 280px;
       line-height: 1.5;
       margin-bottom: 20px;
     }
     .btn-done {
-      background: #282828;
+      background: var(--color-black);
       color: #fff;
       border: none;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-family);
       font-size: 16px;
       font-weight: 700;
       padding: 16px 48px;
-      border-radius: 14px;
+      border-radius: var(--radius-button);
       cursor: pointer;
       box-shadow: 0 4px 16px rgba(40,40,40,0.2);
     }
@@ -496,8 +532,8 @@
     .feedback-section {
       width: 100%;
       max-width: 340px;
-      background: #fff;
-      border-radius: 16px;
+      background: var(--color-white);
+      border-radius: var(--radius-sheet);
       padding: 20px;
       margin-top: 20px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
@@ -506,22 +542,22 @@
       font-size: 14px;
       color: #555;
       font-weight: 600;
-      margin-bottom: 16px;
+      margin-bottom: var(--space-section);
       text-align: center;
     }
     .rating-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      gap: 8px;
+      margin-bottom: var(--space-card);
+      gap: var(--space-gap);
     }
-    .rating-row:last-of-type { margin-bottom: 16px; }
+    .rating-row:last-of-type { margin-bottom: var(--space-section); }
     .rating-icon { font-size: 20px; flex-shrink: 0; }
     .rating-label {
       font-size: 12px;
       font-weight: 600;
-      color: #282828;
+      color: var(--color-text-primary);
       flex: 1;
       line-height: 1.3;
     }
@@ -547,27 +583,27 @@
     .feedback-input {
       width: 100%;
       background: #F8F8F8;
-      border: 1px solid #EDEDED;
-      border-radius: 10px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
       padding: 10px 14px;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-family);
       font-size: 13px;
-      color: #282828;
+      color: var(--color-text-primary);
       resize: none;
       outline: none;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-card);
     }
-    .feedback-input::placeholder { color: #bbb; }
-    .feedback-input:focus { border-color: #10069F; }
+    .feedback-input::placeholder { color: var(--color-text-hint); }
+    .feedback-input:focus { border-color: var(--color-border-active); }
     .btn-send-feedback {
-      background: #10069F;
+      background: var(--color-accent);
       color: #fff;
       border: none;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-family);
       font-size: 14px;
       font-weight: 700;
       padding: 12px 28px;
-      border-radius: 10px;
+      border-radius: var(--radius-input);
       cursor: pointer;
       transition: opacity 0.2s;
       width: 100%;
@@ -576,9 +612,360 @@
     .btn-send-feedback:disabled { opacity: 0.3; cursor: default; }
     .feedback-thanks {
       font-size: 15px;
-      color: #10069F;
+      color: var(--color-accent);
       font-weight: 700;
-      padding: 12px 0;
+      padding: var(--space-card) 0;
+    }
+
+    /* ===== PRODUCT DISCOVERY ===== */
+    .product-discovery-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--color-white);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 20px 24px;
+      animation: fadeIn 0.3s ease;
+      overflow-y: auto;
+    }
+    .pd-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .pd-cards {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-section);
+      flex: 1;
+    }
+    .pd-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .pd-card-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #F8F8F8;
+      display: block;
+    }
+    .pd-card-body { padding: 14px var(--space-section); }
+    .pd-card-brand {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #999;
+      margin-bottom: 2px;
+    }
+    .pd-card-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .pd-card-price {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: 10px;
+    }
+    .pd-card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-card);
+    }
+    .pd-card-cta {
+      display: inline-block;
+      background: var(--color-accent);
+      color: #fff;
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: var(--radius-input);
+      border: none;
+      cursor: pointer;
+      flex: 1;
+      text-align: center;
+    }
+    .pd-card-cta:active { opacity: 0.85; }
+    .pd-card-link {
+      font-size: 12px;
+      color: var(--color-accent);
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-pd-done {
+      background: var(--color-black);
+      color: #fff;
+      border: none;
+      font-family: var(--font-family);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 0;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      width: 100%;
+      max-width: 360px;
+      margin-top: 20px;
+      flex-shrink: 0;
+    }
+    .btn-pd-done:active { transform: scale(0.97); }
+
+    /* ===== PRODUCT DETAIL ===== */
+    .product-detail-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--color-white);
+      z-index: 110;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease;
+      overflow-y: auto;
+    }
+    .pdet-back {
+      position: fixed;
+      top: var(--space-page);
+      left: var(--space-page);
+      z-index: 112;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--color-border);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pdet-back:active { background: var(--color-gray); }
+    .pdet-carousel {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: #F8F8F8;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .pdet-carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .pdet-dots {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+    }
+    .pdet-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+    }
+    .pdet-dot.active { background: #fff; }
+    .pdet-body {
+      padding: 20px;
+      flex: 1;
+      padding-bottom: 100px;
+    }
+    .pdet-brand {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-accent);
+      margin-bottom: 4px;
+    }
+    .pdet-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-gap);
+    }
+    .pdet-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-accent);
+      margin-bottom: var(--space-section);
+    }
+    .pdet-desc {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: var(--space-section);
+      white-space: pre-line;
+    }
+    .pdet-link {
+      display: inline-block;
+      font-size: 13px;
+      color: var(--color-accent);
+      font-weight: 600;
+      text-decoration: underline;
+      margin-bottom: var(--space-section);
+    }
+    .pdet-cta-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-white);
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-card) 20px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 113;
+    }
+    .pdet-cta-btn {
+      display: block;
+      width: 100%;
+      background: var(--color-accent);
+      color: #fff;
+      font-family: var(--font-family);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 0;
+      border-radius: var(--radius-button);
+      border: none;
+      cursor: pointer;
+    }
+    .pdet-cta-btn:active { opacity: 0.85; }
+
+    /* ===== LEAD CONFIRMATION ===== */
+    .lead-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(40,40,40,0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 120;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .lead-sheet {
+      background: var(--color-white);
+      border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+      padding: 28px 24px 36px;
+      width: 100%;
+      max-width: 420px;
+      animation: slideUp 0.3s ease;
+      text-align: center;
+    }
+    .lead-icon { font-size: 48px; margin-bottom: var(--space-card); }
+    .lead-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-gap);
+    }
+    .lead-desc {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin-bottom: var(--space-section);
+    }
+    .voucher-box {
+      background: var(--color-voucher-active-bg);
+      border: 2px dashed var(--color-accent);
+      border-radius: var(--radius-card);
+      padding: var(--space-section);
+      margin-bottom: var(--space-section);
+    }
+    .voucher-code {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-voucher-active-text);
+      letter-spacing: 2px;
+      margin-bottom: var(--space-gap);
+    }
+    .voucher-copy-btn {
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-accent);
+      background: none;
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius-badge);
+      padding: 6px 16px;
+      cursor: pointer;
+    }
+    .voucher-copy-btn:active { background: var(--color-voucher-active-bg); }
+    .btn-lead-done {
+      background: var(--color-black);
+      color: #fff;
+      border: none;
+      font-family: var(--font-family);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 0;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn-lead-done:active { transform: scale(0.97); }
+
+    /* ===== CHECK-IN PRODUCTS ===== */
+    .checkin-products {
+      width: 100%;
+      max-width: 360px;
+      margin-top: 24px;
+    }
+    .checkin-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-accent);
+      margin-bottom: 10px;
+    }
+    .checkin-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-card);
+      padding: 10px var(--space-card);
+      background: #F8F8F8;
+      border-radius: var(--radius-card);
+      cursor: pointer;
+      margin-bottom: var(--space-gap);
+      transition: transform 0.15s;
+    }
+    .checkin-card:active { transform: scale(0.98); }
+    .checkin-card-img {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-thumb);
+      object-fit: cover;
+      background: var(--color-gray);
+      flex-shrink: 0;
+    }
+    .checkin-card-info { flex: 1; }
+    .checkin-card-brand {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #999;
+    }
+    .checkin-card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
     }
   </style>
 </head>
@@ -657,6 +1044,12 @@
         <button class="btn btn-resume hidden" id="btnResume" onclick="handleResume()">Tiếp tục phiên</button>
         <div class="pause-info hidden" id="pauseInfo"></div>
         <button class="btn btn-end hidden" id="btnEnd" onclick="handleEnd()">Kết thúc phiên</button>
+      </div>
+
+      <!-- Check-in product notification -->
+      <div class="checkin-products hidden" id="checkinProducts">
+        <div class="checkin-title">Booth này đang có</div>
+        <div id="checkinCards"></div>
       </div>
     </div>
   </div>
@@ -739,6 +1132,43 @@
     <button class="btn-done" onclick="closeCompletion()" style="margin-top:16px;">Xong</button>
   </div>
 
+  <!-- ==================== PRODUCT DISCOVERY ==================== -->
+  <div class="product-discovery-overlay hidden" id="productDiscoveryOverlay">
+    <div class="pd-title">Hôm nay bạn đã trải nghiệm</div>
+    <div class="pd-cards" id="pdCards"></div>
+    <button class="btn-pd-done" onclick="closeProductDiscovery()">Xong</button>
+  </div>
+
+  <!-- ==================== PRODUCT DETAIL ==================== -->
+  <div class="product-detail-overlay hidden" id="productDetailOverlay">
+    <button class="pdet-back" onclick="closeProductDetail()">&#8592;</button>
+    <div class="pdet-carousel" id="pdetCarousel"></div>
+    <div class="pdet-body">
+      <div class="pdet-brand" id="pdetBrand"></div>
+      <div class="pdet-name" id="pdetName"></div>
+      <div class="pdet-price" id="pdetPrice"></div>
+      <div class="pdet-desc" id="pdetDesc"></div>
+      <a class="pdet-link hidden" id="pdetLink" href="#" target="_blank"></a>
+    </div>
+    <div class="pdet-cta-bar">
+      <button class="pdet-cta-btn" id="pdetCtaBtn" onclick="handleProductCta()"></button>
+    </div>
+  </div>
+
+  <!-- ==================== LEAD CONFIRMATION ==================== -->
+  <div class="lead-overlay hidden" id="leadOverlay">
+    <div class="lead-sheet">
+      <div class="lead-icon" id="leadIcon"></div>
+      <div class="lead-title" id="leadTitle"></div>
+      <div class="lead-desc" id="leadDesc"></div>
+      <div class="voucher-box hidden" id="voucherBox">
+        <div class="voucher-code" id="voucherCode"></div>
+        <button class="voucher-copy-btn" onclick="copyVoucher()">Sao chép mã</button>
+      </div>
+      <button class="btn-lead-done" onclick="closeLeadConfirmation()">Xong</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // ============== CONFIG ==============
@@ -747,9 +1177,17 @@
     const POLL_MS = 3000;
     const HEARTBEAT_TIMEOUT_S = 20;
     const ONBOARD_KEY = 'epione_onboarded';
+    const DEVICE_ID_KEY = 'epione_device_id';
+    function getDeviceId() {
+      let id = localStorage.getItem(DEVICE_ID_KEY);
+      if (!id) { id = crypto.randomUUID(); localStorage.setItem(DEVICE_ID_KEY, id); }
+      return id;
+    }
+    const DEVICE_USER_ID = getDeviceId();
 
     const urlParams = new URLSearchParams(window.location.search);
     const BOOTH_ID = urlParams.get('booth');
+    const PRODUCT_PARAM = urlParams.get('product');
 
     if (!BOOTH_ID) {
       document.getElementById('pageLanding').classList.remove('hidden');
@@ -808,6 +1246,7 @@
     window.closeCompletion = function() {
       document.getElementById('completionOverlay').classList.add('hidden');
       resetFeedback();
+      showProductDiscovery();
     };
 
     function showCompletion(durationStr) {
@@ -889,6 +1328,312 @@
       document.getElementById('feedbackThanks').classList.remove('hidden');
     };
 
+    // ============== PRODUCT PLACEMENT ==============
+    let cachedBoothProducts = [];
+    let userLeadProductIds = new Set();
+    let trackedImpressions = new Set();
+    let currentProductSource = 'post_session';
+    let currentDetailProduct = null;
+    let currentCarouselIndex = 0;
+    let ppDb = null;
+
+    function getPPDb() {
+      if (!ppDb) {
+        const { createClient } = supabase;
+        ppDb = createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+      return ppDb;
+    }
+
+    async function loadBoothProductsForBooth(boothId) {
+      const db = getPPDb();
+      const today = new Date().toISOString().split('T')[0];
+      const { data } = await db.from('booth_products')
+        .select('*, products(*, brands(name, logo_url))')
+        .eq('booth_id', boothId)
+        .eq('status', 'active')
+        .lte('start_date', today)
+        .gte('end_date', today);
+      if (!data) { cachedBoothProducts = []; return []; }
+      data.sort((a, b) => {
+        const aEp = a.products.is_epione ? 1 : 0;
+        const bEp = b.products.is_epione ? 1 : 0;
+        if (aEp !== bEp) return aEp - bEp;
+        return (a.priority || 0) - (b.priority || 0);
+      });
+      cachedBoothProducts = data;
+      return data;
+    }
+
+    async function loadUserLeads() {
+      const db = getPPDb();
+      const { data } = await db.from('product_leads')
+        .select('booth_product_id')
+        .eq('user_id', DEVICE_USER_ID);
+      userLeadProductIds = new Set((data || []).map(d => d.booth_product_id));
+    }
+
+    function getEligibleProducts(maxCount) {
+      return cachedBoothProducts
+        .slice(0, maxCount || 2);
+    }
+
+    async function trackImpression(boothProductId, source) {
+      const key = boothProductId + '_' + source;
+      if (trackedImpressions.has(key)) return;
+      trackedImpressions.add(key);
+      try {
+        const db = getPPDb();
+        await db.from('product_impressions').insert({
+          user_id: DEVICE_USER_ID,
+          booth_product_id: boothProductId,
+          source: source
+        });
+      } catch (e) { /* silent */ }
+    }
+
+    async function createLead(boothProductId, ctaType, source) {
+      const db = getPPDb();
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const { data: existing } = await db.from('product_leads')
+        .select('id')
+        .eq('user_id', DEVICE_USER_ID)
+        .eq('booth_product_id', boothProductId)
+        .gte('created_at', todayStart.toISOString())
+        .limit(1);
+      if (existing && existing.length > 0) return;
+      const isVoucher = ctaType === 'get_voucher';
+      await db.from('product_leads').insert({
+        user_id: DEVICE_USER_ID,
+        booth_product_id: boothProductId,
+        cta_type: ctaType,
+        source: source,
+        voucher_redeemed: isVoucher
+      });
+      userLeadProductIds.add(boothProductId);
+    }
+
+    // --- Product Discovery (F1) ---
+    async function showProductDiscovery() {
+      if (!BOOTH_ID) return;
+      try {
+        await loadBoothProductsForBooth(BOOTH_ID);
+        await loadUserLeads();
+      } catch (e) { return; }
+      const products = getEligibleProducts(2);
+      if (products.length === 0) return;
+
+      currentProductSource = 'post_session';
+      const container = document.getElementById('pdCards');
+      container.innerHTML = products.map(bp => {
+        const p = bp.products;
+        const brand = p.brands || {};
+        const imgUrl = (p.images && p.images.length > 0) ? p.images[0] : '';
+        const ctaText = p.cta_type === 'get_voucher'
+          ? (p.voucher_description || 'Nhận ưu đãi')
+          : 'Tôi quan tâm';
+        const priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
+        return '<div class="pd-card">' +
+          (imgUrl ? '<img class="pd-card-img" src="' + imgUrl + '" alt="">' : '<div class="pd-card-img"></div>') +
+          '<div class="pd-card-body">' +
+            '<div class="pd-card-brand">' + (brand.name || '') + '</div>' +
+            '<div class="pd-card-name">' + p.name + '</div>' +
+            (priceStr ? '<div class="pd-card-price">' + priceStr + '</div>' : '') +
+            '<div class="pd-card-row">' +
+              '<button class="pd-card-cta" onclick="event.stopPropagation(); handleDiscoveryCta(\'' + bp.id + '\')">' + ctaText + '</button>' +
+              '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Tìm hiểu thêm →</span>' +
+            '</div>' +
+          '</div></div>';
+      }).join('');
+
+      document.getElementById('productDiscoveryOverlay').classList.remove('hidden');
+      for (const bp of products) { trackImpression(bp.id, 'post_session'); }
+    }
+
+    window.closeProductDiscovery = function() {
+      document.getElementById('productDiscoveryOverlay').classList.add('hidden');
+    };
+
+    window.handleDiscoveryCta = async function(boothProductId) {
+      const bp = cachedBoothProducts.find(x => x.id === boothProductId);
+      if (!bp) return;
+      currentProductSource = 'post_session';
+      await createLead(boothProductId, bp.products.cta_type, 'post_session');
+      showLeadConfirmation(bp);
+    };
+
+    // --- Product Detail (F4) ---
+    window.openProductDetail = function(boothProductId, source) {
+      const bp = cachedBoothProducts.find(x => x.id === boothProductId);
+      if (!bp) return;
+      currentDetailProduct = bp;
+      currentProductSource = source;
+      const p = bp.products;
+      const brand = p.brands || {};
+      const images = p.images || [];
+      currentCarouselIndex = 0;
+
+      const carousel = document.getElementById('pdetCarousel');
+      if (images.length > 0) {
+        carousel.innerHTML = '<img src="' + images[0] + '" alt="" id="pdetCarouselImg">' +
+          (images.length > 1 ? '<div class="pdet-dots">' +
+            images.map((_, i) => '<div class="pdet-dot' + (i === 0 ? ' active' : '') + '" onclick="setCarouselSlide(' + i + ')"></div>').join('') +
+          '</div>' : '');
+      } else {
+        carousel.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;background:#F8F8F8;">📦</div>';
+      }
+
+      // Swipe support
+      let touchStartX = 0;
+      carousel.ontouchstart = function(e) { touchStartX = e.touches[0].clientX; };
+      carousel.ontouchend = function(e) {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50 && images.length > 1) {
+          if (diff > 0 && currentCarouselIndex < images.length - 1) setCarouselSlide(currentCarouselIndex + 1);
+          else if (diff < 0 && currentCarouselIndex > 0) setCarouselSlide(currentCarouselIndex - 1);
+        }
+      };
+
+      document.getElementById('pdetBrand').textContent = brand.name || '';
+      document.getElementById('pdetName').textContent = p.name;
+      document.getElementById('pdetPrice').textContent = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
+      document.getElementById('pdetDesc').textContent = p.description || '';
+
+      const link = document.getElementById('pdetLink');
+      if (p.cta_link) {
+        link.href = p.cta_link;
+        link.textContent = 'Mua ngay →';
+        link.classList.remove('hidden');
+      } else {
+        link.classList.add('hidden');
+      }
+
+      const ctaBtn = document.getElementById('pdetCtaBtn');
+      ctaBtn.textContent = p.cta_type === 'get_voucher'
+        ? (p.voucher_description || 'Nhận ưu đãi')
+        : 'Tôi quan tâm';
+
+      document.getElementById('productDetailOverlay').classList.remove('hidden');
+      const detailSource = source === 'post_session' ? 'post_session_detail' : (source === 'check_in' ? 'check_in_detail' : 'qr_scan');
+      trackImpression(bp.id, detailSource);
+    };
+
+    window.setCarouselSlide = function(index) {
+      if (!currentDetailProduct) return;
+      const images = currentDetailProduct.products.images || [];
+      if (index >= images.length) return;
+      currentCarouselIndex = index;
+      const img = document.getElementById('pdetCarouselImg');
+      if (img) img.src = images[index];
+      document.querySelectorAll('.pdet-dot').forEach(function(d, i) {
+        d.classList.toggle('active', i === index);
+      });
+    };
+
+    window.closeProductDetail = function() {
+      document.getElementById('productDetailOverlay').classList.add('hidden');
+    };
+
+    window.handleProductCta = async function() {
+      if (!currentDetailProduct) return;
+      await createLead(currentDetailProduct.id, currentDetailProduct.products.cta_type, currentProductSource);
+      showLeadConfirmation(currentDetailProduct);
+    };
+
+    // --- Lead Confirmation ---
+    function showLeadConfirmation(bp) {
+      const p = bp.products;
+      if (p.cta_type === 'get_voucher') {
+        document.getElementById('leadIcon').textContent = '🎉';
+        document.getElementById('leadTitle').textContent = 'Nhận ưu đãi thành công!';
+        document.getElementById('leadDesc').textContent = p.voucher_description || 'Đây là mã ưu đãi của bạn:';
+        document.getElementById('voucherCode').textContent = p.voucher_code || '';
+        document.getElementById('voucherBox').classList.remove('hidden');
+      } else {
+        document.getElementById('leadIcon').textContent = '✅';
+        document.getElementById('leadTitle').textContent = 'Đã ghi nhận!';
+        document.getElementById('leadDesc').textContent = 'Cảm ơn bạn đã quan tâm. Epione sẽ liên hệ bạn sớm nhất.';
+        document.getElementById('voucherBox').classList.add('hidden');
+      }
+      document.getElementById('leadOverlay').classList.remove('hidden');
+    }
+
+    window.copyVoucher = function() {
+      const code = document.getElementById('voucherCode').textContent;
+      navigator.clipboard.writeText(code).then(function() {
+        const btn = document.querySelector('.voucher-copy-btn');
+        btn.textContent = 'Đã sao chép!';
+        setTimeout(function() { btn.textContent = 'Sao chép mã'; }, 2000);
+      });
+    };
+
+    window.closeLeadConfirmation = function() {
+      document.getElementById('leadOverlay').classList.add('hidden');
+      // Close product detail if open
+      document.getElementById('productDetailOverlay').classList.add('hidden');
+      // Refresh discovery cards
+      const pdOverlay = document.getElementById('productDiscoveryOverlay');
+      if (!pdOverlay.classList.contains('hidden')) {
+        const products = getEligibleProducts(2);
+        if (products.length === 0) {
+          window.closeProductDiscovery();
+        } else {
+          // Re-render
+          const container = document.getElementById('pdCards');
+          container.innerHTML = products.map(function(bp) {
+            const p = bp.products;
+            const brand = p.brands || {};
+            const imgUrl = (p.images && p.images.length > 0) ? p.images[0] : '';
+            const ctaText = p.cta_type === 'get_voucher'
+              ? (p.voucher_description || 'Nhận ưu đãi')
+              : 'Tôi quan tâm';
+            const priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
+            return '<div class="pd-card">' +
+              (imgUrl ? '<img class="pd-card-img" src="' + imgUrl + '" alt="">' : '<div class="pd-card-img"></div>') +
+              '<div class="pd-card-body">' +
+                '<div class="pd-card-brand">' + (brand.name || '') + '</div>' +
+                '<div class="pd-card-name">' + p.name + '</div>' +
+                (priceStr ? '<div class="pd-card-price">' + priceStr + '</div>' : '') +
+                '<div class="pd-card-row">' +
+                  '<button class="pd-card-cta" onclick="event.stopPropagation(); handleDiscoveryCta(\'' + bp.id + '\')">' + ctaText + '</button>' +
+                  '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Tìm hiểu thêm →</span>' +
+                '</div>' +
+              '</div></div>';
+          }).join('');
+        }
+      }
+    };
+
+    // --- Check-in Products (F2) ---
+    async function loadCheckinProducts() {
+      if (!BOOTH_ID) return;
+      const container = document.getElementById('checkinProducts');
+      const cards = document.getElementById('checkinCards');
+      try {
+        await loadBoothProductsForBooth(BOOTH_ID);
+        await loadUserLeads();
+      } catch (e) { container.classList.add('hidden'); return; }
+
+      const products = getEligibleProducts(2);
+      if (products.length === 0) { container.classList.add('hidden'); return; }
+
+      cards.innerHTML = products.map(function(bp) {
+        const p = bp.products;
+        const brand = p.brands || {};
+        const imgUrl = (p.images && p.images.length > 0) ? p.images[0] : '';
+        return '<div class="checkin-card" onclick="openProductDetail(\'' + bp.id + '\', \'check_in\')">' +
+          (imgUrl ? '<img class="checkin-card-img" src="' + imgUrl + '" alt="">' : '<div class="checkin-card-img"></div>') +
+          '<div class="checkin-card-info">' +
+            '<div class="checkin-card-brand">' + (brand.name || '') + '</div>' +
+            '<div class="checkin-card-name">' + p.name + '</div>' +
+          '</div></div>';
+      }).join('');
+
+      container.classList.remove('hidden');
+      for (const bp of products) { trackImpression(bp.id, 'check_in'); }
+    }
+
     // ============== BOOTH CONTROL ==============
     function initBooth() {
       const { createClient } = supabase;
@@ -967,6 +1712,7 @@
           btnEnd.classList.remove('hidden');
           btnEnd.disabled = false;
           timerSection.classList.remove('hidden');
+          document.getElementById('checkinProducts').classList.add('hidden');
 
           motiMsg.innerHTML = randomFrom(MOTI_ACTIVE);
           motiInterval = setInterval(() => {
@@ -992,6 +1738,7 @@
           btnEnd.classList.remove('hidden');
           btnEnd.disabled = false;
           timerSection.classList.remove('hidden');
+          document.getElementById('checkinProducts').classList.add('hidden');
 
           motiMsg.innerHTML = randomFrom(MOTI_PAUSED);
           motiInterval = setInterval(() => {
@@ -1021,6 +1768,8 @@
           timerSection.classList.add('hidden');
           stopTimer();
           motiMsg.innerHTML = boothOnline ? randomFrom(MOTI_IDLE) : '';
+          if (boothOnline) loadCheckinProducts();
+          else document.getElementById('checkinProducts').classList.add('hidden');
         }
       }
 
@@ -1146,6 +1895,60 @@
       }
 
       // Actions
+      // Theo dõi latency từ lúc bấm → cửa mở
+      let cmdSentAt = null;
+      let cmdId = null;
+      let latencyPollTimer = null;
+
+      function startLatencyTracking(id) {
+        // Clear timer cũ nếu còn
+        if (latencyPollTimer) { clearTimeout(latencyPollTimer); latencyPollTimer = null; }
+        cmdSentAt = Date.now();
+        cmdId = id;
+        showStatus('Đang gửi lệnh...', '#888');
+        var polling = true;
+
+        async function poll() {
+          if (!polling) return;
+          var elapsed = ((Date.now() - cmdSentAt) / 1000).toFixed(1);
+
+          // Timeout sau 10s → re-enable buttons
+          if (Date.now() - cmdSentAt > 10000) {
+            polling = false;
+            latencyPollTimer = null;
+            showStatus('Timeout - kiểm tra booth!', '#ef4444');
+            btnStart.disabled = false;
+            btnPause.disabled = false;
+            btnResume.disabled = false;
+            btnEnd.disabled = false;
+            setTimeout(function() { showStatus('', ''); }, 3000);
+            return;
+          }
+
+          try {
+            var resp = await db.from('commands')
+              .select('status, relay_at')
+              .eq('id', cmdId).limit(1);
+            if (resp.data && resp.data.length > 0 && resp.data[0].status === 'executed') {
+              polling = false;
+              latencyPollTimer = null;
+              var totalMs = resp.data[0].relay_at
+                ? new Date(resp.data[0].relay_at).getTime() - cmdSentAt
+                : Date.now() - cmdSentAt;
+              var totalSec = (totalMs / 1000).toFixed(1);
+              showStatus('Cửa đã mở! (' + totalSec + 's)', '#10069F');
+              return;
+            }
+          } catch (e) { /* network error, continue polling */ }
+
+          showStatus('Đang mở cửa... ' + elapsed + 's', '#888');
+          // setTimeout thay vì setInterval → chờ request xong mới poll tiếp
+          latencyPollTimer = setTimeout(poll, 500);
+        }
+
+        poll();
+      }
+
       window.handleStart = async function() {
         btnStart.disabled = true;
         showStatus('Đang gửi lệnh...', '#888');
@@ -1153,52 +1956,63 @@
         if (!boothOnline) {
           showStatus('Booth đang offline!', '#ef4444');
           btnStart.disabled = false;
-          setTimeout(() => showStatus('', ''), 3000);
+          setTimeout(function() { showStatus('', ''); }, 3000);
           return;
         }
 
-        const { data: active } = await db.from('sessions')
-          .select('id, status').eq('booth_id', BOOTH_ID).in('status', ['active', 'paused']).limit(1);
-        if (active && active.length > 0) {
-          const msg = active[0].status === 'paused'
-            ? 'Booth đang được giữ chỗ!'
-            : 'Booth đang được sử dụng!';
-          showStatus(msg, '#f97316');
+        try {
+          // Chạy 2 validation check song song thay vì tuần tự (tiết kiệm 200-500ms)
+          var results = await Promise.all([
+            db.from('sessions')
+              .select('id, status').eq('booth_id', BOOTH_ID).in('status', ['active', 'paused']).limit(1),
+            db.from('commands')
+              .select('*', { count: 'exact', head: true })
+              .eq('booth_id', BOOTH_ID).eq('status', 'pending')
+          ]);
+
+          var active = results[0].data;
+          if (active && active.length > 0) {
+            var msg = active[0].status === 'paused'
+              ? 'Booth đang được giữ chỗ!'
+              : 'Booth đang được sử dụng!';
+            showStatus(msg, '#f97316');
+            btnStart.disabled = false;
+            setTimeout(function() { showStatus('', ''); }, 3000);
+            return;
+          }
+
+          if (results[1].count > 0) {
+            showStatus('Có lệnh đang chờ xử lý...', '#f97316');
+            btnStart.disabled = false;
+            setTimeout(function() { showStatus('', ''); }, 3000);
+            return;
+          }
+
+          var resp = await db.from('commands').insert({
+            booth_id: BOOTH_ID, action: 'open', status: 'pending'
+          }).select('id');
+
+          if (resp.error) {
+            showStatus('Lỗi: ' + resp.error.message, '#ef4444');
+            btnStart.disabled = false;
+            return;
+          }
+
+          startLatencyTracking(resp.data[0].id);
+        } catch (e) {
+          showStatus('Lỗi kết nối!', '#ef4444');
           btnStart.disabled = false;
-          setTimeout(() => showStatus('', ''), 3000);
-          return;
+          setTimeout(function() { showStatus('', ''); }, 3000);
         }
-
-        const { count } = await db.from('commands')
-          .select('*', { count: 'exact', head: true })
-          .eq('booth_id', BOOTH_ID).eq('status', 'pending');
-        if (count > 0) {
-          showStatus('Có lệnh đang chờ xử lý...', '#f97316');
-          btnStart.disabled = false;
-          setTimeout(() => showStatus('', ''), 3000);
-          return;
-        }
-
-        const { error } = await db.from('commands').insert({
-          booth_id: BOOTH_ID, action: 'open', status: 'pending'
-        });
-
-        if (error) {
-          showStatus('Lỗi: ' + error.message, '#ef4444');
-          btnStart.disabled = false;
-          return;
-        }
-
-        showStatus('Cửa đang mở... Bước vào nào!', '#10069F');
       };
 
       window.handlePause = async function() {
         btnPause.disabled = true;
         showStatus('Đang tạm dừng...', '#888');
 
-        const { error } = await db.from('commands').insert({
+        const { data: inserted, error } = await db.from('commands').insert({
           booth_id: BOOTH_ID, action: 'pause', status: 'pending'
-        });
+        }).select('id');
 
         if (error) {
           showStatus('Lỗi: ' + error.message, '#ef4444');
@@ -1206,16 +2020,16 @@
           return;
         }
 
-        showStatus('Cửa đang mở... Bước ra tạm nhé!', '#f59e0b');
+        startLatencyTracking(inserted[0].id);
       };
 
       window.handleResume = async function() {
         btnResume.disabled = true;
         showStatus('Đang mở cửa...', '#888');
 
-        const { error } = await db.from('commands').insert({
+        const { data: inserted, error } = await db.from('commands').insert({
           booth_id: BOOTH_ID, action: 'resume', status: 'pending'
-        });
+        }).select('id');
 
         if (error) {
           showStatus('Lỗi: ' + error.message, '#ef4444');
@@ -1223,16 +2037,16 @@
           return;
         }
 
-        showStatus('Cửa đang mở... Chào mừng trở lại!', '#10069F');
+        startLatencyTracking(inserted[0].id);
       };
 
       window.handleEnd = async function() {
         btnEnd.disabled = true;
         showStatus('Đang kết thúc...', '#888');
 
-        const { error } = await db.from('commands').insert({
+        const { data: inserted, error } = await db.from('commands').insert({
           booth_id: BOOTH_ID, action: 'close', status: 'pending'
-        });
+        }).select('id');
 
         if (error) {
           showStatus('Lỗi: ' + error.message, '#ef4444');
@@ -1240,7 +2054,7 @@
           return;
         }
 
-        showStatus('Cửa đang mở... Bước ra nhé!', '#10069F');
+        startLatencyTracking(inserted[0].id);
       };
 
       // Init
@@ -1252,14 +2066,30 @@
             showStatus('Lỗi kết nối: ' + error.message, '#ef4444');
             return;
           }
-          pollState();
-          setInterval(pollState, POLL_MS);
+          // setTimeout chaining thay setInterval → tránh overlap khi network chậm
+          async function pollLoop() {
+            try { await pollState(); } catch(e) { /* silent */ }
+            setTimeout(pollLoop, POLL_MS);
+          }
+          pollLoop();
           showOnboarding();
+          // QR deep link: open product detail if product param present
+          if (PRODUCT_PARAM) {
+            setTimeout(async function() {
+              try {
+                await loadBoothProductsForBooth(BOOTH_ID);
+                await loadUserLeads();
+                const bp = cachedBoothProducts.find(function(x) { return x.product_id === PRODUCT_PARAM; });
+                if (bp) openProductDetail(bp.id, 'qr_scan');
+              } catch (e) { /* silent */ }
+            }, 1500);
+          }
         } catch (e) {
           showStatus('Lỗi: ' + e.message, '#ef4444');
         }
       })();
     }
+
   </script>
 </body>
 </html>
