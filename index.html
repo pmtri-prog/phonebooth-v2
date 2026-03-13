@@ -1612,6 +1612,13 @@
       if (!BOOTH_ID) return;
       const container = document.getElementById('checkinProducts');
       const cards = document.getElementById('checkinCards');
+      // Không load check-in ads nếu đang trong post-session flow (tránh double ads)
+      var completionVisible = !document.getElementById('completionOverlay').classList.contains('hidden');
+      var discoveryVisible = !document.getElementById('productDiscoveryOverlay').classList.contains('hidden');
+      if (completionVisible || discoveryVisible) {
+        container.classList.add('hidden');
+        return;
+      }
       try {
         await loadBoothProductsForBooth(BOOTH_ID);
         await loadUserLeads();
