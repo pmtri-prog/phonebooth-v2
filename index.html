@@ -17,6 +17,9 @@
       --color-splash-bg: #0A0520;
       --color-splash-text: #7070CC;
       --color-splash-muted: #5050AA;
+      --color-splash-dim: #4040AA;
+      --color-pain-bg: #FDE8E8;
+      --color-pain-text: #993333;
       --color-text-primary: #282828;
       --color-text-secondary: #888888;
       --color-text-hint: #BBBBBB;
@@ -39,7 +42,7 @@
       --radius-input: 8px;
       --radius-thumb: 8px;
       --radius-sheet: 16px;
-      --radius-badge: 6px;
+      --radius-badge: 10px;
       --space-page: 16px;
       --space-card: 12px;
       --space-gap: 8px;
@@ -142,6 +145,25 @@
       50% { opacity: 0.3; transform: scale(0.8); }
     }
 
+    /* ON Badge */
+    .on-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--color-accent);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+    .on-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #FFFFFF;
+    }
+
     /* ===== SPLASH / LANDING PAGE ===== */
     .landing {
       display: flex;
@@ -180,7 +202,7 @@
     }
     .landing-tagline p:nth-child(1) { color: var(--color-splash-text); }
     .landing-tagline p:nth-child(2) { color: var(--color-splash-muted); }
-    .landing-tagline p:nth-child(3) { color: #4040AA; }
+    .landing-tagline p:nth-child(3) { color: var(--color-splash-dim); }
     .btn-enter {
       background: var(--color-accent);
       color: #FFFFFF;
@@ -197,7 +219,7 @@
     .btn-enter:active { opacity: 0.9; transform: scale(0.97); }
     .landing-footer {
       font-size: 13px;
-      color: #4040AA;
+      color: var(--color-splash-dim);
     }
     .landing-footer a {
       color: var(--color-splash-text);
@@ -301,12 +323,13 @@
       text-align: center;
     }
     .timer {
-      font-size: 56px;
-      font-weight: 700;
-      color: var(--color-text-primary);
+      font-family: 'Courier New', monospace;
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--color-accent);
       font-variant-numeric: tabular-nums;
       line-height: 1;
-      letter-spacing: -2px;
+      letter-spacing: 1px;
     }
     .timer-label {
       font-size: 11px;
@@ -513,12 +536,13 @@
       margin-bottom: 4px;
     }
     .completion-duration {
-      font-size: 52px;
-      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      font-size: 48px;
+      font-weight: 600;
       font-variant-numeric: tabular-nums;
       margin: var(--space-card) 0;
       color: var(--color-accent);
-      letter-spacing: -2px;
+      letter-spacing: 1px;
     }
     .completion-msg {
       font-size: 15px;
@@ -1016,12 +1040,12 @@
       <div class="landing-brand">FOCUS</div>
       <div class="landing-brand-sub">by EPIONE</div>
       <div class="landing-tagline fade-stagger">
-        <p>Go deep.</p>
-        <p>Your private workspace</p>
-        <p>in the heart of the city.</p>
+        <p>Bật chế độ tập trung.</p>
+        <p>Thế giới bên ngoài...</p>
+        <p>kệ nó đi.</p>
       </div>
-      <button class="btn-enter" onclick="window.location.href='/?booth='">Enter the zone</button>
-      <div class="landing-footer">Already focused? <a href="#">Sign in</a></div>
+      <button class="btn-enter" onclick="window.location.href='/?booth='">Bật ngay</button>
+      <div class="landing-footer">Đã có tài khoản? <a href="#">Đăng nhập</a></div>
     </div>
   </div>
 
@@ -1030,11 +1054,11 @@
     <div class="header">
       <div class="header-logo-wrap">
         <div class="pulse-logo-sm">
-          <svg viewBox="0 0 48 48">
-            <circle cx="24" cy="24" r="19" fill="none" stroke="#10069F" stroke-width="1.5" opacity="0.4" class="pulse-ring"/>
-            <circle cx="24" cy="24" r="12" fill="none" stroke="#10069F" stroke-width="2.5" opacity="0.65" class="pulse-ring"/>
-            <circle cx="24" cy="24" r="6" fill="#10069F"/>
-            <circle cx="24" cy="24" r="2" fill="#FFFFFF"/>
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="19" fill="none" stroke="#10069F" stroke-width="3"/>
+            <circle cx="60" cy="60" r="12" fill="none" stroke="#10069F" stroke-width="2" opacity="0.4"/>
+            <circle cx="60" cy="60" r="5" fill="#10069F"/>
+            <circle cx="60" cy="60" r="1.5" fill="#FFFFFF"/>
           </svg>
         </div>
         <div class="header-logo-text">
@@ -1046,7 +1070,7 @@
     </div>
     <div class="conn-bar checking" id="connBar">
       <div class="conn-dot"></div>
-      <span class="conn-label" id="connText">Connecting...</span>
+      <span class="conn-label" id="connText">Đang kết nối...</span>
     </div>
 
     <div class="main-area">
@@ -1055,13 +1079,13 @@
         <div class="ring hidden" id="activeRing"></div>
         <div class="state-icon" id="stateIcon">&#128274;</div>
       </div>
-      <div class="state-label idle" id="stateLabel">READY</div>
-      <div class="state-msg" id="stateMsg">Your private workspace awaits. Tap below to enter.</div>
+      <div class="state-label idle" id="stateLabel">SẴN SÀNG</div>
+      <div class="state-msg" id="stateMsg">Booth đang trống. Nhấn bên dưới để bật phiên.</div>
 
       <!-- Timer (hidden khi idle) -->
       <div class="timer-section hidden" id="timerSection">
         <div class="timer" id="timer">00:00</div>
-        <div class="timer-label">Session time</div>
+        <div class="timer-label">Thời gian phiên</div>
       </div>
 
       <!-- Motivational message -->
@@ -1070,16 +1094,16 @@
       <!-- Actions -->
       <div class="actions">
         <div class="status-msg" id="status"></div>
-        <button class="btn btn-start" id="btnStart" onclick="handleStart()">Go deep</button>
-        <button class="btn btn-pause hidden" id="btnPause" onclick="handlePause()">Pause</button>
-        <button class="btn btn-resume hidden" id="btnResume" onclick="handleResume()">Resume</button>
+        <button class="btn btn-start" id="btnStart" onclick="handleStart()">Bật ngay</button>
+        <button class="btn btn-pause hidden" id="btnPause" onclick="handlePause()">Tạm dừng</button>
+        <button class="btn btn-resume hidden" id="btnResume" onclick="handleResume()">Tiếp tục</button>
         <div class="pause-info hidden" id="pauseInfo"></div>
-        <button class="btn btn-end hidden" id="btnEnd" onclick="handleEnd()">Surface</button>
+        <button class="btn btn-end hidden" id="btnEnd" onclick="handleEnd()">Tắt máy</button>
       </div>
 
       <!-- Check-in product notification -->
       <div class="checkin-products hidden" id="checkinProducts">
-        <div class="checkin-title">Available in this booth</div>
+        <div class="checkin-title">Đồ xịn trong booth hôm nay</div>
         <div id="checkinCards"></div>
       </div>
     </div>
@@ -1088,23 +1112,23 @@
   <!-- ==================== ONBOARDING OVERLAY ==================== -->
   <div class="onboard-overlay hidden" id="onboardOverlay">
     <div class="onboard-sheet">
-      <h2>Welcome to Focus</h2>
-      <div class="sub">Your first time here. A few things to know:</div>
+      <h2>Chào mừng đến Focus!</h2>
+      <div class="sub">Lần đầu sử dụng? Vài điều cần biết:</div>
       <div class="onboard-tips">
         <div class="tip">
           <div class="tip-icon">&#128274;</div>
-          <div class="tip-text"><strong>Door opens for 5 seconds</strong> to let you in, then auto-locks</div>
+          <div class="tip-text"><strong>Cửa tự mở 5 giây</strong> để bạn vào, sau đó tự đóng lại</div>
         </div>
         <div class="tip">
           <div class="tip-icon">&#9200;</div>
-          <div class="tip-text"><strong>Max 60 minutes per session.</strong> Auto-ends if exceeded</div>
+          <div class="tip-text"><strong>Tối đa 60 phút mỗi phiên.</strong> Hệ thống sẽ tự tắt nếu quá giờ</div>
         </div>
         <div class="tip">
           <div class="tip-icon">&#128682;</div>
-          <div class="tip-text"><strong>Physical button inside</strong> the booth always unlocks the door</div>
+          <div class="tip-text"><strong>Nút vật lý bên trong</strong> booth luôn mở được cửa nếu cần</div>
         </div>
       </div>
-      <button class="btn-onboard" onclick="closeOnboarding()">Got it, let's go!</button>
+      <button class="btn-onboard" onclick="closeOnboarding()">Hiểu rồi, bật thôi!</button>
     </div>
   </div>
 
@@ -1119,17 +1143,17 @@
         <circle cx="40" cy="40" r="2" fill="#FFFFFF"/>
       </svg>
     </div>
-    <div class="completion-title">You surfaced!</div>
-    <div class="completion-sub">Session complete</div>
+    <div class="completion-title">Phiên đã kết thúc!</div>
+    <div class="completion-sub">Bạn vừa ON được</div>
     <div class="completion-duration" id="completionDuration">00:00</div>
-    <div class="completion-msg" id="completionMsg">You went deep. See you next time!</div>
+    <div class="completion-msg" id="completionMsg">phút không ai quấy rầy</div>
 
     <div class="feedback-section" id="feedbackSection">
-      <div class="feedback-label">Quick review</div>
+      <div class="feedback-label">Cho mình xin review nhanh nha!</div>
 
       <div class="rating-row" data-criteria="soundproof">
         <div class="rating-icon">&#128264;</div>
-        <div class="rating-label">Soundproof</div>
+        <div class="rating-label">Cách âm</div>
         <div class="rating-stars">
           <button class="star-btn" data-val="1">&#11088;</button>
           <button class="star-btn" data-val="2">&#11088;</button>
@@ -1141,7 +1165,7 @@
 
       <div class="rating-row" data-criteria="comfort">
         <div class="rating-icon">&#128186;</div>
-        <div class="rating-label">Comfort</div>
+        <div class="rating-label">Thoải mái</div>
         <div class="rating-stars">
           <button class="star-btn" data-val="1">&#11088;</button>
           <button class="star-btn" data-val="2">&#11088;</button>
@@ -1153,7 +1177,7 @@
 
       <div class="rating-row" data-criteria="app">
         <div class="rating-icon">&#128241;</div>
-        <div class="rating-label">App experience</div>
+        <div class="rating-label">App mượt</div>
         <div class="rating-stars">
           <button class="star-btn" data-val="1">&#11088;</button>
           <button class="star-btn" data-val="2">&#11088;</button>
@@ -1163,19 +1187,19 @@
         </div>
       </div>
 
-      <textarea class="feedback-input" id="feedbackText" rows="2" placeholder="Anything else to share?"></textarea>
-      <button class="btn-send-feedback" id="btnSendFeedback" onclick="sendFeedback()" disabled>Submit</button>
+      <textarea class="feedback-input" id="feedbackText" rows="2" placeholder="Muốn chia sẻ gì thêm không?"></textarea>
+      <button class="btn-send-feedback" id="btnSendFeedback" onclick="sendFeedback()" disabled>Gửi review</button>
     </div>
-    <div class="feedback-thanks hidden" id="feedbackThanks">Thanks for your feedback!</div>
+    <div class="feedback-thanks hidden" id="feedbackThanks">Cảm ơn bạn!</div>
 
-    <button class="btn-done" onclick="closeCompletion()" style="margin-top:16px;">Surface</button>
+    <button class="btn-done" onclick="closeCompletion()" style="margin-top:16px;">Tắt máy</button>
   </div>
 
   <!-- ==================== PRODUCT DISCOVERY ==================== -->
   <div class="product-discovery-overlay hidden" id="productDiscoveryOverlay">
-    <div class="pd-title">Today you went deep with</div>
+    <div class="pd-title">Hôm nay bạn đã deep work cùng</div>
     <div class="pd-cards" id="pdCards"></div>
-    <button class="btn-pd-done" onclick="closeProductDiscovery()">Surface</button>
+    <button class="btn-pd-done" onclick="closeProductDiscovery()">Tắt máy</button>
   </div>
 
   <!-- ==================== PRODUCT DETAIL ==================== -->
@@ -1202,9 +1226,9 @@
       <div class="lead-desc" id="leadDesc"></div>
       <div class="voucher-box hidden" id="voucherBox">
         <div class="voucher-code" id="voucherCode"></div>
-        <button class="voucher-copy-btn" onclick="copyVoucher()">Copy code</button>
+        <button class="voucher-copy-btn" onclick="copyVoucher()">Copy ngay</button>
       </div>
-      <button class="btn-lead-done" onclick="closeLeadConfirmation()">Done</button>
+      <button class="btn-lead-done" onclick="closeLeadConfirmation()">Xong</button>
     </div>
   </div>
 
@@ -1237,28 +1261,27 @@
 
     // ============== MOTIVATIONAL MESSAGES ==============
     const MOTI_IDLE = [
-      'Ready to go deep?',
-      'Your quiet space awaits',
+      'Sẵn sàng bật chế độ tập trung?',
+      'Không gian yên tĩnh đang chờ bạn',
       'Focus mode: ON',
     ];
     const MOTI_ACTIVE = [
+      'Bạn đã ON!',
       'Deep work mode',
-      'You\'re doing great!',
-      'Flow state activated',
-      'Keep going!',
-      'No distraction zone',
-      'Deep in the zone',
-      'Work smarter, live better',
+      'Đang làm tốt lắm!',
+      'Không ai quấy rầy được bạn',
+      'Tập trung = siêu năng lực',
+      'Thế giới bên ngoài? Kệ nó đi.',
     ];
     const MOTI_PAUSED = [
-      'Taking a break... Come back soon!',
-      'Your booth is reserved',
-      'Quick break, then back to focus!',
+      'Đang tạm dừng... Quay lại sớm nhé!',
+      'Booth đang giữ chỗ cho bạn',
+      'Nghỉ tý rồi bật lại nào!',
     ];
     const COMPLETION_MSGS = [
-      'You went deep. See you next time!',
-      'Great focus session. Well done!',
-      'Deep work complete. Time to recharge.',
+      'phút không ai quấy rầy',
+      'phút deep work xịn xò',
+      'phút tập trung đỉnh cao',
     ];
 
     function randomFrom(arr) {
@@ -1328,7 +1351,7 @@
     window.sendFeedback = async function() {
       const btn = document.getElementById('btnSendFeedback');
       btn.disabled = true;
-      btn.textContent = 'Sending...';
+      btn.textContent = 'Đang gửi...';
 
       const text = document.getElementById('feedbackText').value.trim();
       const note = 'Cach am:' + feedbackRatings.soundproof + '/5 | Thoai mai:' + feedbackRatings.comfort + '/5 | App:' + feedbackRatings.app + '/5' + (text ? ' | ' + text : '');
@@ -1452,8 +1475,8 @@
         const brand = p.brands || {};
         const imgUrl = (p.images && p.images.length > 0) ? p.images[0] : '';
         const ctaText = p.cta_type === 'get_voucher'
-          ? (p.voucher_description || 'Get voucher')
-          : 'I\'m interested';
+          ? (p.voucher_description || 'Nhận ưu đãi')
+          : 'Thích đấy!';
         const priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
         const focusClass = idx === 0 ? ' card-in-focus' : '';
         return '<div class="pd-card' + focusClass + '">' +
@@ -1464,7 +1487,7 @@
             (priceStr ? '<div class="pd-card-price">' + priceStr + '</div>' : '') +
             '<div class="pd-card-row">' +
               '<button class="pd-card-cta" onclick="event.stopPropagation(); handleDiscoveryCta(\'' + bp.id + '\')">' + ctaText + '</button>' +
-              '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Learn more →</span>' +
+              '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Chi tiết →</span>' +
             '</div>' +
           '</div></div>';
       }).join('');
@@ -1525,7 +1548,7 @@
       const link = document.getElementById('pdetLink');
       if (p.cta_link) {
         link.href = p.cta_link;
-        link.textContent = 'Buy now →';
+        link.textContent = 'Mua ngay →';
         link.classList.remove('hidden');
       } else {
         link.classList.add('hidden');
@@ -1533,8 +1556,8 @@
 
       const ctaBtn = document.getElementById('pdetCtaBtn');
       ctaBtn.textContent = p.cta_type === 'get_voucher'
-        ? (p.voucher_description || 'Get voucher')
-        : 'I\'m interested';
+        ? (p.voucher_description || 'Nhận ưu đãi')
+        : 'Thích đấy!';
 
       document.getElementById('productDetailOverlay').classList.remove('hidden');
       const detailSource = source === 'post_session' ? 'post_session_detail' : (source === 'check_in' ? 'check_in_detail' : 'qr_scan');
@@ -1568,14 +1591,14 @@
       const p = bp.products;
       if (p.cta_type === 'get_voucher') {
         document.getElementById('leadIcon').textContent = '🎉';
-        document.getElementById('leadTitle').textContent = 'Your voucher';
-        document.getElementById('leadDesc').textContent = p.voucher_description || 'Here\'s your exclusive code:';
+        document.getElementById('leadTitle').textContent = 'Mở khóa thành công!';
+        document.getElementById('leadDesc').textContent = p.voucher_description || 'Quà cho người biết tập trung:';
         document.getElementById('voucherCode').textContent = p.voucher_code || '';
         document.getElementById('voucherBox').classList.remove('hidden');
       } else {
         document.getElementById('leadIcon').textContent = '✅';
-        document.getElementById('leadTitle').textContent = 'Noted!';
-        document.getElementById('leadDesc').textContent = 'Thanks for your interest. We\'ll be in touch.';
+        document.getElementById('leadTitle').textContent = 'Đã ghi nhận!';
+        document.getElementById('leadDesc').textContent = 'Epione sẽ liên hệ bạn sớm nhất.';
         document.getElementById('voucherBox').classList.add('hidden');
       }
       document.getElementById('leadOverlay').classList.remove('hidden');
@@ -1585,8 +1608,8 @@
       const code = document.getElementById('voucherCode').textContent;
       navigator.clipboard.writeText(code).then(function() {
         const btn = document.querySelector('.voucher-copy-btn');
-        btn.textContent = 'Copied!';
-        setTimeout(function() { btn.textContent = 'Copy code'; }, 2000);
+        btn.textContent = 'Đã copy!';
+        setTimeout(function() { btn.textContent = 'Copy ngay'; }, 2000);
       });
     };
 
@@ -1620,7 +1643,7 @@
                 (priceStr ? '<div class="pd-card-price">' + priceStr + '</div>' : '') +
                 '<div class="pd-card-row">' +
                   '<button class="pd-card-cta" onclick="event.stopPropagation(); handleDiscoveryCta(\'' + bp.id + '\')">' + ctaText + '</button>' +
-                  '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Learn more →</span>' +
+                  '<span class="pd-card-link" onclick="openProductDetail(\'' + bp.id + '\', \'post_session\')">Chi tiết →</span>' +
                 '</div>' +
               '</div></div>';
           }).join('');
@@ -1714,7 +1737,7 @@
           connText.textContent = 'Booth offline';
           boothOnline = false;
         } else {
-          connText.textContent = 'Connecting...';
+          connText.textContent = 'Đang kết nối...';
         }
       }
 
@@ -1736,7 +1759,7 @@
           stateIcon.innerHTML = '&#9889;';
           activeRing.classList.remove('hidden');
           stateLabel.className = 'state-label active';
-          stateLabel.textContent = 'IN THE ZONE';
+          stateLabel.textContent = 'BẠN ĐÃ ON!';
           stateMsg.textContent = '';
           btnStart.classList.add('hidden');
           btnPause.classList.remove('hidden');
@@ -1762,8 +1785,8 @@
           stateIcon.innerHTML = '&#9208;';
           activeRing.classList.remove('hidden');
           stateLabel.className = 'state-label paused';
-          stateLabel.textContent = 'PAUSED';
-          stateMsg.textContent = 'Your booth is reserved';
+          stateLabel.textContent = 'TẠM DỪNG';
+          stateMsg.textContent = 'Booth đang giữ chỗ cho bạn';
           btnStart.classList.add('hidden');
           btnPause.classList.add('hidden');
           btnResume.classList.remove('hidden');
@@ -1789,10 +1812,10 @@
           stateIcon.innerHTML = boothOnline ? '&#128274;' : '&#128308;';
           activeRing.classList.add('hidden');
           stateLabel.className = 'state-label ' + (boothOnline ? 'idle' : 'offline');
-          stateLabel.textContent = boothOnline ? 'READY' : 'OFFLINE';
+          stateLabel.textContent = boothOnline ? 'SẴN SÀNG' : 'MẤT KẾT NỐI';
           stateMsg.textContent = boothOnline
-            ? 'Your private workspace awaits. Tap below to enter.'
-            : 'Booth is offline. Please try again later.';
+            ? 'Booth đang trống. Nhấn bên dưới để bật phiên.'
+            : 'Booth đang offline. Vui lòng thử lại sau.';
           btnEnd.classList.add('hidden');
           btnPause.classList.add('hidden');
           btnResume.classList.add('hidden');
@@ -1846,12 +1869,12 @@
           const pausedSec = Math.floor((Date.now() - new Date(pausedAt).getTime()) / 1000);
           const remaining = PAUSE_TIMEOUT - pausedSec;
           if (remaining <= 0) {
-            pauseInfo.textContent = 'Reservation expired...';
+            pauseInfo.textContent = 'Hết thời gian giữ chỗ...';
             clearInterval(pauseCountdownInterval);
           } else {
             const m = Math.floor(remaining / 60);
             const s = remaining % 60;
-            pauseInfo.textContent = 'Auto-end in ' + m + ':' + s.toString().padStart(2, '0');
+            pauseInfo.textContent = 'Tự tắt sau ' + m + ':' + s.toString().padStart(2, '0');
           }
         };
         tick();
@@ -1969,7 +1992,7 @@
         if (latencyPollTimer) { clearTimeout(latencyPollTimer); latencyPollTimer = null; }
         cmdSentAt = Date.now();
         cmdId = id;
-        var label = actionLabel || 'Processing';
+        var label = actionLabel || 'Đang xử lý';
         var polling = true;
 
         async function poll() {
@@ -2010,10 +2033,10 @@
 
       window.handleStart = async function() {
         btnStart.disabled = true;
-        showStatus('Sending...', '#888');
+        showStatus('Đang gửi lệnh...', '#888');
 
         if (!boothOnline) {
-          showStatus('Booth is offline!', '#ef4444');
+          showStatus('Booth đang offline!', '#ef4444');
           btnStart.disabled = false;
           setTimeout(function() { showStatus('', ''); }, 3000);
           return;
@@ -2038,16 +2061,16 @@
             optimisticUntil = 0; optimisticState = null;
             currentState = 'idle';
             setBoothState('idle');
-            showStatus('Error: ' + resp.error.message, '#ef4444');
+            showStatus('Lỗi: ' + resp.error.message, '#ef4444');
             btnStart.disabled = false;
             return;
           }
-          startLatencyTracking(resp.data[0].id, 'Door opened');
+          startLatencyTracking(resp.data[0].id, 'Đã bật');
         } catch (e) {
           optimisticUntil = 0; optimisticState = null;
           currentState = 'idle';
           setBoothState('idle');
-          showStatus('Connection error!', '#ef4444');
+          showStatus('Lỗi kết nối!', '#ef4444');
           btnStart.disabled = false;
           setTimeout(function() { showStatus('', ''); }, 3000);
         }
@@ -2072,7 +2095,7 @@
             booth_id: BOOTH_ID, action: 'pause', status: 'pending'
           }).select('id');
           if (!resp.error && resp.data && resp.data[0]) {
-            startLatencyTracking(resp.data[0].id, 'Paused');
+            startLatencyTracking(resp.data[0].id, 'Đã tạm dừng');
           }
         } catch (e) { /* silent */ }
       };
@@ -2098,7 +2121,7 @@
             booth_id: BOOTH_ID, action: 'resume', status: 'pending'
           }).select('id');
           if (!resp.error && resp.data && resp.data[0]) {
-            startLatencyTracking(resp.data[0].id, 'Resumed');
+            startLatencyTracking(resp.data[0].id, 'Đã tiếp tục');
           }
         } catch (e) { /* silent */ }
       };
@@ -2121,7 +2144,7 @@
             booth_id: BOOTH_ID, action: 'close', status: 'pending'
           }).select('id');
           if (!resp.error && resp.data && resp.data[0]) {
-            startLatencyTracking(resp.data[0].id, 'Surfaced');
+            startLatencyTracking(resp.data[0].id, 'Đã tắt');
           }
         } catch (e) { /* silent */ }
       };
@@ -2132,7 +2155,7 @@
           const { error } = await db.from('booths')
             .select('booth_id').eq('booth_id', BOOTH_ID).limit(1);
           if (error) {
-            showStatus('Connection error: ' + error.message, '#ef4444');
+            showStatus('Lỗi kết nối: ' + error.message, '#ef4444');
             return;
           }
           // Supabase Realtime: nhận update sessions tức thì (không chờ poll)
@@ -2183,7 +2206,7 @@
             }, 1500);
           }
         } catch (e) {
-          showStatus('Error: ' + e.message, '#ef4444');
+          showStatus('Lỗi: ' + e.message, '#ef4444');
         }
       })();
     }
