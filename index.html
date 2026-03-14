@@ -173,67 +173,121 @@
       min-height: 100vh;
       padding: 40px 24px;
       text-align: center;
-      background: var(--color-splash-bg);
+      background: var(--color-white);
     }
     .landing .pulse-logo-lg {
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
     .landing-brand {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
-      color: #FFFFFF;
+      color: var(--color-accent);
       letter-spacing: 4px;
       margin-bottom: 4px;
     }
     .landing-brand-sub {
       font-size: 10px;
-      font-weight: 400;
-      color: var(--color-splash-muted);
+      font-weight: 500;
+      color: var(--color-text-secondary);
       letter-spacing: 2px;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
     .landing-tagline {
-      margin-bottom: 48px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      line-height: 1.5;
     }
-    .landing-tagline p {
-      font-size: 16px;
-      line-height: 1.8;
+    .landing-sub {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 300px;
+    }
+    .landing-features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+      max-width: 300px;
+      width: 100%;
+    }
+    .landing-feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      font-size: 13px;
+      color: var(--color-text-primary);
       font-weight: 500;
     }
-    .landing-tagline p:nth-child(1) { color: var(--color-splash-text); }
-    .landing-tagline p:nth-child(2) { color: var(--color-splash-muted); }
-    .landing-tagline p:nth-child(3) { color: var(--color-splash-dim); }
+    .landing-feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--color-voucher-active-bg);
+      color: var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
     .btn-enter {
       background: var(--color-accent);
       color: #FFFFFF;
       border: none;
       font-family: var(--font-family);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      padding: 16px 48px;
+      padding: 16px 0;
       border-radius: var(--radius-button);
       cursor: pointer;
       letter-spacing: 0.5px;
-      margin-bottom: 24px;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 12px;
     }
     .btn-enter:active { opacity: 0.9; transform: scale(0.97); }
+    .landing-auth-row {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 24px;
+    }
+    .btn-auth-outline {
+      flex: 1;
+      background: transparent;
+      color: var(--color-accent);
+      border: 1px solid var(--color-border);
+      font-family: var(--font-family);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 0;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+    }
+    .btn-auth-outline:active { background: var(--color-gray); }
     .landing-footer {
-      font-size: 13px;
-      color: var(--color-splash-dim);
+      font-size: 12px;
+      color: var(--color-text-hint);
     }
     .landing-footer a {
-      color: var(--color-splash-text);
+      color: var(--color-accent);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
     }
-    /* Fade in stagger for tagline */
+    /* Fade in stagger */
     @keyframes fade-in-up {
       0% { opacity: 0; transform: translateY(8px); }
       100% { opacity: 1; transform: translateY(0); }
     }
-    .fade-stagger > *:nth-child(1) { animation: fade-in-up 0.6s ease both 0.2s; }
-    .fade-stagger > *:nth-child(2) { animation: fade-in-up 0.6s ease both 0.5s; }
-    .fade-stagger > *:nth-child(3) { animation: fade-in-up 0.6s ease both 0.8s; }
+    .fade-stagger > *:nth-child(1) { animation: fade-in-up 0.6s ease both 0.1s; }
+    .fade-stagger > *:nth-child(2) { animation: fade-in-up 0.6s ease both 0.25s; }
+    .fade-stagger > *:nth-child(3) { animation: fade-in-up 0.6s ease both 0.4s; }
 
     /* ===== BOOTH CONTROL PAGE ===== */
     .main-area {
@@ -1354,22 +1408,6 @@
       font-weight: 700;
     }
 
-    /* Landing venue button */
-    .btn-venue {
-      display: block;
-      margin-top: 12px;
-      background: transparent;
-      color: var(--color-accent);
-      font-family: var(--font-family);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 14px 40px;
-      border-radius: var(--radius-button);
-      border: 1px solid var(--color-accent);
-      cursor: pointer;
-    }
-    .btn-venue:active { opacity: 0.85; }
-
     /* ===== QR SCANNER ===== */
     .qr-scanner-overlay {
       position: fixed;
@@ -1461,14 +1499,28 @@
       </div>
       <div class="landing-brand">FOCUS</div>
       <div class="landing-brand-sub">by EPIONE</div>
-      <div class="landing-tagline fade-stagger">
-        <p>Bật chế độ tập trung.</p>
-        <p>Thế giới bên ngoài...</p>
-        <p>kệ nó đi.</p>
+      <div class="landing-tagline">Booth yên tĩnh, đặt chỗ 1 phút</div>
+      <div class="landing-sub">Không gian riêng tư cho bạn tập trung làm việc, học tập hay nghỉ ngơi.</div>
+      <div class="landing-features fade-stagger">
+        <div class="landing-feature">
+          <div class="landing-feature-icon">&#128274;</div>
+          <span>Booth cách âm, riêng tư hoàn toàn</span>
+        </div>
+        <div class="landing-feature">
+          <div class="landing-feature-icon">&#9202;</div>
+          <span>Đặt trước 10 phút, đến quét QR là vào</span>
+        </div>
+        <div class="landing-feature">
+          <div class="landing-feature-icon">&#9889;</div>
+          <span>Dùng ngay, không cần tải app</span>
+        </div>
       </div>
-      <button class="btn-enter" onclick="window.location.href='/?booth='">Bật ngay</button>
-      <button class="btn-venue" onclick="window.location.href='/?page=venue'">Xem danh sách booth</button>
-      <div class="landing-footer">Đã có tài khoản? <a href="#" onclick="showLandingLogin(); return false;">Đăng nhập</a></div>
+      <button class="btn-enter" onclick="window.location.href='/?page=venue'">Xem booth trống</button>
+      <div class="landing-auth-row">
+        <button class="btn-auth-outline" onclick="showLandingLogin(); return false;">Đăng nhập</button>
+        <button class="btn-auth-outline" onclick="showLandingRegister(); return false;">Đăng ký</button>
+      </div>
+      <div class="landing-footer">Powered by Epione</div>
     </div>
   </div>
 
@@ -1810,11 +1862,14 @@
     function updateAuthUI() {
       const auth = getStoredAuth();
       const footer = document.querySelector('.landing-footer');
+      const authRow = document.querySelector('.landing-auth-row');
       if (footer) {
         if (auth) {
           footer.innerHTML = 'Chào, <strong>' + (auth.name || auth.phone) + '</strong>';
+          if (authRow) authRow.classList.add('hidden');
         } else {
-          footer.innerHTML = 'Đã có tài khoản? <a href="#" onclick="showLandingLogin(); return false;">Đăng nhập</a>';
+          footer.innerHTML = 'Powered by Epione';
+          if (authRow) authRow.classList.remove('hidden');
         }
       }
     }
@@ -2205,6 +2260,17 @@
       document.getElementById('btnLogin').disabled = false;
       document.getElementById('btnLogin').textContent = 'Đăng nhập';
       showLoginForm();
+      document.getElementById('registrationOverlay').classList.remove('hidden');
+    };
+
+    window.showLandingRegister = function() {
+      pendingSessionLink = null;
+      document.getElementById('authPhone').value = '';
+      document.getElementById('authPassword').value = '';
+      document.getElementById('authError').classList.add('hidden');
+      document.getElementById('btnRegister').disabled = false;
+      document.getElementById('btnRegister').textContent = 'Đăng ký';
+      showRegisterForm();
       document.getElementById('registrationOverlay').classList.remove('hidden');
     };
 
