@@ -1369,6 +1369,77 @@
       cursor: pointer;
     }
     .btn-venue:active { opacity: 0.85; }
+
+    /* ===== QR SCANNER ===== */
+    .qr-scanner-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease;
+    }
+    .qr-scanner-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: #000;
+    }
+    .qr-scanner-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .qr-scanner-title {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    #qrReader {
+      flex: 1;
+      background: #000;
+    }
+    #qrReader video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+    }
+    .qr-scanner-hint {
+      padding: 20px;
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      background: #000;
+    }
+    .qr-scanner-hint.success {
+      color: var(--color-success);
+      font-weight: 600;
+    }
+    .qr-scanner-hint.error {
+      color: var(--color-error);
+    }
+    .btn-qr-scan {
+      flex: 1;
+      background: transparent;
+      color: var(--color-accent);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 0;
+      border-radius: var(--radius-button);
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-qr-scan:active { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -1420,6 +1491,16 @@
       </div>
       <div class="venue-footer-note">Giữ chỗ tối đa 10 phút</div>
     </div>
+  </div>
+
+  <!-- ==================== QR SCANNER OVERLAY ==================== -->
+  <div id="qrScannerOverlay" class="qr-scanner-overlay hidden">
+    <div class="qr-scanner-header">
+      <button class="qr-scanner-close" onclick="closeQrScanner()">&#10005;</button>
+      <span class="qr-scanner-title">Quét mã QR trên booth</span>
+    </div>
+    <div id="qrReader"></div>
+    <div class="qr-scanner-hint" id="qrScannerHint">Hướng camera vào mã QR trên cửa booth</div>
   </div>
 
   <!-- ==================== BOOTH CONTROL ==================== -->
@@ -1686,6 +1767,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script>
     // ============== CONFIG ==============
     const SUPABASE_URL = "https://iwczjfomyybszwdlzwjs.supabase.co";
@@ -2553,11 +2635,11 @@
             '</button>';
           } else if (isMyReservation) {
             html += '<button class="btn-cancel-reserve" onclick="handleCancelReserve(\'' + reservation.id + '\')">Hủy đặt</button>';
-            html += '<div class="booth-card-qr-hint">Quét QR tại booth để vào</div>';
+            html += '<button class="btn-qr-scan" onclick="openQrScanner()">&#128247; Quét QR để vào</button>';
           } else {
             // Available
             html += '<button class="btn-reserve" onclick="handleReserve(\'' + booth.booth_id + '\')">Giữ chỗ 10p</button>';
-            html += '<div class="booth-card-qr-hint">Quét QR để vào</div>';
+            html += '<button class="btn-qr-scan" onclick="openQrScanner()">&#128247; Quét QR để vào</button>';
           }
           html += '</div>';
 
@@ -2643,6 +2725,74 @@
       document.getElementById('btnLogin').textContent = 'Đăng nhập';
       showLoginForm();
       document.getElementById('registrationOverlay').classList.remove('hidden');
+    };
+
+    // ============== QR SCANNER ==============
+    var qrScanner = null;
+
+    window.openQrScanner = function() {
+      var overlay = document.getElementById('qrScannerOverlay');
+      var hint = document.getElementById('qrScannerHint');
+      overlay.classList.remove('hidden');
+      hint.textContent = 'Hướng camera vào mã QR trên cửa booth';
+      hint.className = 'qr-scanner-hint';
+
+      qrScanner = new Html5Qrcode('qrReader');
+      qrScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        function onScanSuccess(decodedText) {
+          // Tìm booth ID từ URL QR
+          var boothId = extractBoothId(decodedText);
+          if (boothId) {
+            hint.textContent = 'Đã quét! Đang chuyển...';
+            hint.className = 'qr-scanner-hint success';
+            qrScanner.stop().then(function() {
+              qrScanner = null;
+              window.location.href = '/?booth=' + boothId;
+            }).catch(function() {
+              window.location.href = '/?booth=' + boothId;
+            });
+          } else {
+            hint.textContent = 'QR không hợp lệ. Quét mã trên booth.';
+            hint.className = 'qr-scanner-hint error';
+          }
+        },
+        function onScanFailure() { /* silent - camera đang scan */ }
+      ).catch(function(err) {
+        hint.textContent = 'Không thể mở camera. Hãy cấp quyền camera.';
+        hint.className = 'qr-scanner-hint error';
+      });
+    };
+
+    function extractBoothId(text) {
+      // Hỗ trợ nhiều format QR:
+      // 1. URL: https://phonebooth-mvp.vercel.app/?booth=BOOTH_001
+      // 2. URL: /?booth=BOOTH_001
+      // 3. Plain text: BOOTH_001
+      try {
+        var url = new URL(text, window.location.origin);
+        var booth = url.searchParams.get('booth');
+        if (booth) return booth;
+      } catch (e) { /* not a URL */ }
+      // Plain text: BOOTH_XXX
+      if (/^BOOTH_\d+$/i.test(text)) return text;
+      return null;
+    }
+
+    window.closeQrScanner = function() {
+      var overlay = document.getElementById('qrScannerOverlay');
+      if (qrScanner) {
+        qrScanner.stop().then(function() {
+          qrScanner = null;
+          overlay.classList.add('hidden');
+        }).catch(function() {
+          qrScanner = null;
+          overlay.classList.add('hidden');
+        });
+      } else {
+        overlay.classList.add('hidden');
+      }
     };
 
     // ============== BOOTH CONTROL ==============
