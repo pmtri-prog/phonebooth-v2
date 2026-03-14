@@ -972,6 +972,117 @@
     }
     .btn-lead-done:active { opacity: 0.85; }
 
+    /* ===== AUTH / REGISTRATION ===== */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(40,40,40,0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .auth-sheet {
+      background: var(--color-white);
+      border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+      padding: 28px 24px 36px;
+      width: 100%;
+      max-width: 420px;
+      animation: slideUp 0.3s ease;
+      text-align: center;
+    }
+    .auth-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+    .auth-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+    }
+    .auth-sub {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .auth-field {
+      text-align: left;
+      margin-bottom: 12px;
+    }
+    .auth-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: 4px;
+    }
+    .auth-input {
+      width: 100%;
+      background: #F8F8F8;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
+      padding: 12px 14px;
+      font-family: var(--font-family);
+      font-size: 15px;
+      color: var(--color-text-primary);
+      outline: none;
+    }
+    .auth-input:focus {
+      border-color: var(--color-border-active);
+    }
+    .auth-input::placeholder {
+      color: var(--color-text-hint);
+    }
+    .auth-error {
+      font-size: 13px;
+      color: var(--color-error);
+      margin-bottom: 8px;
+      text-align: left;
+    }
+    .btn-auth-primary {
+      display: block;
+      width: 100%;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      font-family: var(--font-family);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 0;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .btn-auth-primary:active { opacity: 0.85; }
+    .btn-auth-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-auth-skip {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: none;
+      font-family: var(--font-family);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 0;
+      cursor: pointer;
+    }
+    .btn-auth-skip:active { color: var(--color-text-primary); }
+    .auth-switch {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-top: 12px;
+    }
+    .auth-switch a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
     /* ===== CHECK-IN PRODUCTS ===== */
     .checkin-products {
       width: 100%;
@@ -1045,7 +1156,7 @@
         <p>kệ nó đi.</p>
       </div>
       <button class="btn-enter" onclick="window.location.href='/?booth='">Bật ngay</button>
-      <div class="landing-footer">Đã có tài khoản? <a href="#">Đăng nhập</a></div>
+      <div class="landing-footer">Đã có tài khoản? <a href="#" onclick="showLandingLogin(); return false;">Đăng nhập</a></div>
     </div>
   </div>
 
@@ -1232,6 +1343,45 @@
     </div>
   </div>
 
+  <!-- ==================== REGISTRATION / LOGIN ==================== -->
+  <div class="auth-overlay hidden" id="registrationOverlay">
+    <div class="auth-sheet">
+      <div class="auth-icon" id="authIcon">&#128272;</div>
+      <h2 class="auth-title" id="authTitle"></h2>
+      <p class="auth-sub" id="authSub"></p>
+
+      <div id="authFormRegister">
+        <div class="auth-field">
+          <label class="auth-label">Số điện thoại</label>
+          <input type="tel" class="auth-input" id="authPhone" placeholder="0912 345 678" autocomplete="tel">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Mật khẩu</label>
+          <input type="password" class="auth-input" id="authPassword" placeholder="Tối thiểu 6 ký tự">
+        </div>
+        <div class="auth-error hidden" id="authError"></div>
+        <button class="btn-auth-primary" id="btnRegister" onclick="handleRegister()">Đăng ký</button>
+        <button class="btn-auth-skip" onclick="skipRegistration()">Để sau</button>
+        <div class="auth-switch">Đã có tài khoản? <a href="#" onclick="showLoginForm(); return false;">Đăng nhập</a></div>
+      </div>
+
+      <div id="authFormLogin" class="hidden">
+        <div class="auth-field">
+          <label class="auth-label">Số điện thoại</label>
+          <input type="tel" class="auth-input" id="loginPhone" placeholder="0912 345 678" autocomplete="tel">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Mật khẩu</label>
+          <input type="password" class="auth-input" id="loginPassword" placeholder="Mật khẩu">
+        </div>
+        <div class="auth-error hidden" id="loginError"></div>
+        <button class="btn-auth-primary" id="btnLogin" onclick="handleLogin()">Đăng nhập</button>
+        <button class="btn-auth-skip" onclick="skipRegistration()">Để sau</button>
+        <div class="auth-switch">Chưa có tài khoản? <a href="#" onclick="showRegisterForm(); return false;">Đăng ký</a></div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // ============== CONFIG ==============
@@ -1248,6 +1398,42 @@
     }
     const DEVICE_USER_ID = getDeviceId();
 
+    // ============== AUTH STATE ==============
+    const AUTH_KEY = 'epione_auth';
+    let activeSessionId = null;
+    let pendingSessionLink = null;
+
+    function getStoredAuth() {
+      try {
+        const raw = localStorage.getItem(AUTH_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+    function setStoredAuth(user) {
+      localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    }
+    function clearStoredAuth() {
+      localStorage.removeItem(AUTH_KEY);
+    }
+    function getCurrentUserId() {
+      const auth = getStoredAuth();
+      return (auth && auth.id) ? auth.id : DEVICE_USER_ID;
+    }
+    function isLoggedIn() {
+      return !!getStoredAuth();
+    }
+    function updateAuthUI() {
+      const auth = getStoredAuth();
+      const footer = document.querySelector('.landing-footer');
+      if (footer) {
+        if (auth) {
+          footer.innerHTML = 'Chào, <strong>' + (auth.name || auth.phone) + '</strong>';
+        } else {
+          footer.innerHTML = 'Đã có tài khoản? <a href="#" onclick="showLandingLogin(); return false;">Đăng nhập</a>';
+        }
+      }
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const BOOTH_ID = urlParams.get('booth');
     const PRODUCT_PARAM = urlParams.get('product');
@@ -1258,6 +1444,7 @@
       document.getElementById('pageBooth').classList.remove('hidden');
       initBooth();
     }
+    updateAuthUI();
 
     // ============== MOTIVATIONAL MESSAGES ==============
     const MOTI_IDLE = [
@@ -1305,7 +1492,11 @@
     window.closeCompletion = function() {
       document.getElementById('completionOverlay').classList.add('hidden');
       resetFeedback();
-      showProductDiscovery();
+      if (!isLoggedIn()) {
+        showRegistrationPrompt(activeSessionId);
+      } else {
+        showProductDiscovery();
+      }
     };
 
     function showCompletion(durationStr) {
@@ -1372,6 +1563,164 @@
       document.getElementById('feedbackThanks').classList.remove('hidden');
     };
 
+    // ============== AUTH FUNCTIONS ==============
+    window.handleRegister = async function() {
+      var phone = document.getElementById('authPhone').value.trim();
+      var password = document.getElementById('authPassword').value;
+      var errorEl = document.getElementById('authError');
+      var btn = document.getElementById('btnRegister');
+
+      errorEl.classList.add('hidden');
+      if (!phone || phone.length < 9) {
+        errorEl.textContent = 'Vui lòng nhập số điện thoại hợp lệ';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      if (!password || password.length < 6) {
+        errorEl.textContent = 'Mật khẩu tối thiểu 6 ký tự';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng ký...';
+
+      try {
+        var db = getPPDb();
+        var result = await db.rpc('register_user', { p_phone: phone, p_password: password });
+        if (result.error) throw result.error;
+        var data = result.data;
+        if (data.error === 'PHONE_EXISTS') {
+          errorEl.textContent = 'Số điện thoại đã được đăng ký. Hãy đăng nhập.';
+          errorEl.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Đăng ký';
+          return;
+        }
+        setStoredAuth({ id: data.id, phone: data.phone, name: data.name });
+        await linkSessionToUser(data.id);
+        await migrateDeviceDataToUser(data.id);
+        closeRegistration();
+      } catch (e) {
+        errorEl.textContent = 'Lỗi đăng ký. Thử lại sau.';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Đăng ký';
+      }
+    };
+
+    window.handleLogin = async function() {
+      var phone = document.getElementById('loginPhone').value.trim();
+      var password = document.getElementById('loginPassword').value;
+      var errorEl = document.getElementById('loginError');
+      var btn = document.getElementById('btnLogin');
+
+      errorEl.classList.add('hidden');
+      if (!phone || !password) {
+        errorEl.textContent = 'Vui lòng nhập đầy đủ thông tin';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng nhập...';
+
+      try {
+        var db = getPPDb();
+        var result = await db.rpc('login_user', { p_phone: phone, p_password: password });
+        if (result.error) throw result.error;
+        var data = result.data;
+        if (data.error === 'INVALID_CREDENTIALS') {
+          errorEl.textContent = 'Sai số điện thoại hoặc mật khẩu';
+          errorEl.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Đăng nhập';
+          return;
+        }
+        setStoredAuth({ id: data.id, phone: data.phone, name: data.name });
+        await linkSessionToUser(data.id);
+        await migrateDeviceDataToUser(data.id);
+        closeRegistration();
+      } catch (e) {
+        errorEl.textContent = 'Lỗi đăng nhập. Thử lại sau.';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Đăng nhập';
+      }
+    };
+
+    async function linkSessionToUser(userId) {
+      if (!pendingSessionLink) return;
+      try {
+        var db = getPPDb();
+        await db.from('sessions').update({ user_id: userId }).eq('id', pendingSessionLink);
+      } catch (e) { /* silent */ }
+    }
+
+    async function migrateDeviceDataToUser(userId) {
+      try {
+        var db = getPPDb();
+        await Promise.all([
+          db.from('product_impressions').update({ user_id: userId }).eq('user_id', DEVICE_USER_ID),
+          db.from('product_leads').update({ user_id: userId }).eq('user_id', DEVICE_USER_ID)
+        ]);
+      } catch (e) { /* silent */ }
+    }
+
+    function showRegistrationPrompt(sessionId) {
+      pendingSessionLink = sessionId;
+      document.getElementById('authPhone').value = '';
+      document.getElementById('authPassword').value = '';
+      document.getElementById('loginPhone').value = '';
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('authError').classList.add('hidden');
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('btnRegister').disabled = false;
+      document.getElementById('btnRegister').textContent = 'Đăng ký';
+      document.getElementById('btnLogin').disabled = false;
+      document.getElementById('btnLogin').textContent = 'Đăng nhập';
+      showRegisterForm();
+      document.getElementById('registrationOverlay').classList.remove('hidden');
+    }
+
+    function closeRegistration() {
+      document.getElementById('registrationOverlay').classList.add('hidden');
+      pendingSessionLink = null;
+      updateAuthUI();
+      if (BOOTH_ID) {
+        showProductDiscovery();
+      }
+    }
+
+    window.skipRegistration = function() {
+      closeRegistration();
+    };
+
+    window.showLoginForm = function() {
+      document.getElementById('authFormRegister').classList.add('hidden');
+      document.getElementById('authFormLogin').classList.remove('hidden');
+      document.getElementById('authTitle').textContent = 'Đăng nhập';
+      document.getElementById('authSub').textContent = 'Đăng nhập để xem lịch sử và nhận ưu đãi.';
+    };
+
+    window.showRegisterForm = function() {
+      document.getElementById('authFormLogin').classList.add('hidden');
+      document.getElementById('authFormRegister').classList.remove('hidden');
+      document.getElementById('authTitle').textContent = 'Lưu lịch sử & nhận ưu đãi?';
+      document.getElementById('authSub').textContent = 'Đăng ký để xem lại phiên làm việc và nhận voucher độc quyền.';
+    };
+
+    window.showLandingLogin = function() {
+      pendingSessionLink = null;
+      document.getElementById('loginPhone').value = '';
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('btnLogin').disabled = false;
+      document.getElementById('btnLogin').textContent = 'Đăng nhập';
+      showLoginForm();
+      document.getElementById('registrationOverlay').classList.remove('hidden');
+    };
+
     // ============== PRODUCT PLACEMENT ==============
     let cachedBoothProducts = [];
     let userLeadProductIds = new Set();
@@ -1413,7 +1762,7 @@
       const db = getPPDb();
       const { data } = await db.from('product_leads')
         .select('booth_product_id')
-        .eq('user_id', DEVICE_USER_ID);
+        .eq('user_id', getCurrentUserId());
       userLeadProductIds = new Set((data || []).map(d => d.booth_product_id));
     }
 
@@ -1429,7 +1778,7 @@
       try {
         const db = getPPDb();
         await db.from('product_impressions').insert({
-          user_id: DEVICE_USER_ID,
+          user_id: getCurrentUserId(),
           booth_product_id: boothProductId,
           source: source
         });
@@ -1442,14 +1791,14 @@
       todayStart.setHours(0, 0, 0, 0);
       const { data: existing } = await db.from('product_leads')
         .select('id')
-        .eq('user_id', DEVICE_USER_ID)
+        .eq('user_id', getCurrentUserId())
         .eq('booth_product_id', boothProductId)
         .gte('created_at', todayStart.toISOString())
         .limit(1);
       if (existing && existing.length > 0) return;
       const isVoucher = ctaType === 'get_voucher';
       await db.from('product_leads').insert({
-        user_id: DEVICE_USER_ID,
+        user_id: getCurrentUserId(),
         booth_product_id: boothProductId,
         cta_type: ctaType,
         source: source,
@@ -1498,6 +1847,7 @@
 
     window.closeProductDiscovery = function() {
       document.getElementById('productDiscoveryOverlay').classList.add('hidden');
+      activeSessionId = null;
     };
 
     window.handleDiscoveryCta = async function(boothProductId) {
@@ -1921,6 +2271,7 @@
           optimisticState = null;
           if (serverState === 'active' && session && session.started_at) {
             wasActive = true; // Server confirmed → giờ mới đánh dấu
+            activeSessionId = session.id || activeSessionId;
             // Chỉ sync timer nếu chưa chạy (tránh reset khi resume từ pause)
             if (!activeSessionStart || timerInterval === null) {
               startTimer(new Date(session.started_at), session.total_paused_seconds || 0);
@@ -1928,6 +2279,7 @@
           } else if (serverState === 'paused' && session && session.paused_at) {
             wasActive = true;
             wasPaused = true;
+            activeSessionId = session.id || activeSessionId;
             freezeTimer(new Date(session.started_at), session.total_paused_seconds || 0, session.paused_at);
             startPauseCountdown(session.paused_at);
           }
@@ -1938,6 +2290,12 @@
         if (serverState === 'active') {
           wasActive = true;
           wasPaused = false;
+          activeSessionId = session.id || activeSessionId;
+          // Auto-link session cho logged-in user
+          if (session.id && isLoggedIn() && !session.user_id) {
+            var auth = getStoredAuth();
+            db.from('sessions').update({ user_id: auth.id }).eq('id', session.id).then(function() {});
+          }
           if (currentState !== 'active') {
             currentState = 'active';
             setBoothState('active');
@@ -1947,6 +2305,7 @@
           }
         } else if (serverState === 'paused') {
           wasActive = true;
+          activeSessionId = session.id || activeSessionId;
           if (currentState !== 'paused') {
             wasPaused = true;
             currentState = 'paused';
@@ -1974,7 +2333,7 @@
 
       async function pollState() {
         const { data } = await db.from('sessions')
-          .select('started_at, status, paused_at, total_paused_seconds')
+          .select('id, user_id, started_at, status, paused_at, total_paused_seconds')
           .eq('booth_id', BOOTH_ID)
           .in('status', ['active', 'paused'])
           .limit(1);
