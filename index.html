@@ -2454,18 +2454,22 @@
 
     async function loadVenueData(db) {
       try {
-        // Expire old reservations server-side
-        await db.rpc('expire_reservations');
+        // Expire old reservations server-side (silent fail nếu chưa chạy migration)
+        try { await db.rpc('expire_reservations'); } catch (e) { /* silent */ }
 
-        var [boothsRes, sessionsRes, resvRes] = await Promise.all([
+        // Load booths + sessions luôn, reservations có thể fail nếu bảng chưa tồn tại
+        var [boothsRes, sessionsRes] = await Promise.all([
           db.from('booths').select('booth_id, name, location, address, last_seen').order('booth_id'),
-          db.from('sessions').select('booth_id, status').in('status', ['active', 'paused']),
-          db.from('reservations').select('id, booth_id, user_id, status, expires_at').eq('status', 'active')
+          db.from('sessions').select('booth_id, status').in('status', ['active', 'paused'])
         ]);
+        var resvRes = { data: [] };
+        try {
+          resvRes = await db.from('reservations').select('id, booth_id, user_id, status, expires_at').eq('status', 'active');
+        } catch (e) { /* silent - table may not exist yet */ }
 
         var booths = boothsRes.data || [];
         var activeSessions = sessionsRes.data || [];
-        var activeReservations = resvRes.data || [];
+        var activeReservations = (resvRes.data) || [];
 
         var currentUserId = isLoggedIn() ? getStoredAuth().id : null;
         var now = Date.now();
