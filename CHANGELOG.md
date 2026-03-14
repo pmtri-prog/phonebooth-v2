@@ -1,5 +1,26 @@
 # Phonebooth MVP - Changelog
 
+## [2026-03-14] Rank System & Leaderboard
+
+### Tính năng
+- **Hệ thống thăng hạng**: 6 hạng (Tập sự → Bạc → Vàng → Bạch kim → Kim cương → Thách đấu) dựa trên tổng phút deep work
+- **Rank card sau phiên**: Hiện +điểm, hạng hiện tại, thanh tiến trình ngay trong completion overlay
+- **Bảng xếp hạng (Leaderboard)**: Thay thế trang Thống kê, hiện top 50 deep workers
+- **Trang Profile (Tôi)**: Chọn nickname, avatar icon, toggle ẩn/hiện leaderboard
+- **18 avatar icons**: Bộ icon dễ thương để user chọn
+- **Tab bar mới**: Đổi "Thống kê" → "Xếp hạng" với icon trophy
+
+### Database
+- Thêm cột `nickname`, `avatar_icon`, `show_leaderboard` vào users
+- Update `login_user()` và `register_user()` trả thêm rank fields
+- RPC `get_leaderboard()` cho query leaderboard theo location
+
+### File thay đổi
+- `index.html` (Rank system, Leaderboard, Profile page, completion rank card)
+- `migration_rank.sql` (NEW - chạy trong Supabase SQL Editor)
+
+---
+
 ## [2026-03-14] Demographics Report cho khách hàng quảng cáo
 
 ### Tính năng

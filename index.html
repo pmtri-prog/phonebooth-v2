@@ -1723,6 +1723,340 @@
       color: var(--color-text-hint);
     }
 
+    /* ===== RANK SYSTEM ===== */
+    .rank-card {
+      background: #F6F5FF;
+      border-radius: var(--radius-card);
+      padding: 16px;
+      margin-top: 16px;
+      text-align: center;
+    }
+    .rank-points {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    .rank-points-label {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+    .rank-tier {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .rank-tier-icon {
+      font-size: 24px;
+    }
+    .rank-tier-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .rank-progress {
+      margin-top: 10px;
+    }
+    .rank-progress-bar {
+      height: 8px;
+      background: var(--color-gray);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .rank-progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+    .rank-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--color-text-hint);
+      margin-top: 4px;
+    }
+
+    /* ===== LEADERBOARD ===== */
+    .lb-page {
+      min-height: 100vh;
+      background: var(--color-white);
+      padding-bottom: 80px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .lb-hero {
+      padding: 24px var(--space-page) 16px;
+    }
+    .lb-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .lb-subtitle {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-bottom: 16px;
+    }
+    .lb-my-rank {
+      background: #F6F5FF;
+      border-radius: var(--radius-card);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .lb-my-icon {
+      font-size: 28px;
+    }
+    .lb-my-info {
+      flex: 1;
+    }
+    .lb-my-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .lb-my-tier {
+      font-size: 12px;
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+    .lb-my-hours {
+      text-align: right;
+    }
+    .lb-my-hours-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    .lb-my-hours-label {
+      font-size: 10px;
+      color: var(--color-text-hint);
+    }
+    .lb-list {
+      padding: 0 var(--space-page) 16px;
+    }
+    .lb-list-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 12px;
+    }
+    .lb-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .lb-item:last-child {
+      border-bottom: none;
+    }
+    .lb-rank {
+      width: 24px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-hint);
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .lb-rank.top-1 { color: #f59e0b; }
+    .lb-rank.top-2 { color: #94a3b8; }
+    .lb-rank.top-3 { color: #cd7f32; }
+    .lb-avatar {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .lb-user {
+      flex: 1;
+      min-width: 0;
+    }
+    .lb-user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lb-user-tier {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+    }
+    .lb-hours {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+    .lb-empty {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 14px;
+      color: var(--color-text-hint);
+    }
+
+    /* ===== PROFILE PAGE ===== */
+    .profile-page {
+      min-height: 100vh;
+      background: var(--color-white);
+      padding-bottom: 80px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .profile-hero {
+      padding: 24px var(--space-page) 16px;
+      text-align: center;
+    }
+    .profile-avatar-big {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+    .profile-name-big {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .profile-tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-accent);
+      background: #F6F5FF;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 6px;
+    }
+    .profile-section {
+      padding: 0 var(--space-page) 20px;
+    }
+    .profile-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--color-text-hint);
+      margin-bottom: 10px;
+    }
+    .profile-field {
+      margin-bottom: 12px;
+    }
+    .profile-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: 4px;
+    }
+    .profile-field input {
+      width: 100%;
+      font-family: var(--font-family);
+      font-size: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-input);
+      color: var(--color-text-primary);
+      background: var(--color-white);
+    }
+    .profile-field input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    .profile-icon-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+    .profile-icon-btn {
+      font-size: 24px;
+      padding: 8px;
+      border-radius: var(--radius-input);
+      border: 2px solid var(--color-border);
+      background: var(--color-white);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .profile-icon-btn.selected {
+      border-color: var(--color-accent);
+      background: #F6F5FF;
+    }
+    .profile-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+    .profile-toggle-label {
+      font-size: 14px;
+      color: var(--color-text-primary);
+    }
+    .profile-toggle-sub {
+      font-size: 12px;
+      color: var(--color-text-hint);
+      margin-top: 2px;
+    }
+    .toggle-switch {
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: var(--color-gray);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      border: none;
+    }
+    .toggle-switch.on {
+      background: var(--color-accent);
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      transition: left 0.2s;
+    }
+    .toggle-switch.on::after {
+      left: 22px;
+    }
+    .profile-save-action {
+      width: 100%;
+      font-family: var(--font-family);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px;
+      background: var(--color-accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .profile-logout {
+      width: 100%;
+      font-family: var(--font-family);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px;
+      background: none;
+      color: #ef4444;
+      border: 1px solid #fee2e2;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
     /* ===== BOTTOM TAB BAR ===== */
     .tab-bar {
       position: fixed;
@@ -1919,45 +2253,75 @@
 
   <!-- ==================== STATS PAGE ==================== -->
   <div id="pageStats" class="hidden">
-    <div class="stats-page">
+    <div class="lb-page">
       <div class="venue-header">
         <div class="venue-header-logo">
           <span class="logo-focus">FOCUS</span>
           <span class="logo-epione">by EPIONE</span>
         </div>
       </div>
-      <div class="stats-hero">
-        <div class="stats-title">Deep Work của bạn</div>
-        <div class="stats-summary">
-          <div class="stats-card">
-            <div class="stats-card-value" id="statsTotalHours">0h</div>
-            <div class="stats-card-label">Tổng giờ</div>
+      <div class="lb-hero">
+        <div class="lb-title">Bảng xếp hạng</div>
+        <div class="lb-subtitle">Deep Workers tại venue này</div>
+        <div class="lb-my-rank hidden" id="lbMyRank">
+          <span class="lb-my-icon" id="lbMyIcon">🌱</span>
+          <div class="lb-my-info">
+            <div class="lb-my-name" id="lbMyName">Bạn</div>
+            <div class="lb-my-tier" id="lbMyTier">Tập sự</div>
           </div>
-          <div class="stats-card">
-            <div class="stats-card-value" id="statsTotalSessions">0</div>
-            <div class="stats-card-label">Tổng phiên</div>
-          </div>
-          <div class="stats-card">
-            <div class="stats-card-value" id="statsAvgDuration">0p</div>
-            <div class="stats-card-label">TB/phiên</div>
+          <div class="lb-my-hours">
+            <div class="lb-my-hours-value" id="lbMyHours">0h</div>
+            <div class="lb-my-hours-label">deep work</div>
           </div>
         </div>
       </div>
-      <div class="stats-week">
-        <div class="stats-week-header">
-          <span class="stats-week-title">Tuần này</span>
-          <span class="stats-week-value" id="statsWeekValue">0h</span>
-        </div>
-        <div class="stats-week-bar">
-          <div class="stats-week-fill" id="statsWeekFill" style="width:0%"></div>
-        </div>
-        <div class="stats-week-goal">Mục tiêu 10 giờ / tuần</div>
+      <div class="lb-list">
+        <div class="lb-list-title">Top Deep Workers</div>
+        <div id="lbListItems"></div>
+        <div class="lb-empty hidden" id="lbEmpty">Chưa có ai trên bảng xếp hạng. Hãy là người đầu tiên!</div>
       </div>
-      <div class="stats-history">
-        <div class="stats-history-title">Lịch sử gần đây</div>
-        <div id="statsHistoryList"></div>
-        <button class="stats-load-more hidden" id="statsLoadMore" onclick="loadMoreSessions()">Xem thêm</button>
-        <div class="stats-empty hidden" id="statsEmpty">Chưa có phiên nào. Hãy bắt đầu deep work!</div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: PROFILE ==================== -->
+  <div id="pageProfile" class="hidden">
+    <div class="profile-page">
+      <div class="venue-header">
+        <div class="venue-header-logo">
+          <span class="logo-focus">FOCUS</span>
+          <span class="logo-epione">by EPIONE</span>
+        </div>
+      </div>
+      <div class="profile-hero">
+        <div class="profile-avatar-big" id="profileAvatarBig">🌱</div>
+        <div class="profile-name-big" id="profileNameBig">Focuser</div>
+        <div class="profile-tier-badge" id="profileTierBadge">
+          <span id="profileTierIcon">🌱</span> <span id="profileTierName">Tập sự</span>
+        </div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Thông tin</div>
+        <div class="profile-field">
+          <label>Nickname</label>
+          <input type="text" id="profileNickname" placeholder="Nhập nickname" maxlength="20">
+        </div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Chọn icon</div>
+        <div class="profile-icon-grid" id="profileIconGrid"></div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-toggle">
+          <div>
+            <div class="profile-toggle-label">Hiện trên bảng xếp hạng</div>
+            <div class="profile-toggle-sub">Mọi người sẽ thấy nickname và icon của bạn</div>
+          </div>
+          <button class="toggle-switch on" id="profileToggleLb" onclick="toggleLeaderboardVisibility()"></button>
+        </div>
+      </div>
+      <div class="profile-section">
+        <button class="profile-save-action" onclick="saveProfile()">Lưu thay đổi</button>
+        <button class="profile-logout" onclick="handleLogout()">Đăng xuất</button>
       </div>
     </div>
   </div>
@@ -1969,8 +2333,8 @@
       <span class="tab-label">Focus</span>
     </button>
     <button class="tab-item" id="tabStats" onclick="switchTab('stats')">
-      <span class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></span>
-      <span class="tab-label">Thống kê</span>
+      <span class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 22V9.354a4 4 0 0 0 4 0V22"/><path d="M8 2v2"/><path d="M16 2v2"/><path d="M8 4h8a2 2 0 0 1 2 2v3H6V6a2 2 0 0 1 2-2z"/></svg></span>
+      <span class="tab-label">Xếp hạng</span>
     </button>
     <button class="tab-item" id="tabProfile" onclick="switchTab('profile')">
       <span class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span>
@@ -2184,6 +2548,25 @@
       <button class="profile-skip" onclick="skipProfileQuestion()">Để sau</button>
     </div>
 
+    <!-- Rank card (hiện khi đã login) -->
+    <div class="rank-card hidden" id="rankCard">
+      <div class="rank-points" id="rankPoints">+0</div>
+      <div class="rank-points-label">điểm focus</div>
+      <div class="rank-tier">
+        <span class="rank-tier-icon" id="rankTierIcon">🌱</span>
+        <span class="rank-tier-name" id="rankTierName">Tập sự</span>
+      </div>
+      <div class="rank-progress">
+        <div class="rank-progress-bar">
+          <div class="rank-progress-fill" id="rankProgressFill" style="width:0%"></div>
+        </div>
+        <div class="rank-progress-label">
+          <span id="rankProgressCurrent">0h</span>
+          <span id="rankProgressNext">→ 2h (Bạc)</span>
+        </div>
+      </div>
+    </div>
+
     <button class="btn-done" onclick="closeCompletion()" style="margin-top:20px;">Tắt máy</button>
   </div>
 
@@ -2341,6 +2724,7 @@
       // Hide all pages
       document.getElementById('pageVenue').classList.add('hidden');
       document.getElementById('pageStats').classList.add('hidden');
+      document.getElementById('pageProfile').classList.add('hidden');
       document.getElementById('pageLanding').classList.add('hidden');
       setActiveTab(tab);
 
@@ -2351,14 +2735,12 @@
         history.replaceState(null, '', '/?page=venue');
       } else if (tab === 'stats') {
         document.getElementById('pageStats').classList.remove('hidden');
-        initStats();
+        initLeaderboard();
         history.replaceState(null, '', '/?page=stats');
       } else if (tab === 'profile') {
-        // Placeholder - redirect to venue for now
-        document.getElementById('pageVenue').classList.remove('hidden');
-        setActiveTab('booth');
-        initVenue();
-        history.replaceState(null, '', '/?page=venue');
+        document.getElementById('pageProfile').classList.remove('hidden');
+        initProfile();
+        history.replaceState(null, '', '/?page=profile');
       }
     };
 
@@ -2369,7 +2751,11 @@
     } else if (PAGE_PARAM === 'stats') {
       document.getElementById('pageStats').classList.remove('hidden');
       showTabBar(); setActiveTab('stats');
-      initStats();
+      initLeaderboard();
+    } else if (PAGE_PARAM === 'profile') {
+      document.getElementById('pageProfile').classList.remove('hidden');
+      showTabBar(); setActiveTab('profile');
+      initProfile();
     } else if (BOOTH_ID) {
       document.getElementById('pageBooth').classList.remove('hidden');
       hideTabBar();
@@ -2442,6 +2828,10 @@
       resetFeedback();
       resetCompAuth();
       checkProfileQuestion();
+      // Parse minutes from durationStr (format "MM:SS" or "HH:MM:SS")
+      var parts = durationStr.split(':').map(Number);
+      var sessionMinutes = parts.length === 3 ? parts[0] * 60 + parts[1] : parts[0];
+      showRankCard(sessionMinutes);
       overlay.scrollTop = 0;
       overlay.classList.remove('hidden');
     }
@@ -2536,7 +2926,10 @@
         phone: data.phone,
         name: data.name || '',
         occupation: data.occupation || '',
-        purpose: data.purpose || ''
+        purpose: data.purpose || '',
+        nickname: data.nickname || '',
+        avatar_icon: data.avatar_icon || '🌱',
+        show_leaderboard: data.show_leaderboard !== false
       });
       updateAuthUI();
       checkProfileQuestion();
@@ -2872,80 +3265,31 @@
       document.getElementById('profileQuestion').classList.add('hidden');
     };
 
-    // ============== STATS PAGE ==============
-    var statsOffset = 0;
-    var STATS_PAGE_SIZE = 10;
-    var boothNamesCache = {};
+    // ============== RANK SYSTEM ==============
+    var RANK_TIERS = [
+      { name: 'Tập sự', icon: '🌱', minMinutes: 0 },
+      { name: 'Bạc', icon: '🥈', minMinutes: 120 },
+      { name: 'Vàng', icon: '🥇', minMinutes: 600 },
+      { name: 'Bạch kim', icon: '💎', minMinutes: 1500 },
+      { name: 'Kim cương', icon: '👑', minMinutes: 3000 },
+      { name: 'Thách đấu', icon: '🔥', minMinutes: 6000 }
+    ];
 
-    function initStats() {
-      if (!isLoggedIn()) {
-        document.getElementById('statsEmpty').classList.remove('hidden');
-        document.getElementById('statsEmpty').textContent = 'Đăng nhập để xem thống kê deep work của bạn.';
-        return;
+    var AVATAR_ICONS = ['🌱', '🎯', '⚡', '🔥', '💎', '👑', '🚀', '🦊', '🐻', '🐼', '🦁', '🐯', '🎧', '💻', '📚', '☕', '🌙', '⭐'];
+
+    function getRankTier(totalMinutes) {
+      var tier = RANK_TIERS[0];
+      for (var i = RANK_TIERS.length - 1; i >= 0; i--) {
+        if (totalMinutes >= RANK_TIERS[i].minMinutes) { tier = RANK_TIERS[i]; break; }
       }
-      statsOffset = 0;
-      document.getElementById('statsHistoryList').innerHTML = '';
-      loadStats();
-    }
-
-    async function loadStats() {
-      var db = getPPDb();
-      var auth = getStoredAuth();
-      try {
-        // Load all ended sessions for this user
-        var { data: allSessions } = await db.from('sessions')
-          .select('id, booth_id, started_at, ended_at, duration_seconds')
-          .eq('user_id', auth.id)
-          .eq('status', 'ended')
-          .not('duration_seconds', 'is', null)
-          .order('ended_at', { ascending: false });
-
-        var sessions = allSessions || [];
-
-        // Total stats
-        var totalSeconds = 0;
-        sessions.forEach(function(s) { totalSeconds += (s.duration_seconds || 0); });
-        var totalHours = totalSeconds / 3600;
-        var totalSessions = sessions.length;
-        var avgMinutes = totalSessions > 0 ? Math.round((totalSeconds / totalSessions) / 60) : 0;
-
-        document.getElementById('statsTotalHours').textContent = formatHours(totalSeconds);
-        document.getElementById('statsTotalSessions').textContent = totalSessions;
-        document.getElementById('statsAvgDuration').textContent = avgMinutes + 'p';
-
-        // Week stats (Mon-Sun)
-        var now = new Date();
-        var dayOfWeek = now.getDay();
-        var mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-        var monday = new Date(now);
-        monday.setHours(0, 0, 0, 0);
-        monday.setDate(monday.getDate() - mondayOffset);
-        var weekSeconds = 0;
-        sessions.forEach(function(s) {
-          if (new Date(s.ended_at) >= monday) weekSeconds += (s.duration_seconds || 0);
-        });
-        var weekHours = weekSeconds / 3600;
-        var weekGoal = 10;
-        var weekPct = Math.min(100, Math.round((weekHours / weekGoal) * 100));
-        document.getElementById('statsWeekValue').textContent = formatHours(weekSeconds);
-        document.getElementById('statsWeekFill').style.width = weekPct + '%';
-
-        // Load booth names
-        var boothIds = [];
-        sessions.forEach(function(s) {
-          if (s.booth_id && !boothNamesCache[s.booth_id] && boothIds.indexOf(s.booth_id) === -1) boothIds.push(s.booth_id);
-        });
-        if (boothIds.length > 0) {
-          var { data: booths } = await db.from('booths').select('booth_id, name').in('booth_id', boothIds);
-          (booths || []).forEach(function(b) { boothNamesCache[b.booth_id] = b.name || b.booth_id; });
-        }
-
-        // Render history
-        renderSessionHistory(sessions);
-
-      } catch (e) {
-        console.error('loadStats error:', e);
+      var tierIndex = RANK_TIERS.indexOf(tier);
+      var nextTier = tierIndex < RANK_TIERS.length - 1 ? RANK_TIERS[tierIndex + 1] : null;
+      var progress = 100;
+      if (nextTier) {
+        var range = nextTier.minMinutes - tier.minMinutes;
+        progress = Math.min(100, Math.round(((totalMinutes - tier.minMinutes) / range) * 100));
       }
+      return { tier: tier, nextTier: nextTier, progress: progress, tierIndex: tierIndex };
     }
 
     function formatHours(totalSeconds) {
@@ -2956,66 +3300,236 @@
       return m + 'p';
     }
 
-    function formatTime(dateStr) {
-      var d = new Date(dateStr);
-      return (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    function formatMinutesAsHours(mins) {
+      var h = Math.floor(mins / 60);
+      var m = mins % 60;
+      if (h > 0 && m > 0) return h + 'h' + (m < 10 ? '0' : '') + m + 'p';
+      if (h > 0) return h + 'h';
+      return m + 'p';
     }
 
-    function formatDate(dateStr) {
-      var d = new Date(dateStr);
-      var now = new Date();
-      var today = new Date(now); today.setHours(0,0,0,0);
-      var yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
-      var sessionDate = new Date(d); sessionDate.setHours(0,0,0,0);
-      if (sessionDate.getTime() === today.getTime()) return 'Hôm nay';
-      if (sessionDate.getTime() === yesterday.getTime()) return 'Hôm qua';
-      return (d.getDate() < 10 ? '0' : '') + d.getDate() + '/' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
+    // Show rank card in completion overlay
+    async function showRankCard(sessionMinutes) {
+      var card = document.getElementById('rankCard');
+      if (!isLoggedIn()) { card.classList.add('hidden'); return; }
+
+      var db = getPPDb();
+      var auth = getStoredAuth();
+      try {
+        var { data: sessions } = await db.from('sessions')
+          .select('duration_minutes')
+          .eq('user_id', auth.id)
+          .eq('status', 'ended');
+
+        var totalMinutes = 0;
+        (sessions || []).forEach(function(s) { totalMinutes += (s.duration_minutes || 0); });
+
+        var rank = getRankTier(totalMinutes);
+        document.getElementById('rankPoints').textContent = '+' + sessionMinutes;
+        document.getElementById('rankTierIcon').textContent = rank.tier.icon;
+        document.getElementById('rankTierName').textContent = rank.tier.name;
+        document.getElementById('rankProgressFill').style.width = rank.progress + '%';
+        document.getElementById('rankProgressCurrent').textContent = formatMinutesAsHours(totalMinutes);
+        if (rank.nextTier) {
+          document.getElementById('rankProgressNext').textContent = '→ ' + formatMinutesAsHours(rank.nextTier.minMinutes) + ' (' + rank.nextTier.name + ')';
+        } else {
+          document.getElementById('rankProgressNext').textContent = 'Max rank!';
+        }
+        card.classList.remove('hidden');
+      } catch (e) {
+        console.error('showRankCard error:', e);
+        card.classList.add('hidden');
+      }
     }
 
-    function renderSessionHistory(sessions) {
-      var list = document.getElementById('statsHistoryList');
-      var emptyEl = document.getElementById('statsEmpty');
-      var loadMoreEl = document.getElementById('statsLoadMore');
-
-      if (sessions.length === 0) {
-        emptyEl.classList.remove('hidden');
-        loadMoreEl.classList.add('hidden');
+    // ============== LEADERBOARD ==============
+    function initLeaderboard() {
+      if (!isLoggedIn()) {
+        document.getElementById('lbEmpty').classList.remove('hidden');
+        document.getElementById('lbEmpty').textContent = 'Đăng nhập để xem bảng xếp hạng.';
+        document.getElementById('lbMyRank').classList.add('hidden');
+        document.getElementById('lbListItems').innerHTML = '';
         return;
       }
-      emptyEl.classList.add('hidden');
+      loadLeaderboard();
+    }
 
-      var page = sessions.slice(statsOffset, statsOffset + STATS_PAGE_SIZE);
-      page.forEach(function(s) {
-        var div = document.createElement('div');
-        div.className = 'stats-session';
-        var boothName = boothNamesCache[s.booth_id] || s.booth_id;
-        var duration = formatHours(s.duration_seconds || 0);
-        var startTime = s.started_at ? formatTime(s.started_at) : '';
-        var endTime = s.ended_at ? formatTime(s.ended_at) : '';
-        var dateStr = s.ended_at ? formatDate(s.ended_at) : '';
-        div.innerHTML = '<div class="stats-session-left">' +
-          '<div class="stats-session-date">' + dateStr + '</div>' +
-          '<div class="stats-session-booth">' + boothName + '</div>' +
-        '</div>' +
-        '<div class="stats-session-right">' +
-          '<div class="stats-session-duration">' + duration + '</div>' +
-          '<div class="stats-session-time">' + startTime + ' - ' + endTime + '</div>' +
-        '</div>';
-        list.appendChild(div);
-      });
-      statsOffset += STATS_PAGE_SIZE;
+    async function loadLeaderboard() {
+      var db = getPPDb();
+      var auth = getStoredAuth();
+      try {
+        // Load all sessions grouped by user
+        var { data: allSessions } = await db.from('sessions')
+          .select('user_id, duration_minutes')
+          .eq('status', 'ended');
 
-      if (statsOffset < sessions.length) {
-        loadMoreEl.classList.remove('hidden');
-        // Store sessions for loadMore
-        window._statsSessions = sessions;
-      } else {
-        loadMoreEl.classList.add('hidden');
+        // Aggregate per user
+        var userMinutes = {};
+        (allSessions || []).forEach(function(s) {
+          if (!s.user_id) return;
+          userMinutes[s.user_id] = (userMinutes[s.user_id] || 0) + (s.duration_minutes || 0);
+        });
+
+        // Load users who show on leaderboard
+        var userIds = Object.keys(userMinutes);
+        if (userIds.length === 0) {
+          document.getElementById('lbEmpty').classList.remove('hidden');
+          document.getElementById('lbListItems').innerHTML = '';
+          return;
+        }
+
+        var { data: users } = await db.from('users')
+          .select('id, nickname, avatar_icon, show_leaderboard')
+          .in('id', userIds);
+
+        var userMap = {};
+        (users || []).forEach(function(u) { userMap[u.id] = u; });
+
+        // My rank
+        var myMinutes = userMinutes[auth.id] || 0;
+        var myRank = getRankTier(myMinutes);
+        var myEl = document.getElementById('lbMyRank');
+        document.getElementById('lbMyIcon').textContent = auth.avatar_icon || '🌱';
+        document.getElementById('lbMyName').textContent = auth.nickname || auth.name || 'Bạn';
+        document.getElementById('lbMyTier').textContent = myRank.tier.icon + ' ' + myRank.tier.name + ' · ' + formatMinutesAsHours(myMinutes);
+        document.getElementById('lbMyHours').textContent = formatMinutesAsHours(myMinutes);
+        myEl.classList.remove('hidden');
+
+        // Build leaderboard (only users with show_leaderboard = true)
+        var entries = [];
+        Object.keys(userMinutes).forEach(function(uid) {
+          var u = userMap[uid];
+          if (!u || u.show_leaderboard === false) return;
+          entries.push({
+            id: uid,
+            nickname: u.nickname || 'Ẩn danh',
+            avatar: u.avatar_icon || '🌱',
+            minutes: userMinutes[uid]
+          });
+        });
+        entries.sort(function(a, b) { return b.minutes - a.minutes; });
+        entries = entries.slice(0, 50);
+
+        var listEl = document.getElementById('lbListItems');
+        var emptyEl = document.getElementById('lbEmpty');
+        if (entries.length === 0) {
+          listEl.innerHTML = '';
+          emptyEl.classList.remove('hidden');
+          return;
+        }
+        emptyEl.classList.add('hidden');
+
+        listEl.innerHTML = entries.map(function(e, i) {
+          var rank = getRankTier(e.minutes);
+          var rankClass = i === 0 ? 'top-1' : i === 1 ? 'top-2' : i === 2 ? 'top-3' : '';
+          var isMe = e.id === auth.id;
+          return '<div class="lb-item" style="' + (isMe ? 'background:#F6F5FF;border-radius:8px;padding:12px 8px;' : '') + '">' +
+            '<div class="lb-rank ' + rankClass + '">' + (i + 1) + '</div>' +
+            '<div class="lb-avatar">' + e.avatar + '</div>' +
+            '<div class="lb-user">' +
+              '<div class="lb-user-name">' + e.nickname + (isMe ? ' (bạn)' : '') + '</div>' +
+              '<div class="lb-user-tier">' + rank.tier.icon + ' ' + rank.tier.name + '</div>' +
+            '</div>' +
+            '<div class="lb-hours">' + formatMinutesAsHours(e.minutes) + '</div>' +
+          '</div>';
+        }).join('');
+
+      } catch (e) {
+        console.error('loadLeaderboard error:', e);
       }
     }
 
-    window.loadMoreSessions = function() {
-      if (window._statsSessions) renderSessionHistory(window._statsSessions);
+    // ============== PROFILE PAGE ==============
+    function initProfile() {
+      if (!isLoggedIn()) {
+        switchTab('venue');
+        return;
+      }
+      var auth = getStoredAuth();
+      document.getElementById('profileAvatarBig').textContent = auth.avatar_icon || '🌱';
+      document.getElementById('profileNameBig').textContent = auth.nickname || auth.name || 'Focuser';
+      document.getElementById('profileNickname').value = auth.nickname || '';
+
+      // Load rank
+      loadProfileRank();
+
+      // Render icon grid
+      var grid = document.getElementById('profileIconGrid');
+      var currentIcon = auth.avatar_icon || '🌱';
+      grid.innerHTML = AVATAR_ICONS.map(function(icon) {
+        return '<button class="profile-icon-btn' + (icon === currentIcon ? ' selected' : '') + '" onclick="selectIcon(this, \'' + icon + '\')">' + icon + '</button>';
+      }).join('');
+
+      // Toggle
+      var toggle = document.getElementById('profileToggleLb');
+      if (auth.show_leaderboard !== false) {
+        toggle.classList.add('on');
+      } else {
+        toggle.classList.remove('on');
+      }
+    }
+
+    async function loadProfileRank() {
+      var db = getPPDb();
+      var auth = getStoredAuth();
+      try {
+        var { data: sessions } = await db.from('sessions')
+          .select('duration_minutes')
+          .eq('user_id', auth.id)
+          .eq('status', 'ended');
+
+        var totalMinutes = 0;
+        (sessions || []).forEach(function(s) { totalMinutes += (s.duration_minutes || 0); });
+        var rank = getRankTier(totalMinutes);
+        document.getElementById('profileTierIcon').textContent = rank.tier.icon;
+        document.getElementById('profileTierName').textContent = rank.tier.name + ' · ' + formatMinutesAsHours(totalMinutes);
+      } catch (e) {}
+    }
+
+    window.selectIcon = function(btn, icon) {
+      document.querySelectorAll('.profile-icon-btn').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      document.getElementById('profileAvatarBig').textContent = icon;
+    };
+
+    window.toggleLeaderboardVisibility = function() {
+      var toggle = document.getElementById('profileToggleLb');
+      toggle.classList.toggle('on');
+    };
+
+    window.saveProfile = async function() {
+      if (!isLoggedIn()) return;
+      var auth = getStoredAuth();
+      var nickname = document.getElementById('profileNickname').value.trim();
+      var selectedIcon = document.querySelector('.profile-icon-btn.selected');
+      var avatarIcon = selectedIcon ? selectedIcon.textContent : (auth.avatar_icon || '🌱');
+      var showLb = document.getElementById('profileToggleLb').classList.contains('on');
+
+      var db = getPPDb();
+      await db.from('users').update({
+        nickname: nickname || null,
+        avatar_icon: avatarIcon,
+        show_leaderboard: showLb
+      }).eq('id', auth.id);
+
+      // Update local storage
+      auth.nickname = nickname;
+      auth.avatar_icon = avatarIcon;
+      auth.show_leaderboard = showLb;
+      setStoredAuth(auth);
+
+      document.getElementById('profileNameBig').textContent = nickname || auth.name || 'Focuser';
+
+      // Simple feedback
+      var btn = document.querySelector('.profile-save-action');
+      btn.textContent = 'Đã lưu!';
+      btn.style.background = '#22c55e';
+      setTimeout(function() { btn.textContent = 'Lưu thay đổi'; btn.style.background = ''; }, 1500);
+    };
+
+    window.handleLogout = function() {
+      clearStoredAuth();
+      window.location.href = '/';
     };
 
     // ============== PRODUCT PLACEMENT ==============
