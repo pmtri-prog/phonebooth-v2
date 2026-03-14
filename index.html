@@ -1143,6 +1143,224 @@
       font-weight: 600;
       color: var(--color-text-primary);
     }
+
+    /* ===== VENUE PAGE ===== */
+    .venue-page {
+      min-height: 100vh;
+      background: var(--color-white);
+      padding-bottom: 40px;
+    }
+    .venue-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px var(--space-page);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .venue-back {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--color-text-primary);
+      line-height: 1;
+    }
+    .venue-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .venue-header-logo .logo-focus {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-accent);
+      letter-spacing: 2px;
+    }
+    .venue-header-logo .logo-epione {
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      letter-spacing: 1px;
+    }
+    .venue-info {
+      padding: 24px var(--space-page) 8px;
+    }
+    .venue-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .venue-address {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+    }
+    .venue-list {
+      padding: 16px var(--space-page);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .booth-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+    .booth-card.my-reservation {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 1px var(--color-accent), 0 0 0 4px var(--color-glow-1);
+    }
+    .booth-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .booth-card-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .booth-status-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-badge);
+      white-space: nowrap;
+    }
+    .booth-status-badge.available {
+      background: #E8FFE8;
+      color: #22c55e;
+    }
+    .booth-status-badge.occupied {
+      background: #FDE8E8;
+      color: #ef4444;
+    }
+    .booth-status-badge.reserved {
+      background: #FFF3E0;
+      color: #f59e0b;
+    }
+    .booth-status-badge.my-reserved {
+      background: var(--color-voucher-active-bg);
+      color: var(--color-accent);
+    }
+    .booth-status-badge.offline {
+      background: var(--color-gray);
+      color: #999;
+    }
+    .booth-card-countdown {
+      font-size: 13px;
+      color: var(--color-accent);
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .booth-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-reserve {
+      flex: 1;
+      background: var(--color-accent);
+      color: #fff;
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 0;
+      border-radius: var(--radius-button);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-reserve:active { opacity: 0.85; }
+    .btn-reserve:disabled {
+      background: var(--color-gray);
+      color: #999;
+      cursor: default;
+    }
+    .btn-use-now {
+      flex: 1;
+      background: transparent;
+      color: var(--color-accent);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 0;
+      border-radius: var(--radius-button);
+      border: 1px solid var(--color-accent);
+      cursor: pointer;
+    }
+    .btn-use-now:active { opacity: 0.85; }
+    .btn-cancel-reserve {
+      background: none;
+      border: none;
+      color: var(--color-error);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 0;
+      cursor: pointer;
+      flex: 1;
+    }
+    .booth-card-login-hint {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-top: 8px;
+      text-align: center;
+    }
+    .booth-card-login-hint a {
+      color: var(--color-accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .venue-footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-text-hint);
+      padding: 16px var(--space-page) 0;
+    }
+
+    /* Reservation banner on booth page */
+    .reservation-banner {
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+    .reservation-banner.mine {
+      background: var(--color-voucher-active-bg);
+      color: var(--color-accent);
+      display: block;
+    }
+    .reservation-banner.blocked {
+      background: #FDE8E8;
+      color: var(--color-error);
+      display: block;
+    }
+    .reservation-banner .resv-countdown {
+      font-weight: 700;
+    }
+
+    /* Landing venue button */
+    .btn-venue {
+      display: block;
+      margin-top: 12px;
+      background: transparent;
+      color: var(--color-accent);
+      font-family: var(--font-family);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px 40px;
+      border-radius: var(--radius-button);
+      border: 1px solid var(--color-accent);
+      cursor: pointer;
+    }
+    .btn-venue:active { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -1170,7 +1388,29 @@
         <p>kệ nó đi.</p>
       </div>
       <button class="btn-enter" onclick="window.location.href='/?booth='">Bật ngay</button>
+      <button class="btn-venue" onclick="window.location.href='/?page=venue'">Xem danh sách booth</button>
       <div class="landing-footer">Đã có tài khoản? <a href="#" onclick="showLandingLogin(); return false;">Đăng nhập</a></div>
+    </div>
+  </div>
+
+  <!-- ==================== VENUE PAGE ==================== -->
+  <div id="pageVenue" class="hidden">
+    <div class="venue-page">
+      <div class="venue-header">
+        <button class="venue-back" onclick="window.location.href='/'">&#8592;</button>
+        <div class="venue-header-logo">
+          <span class="logo-focus">FOCUS</span>
+          <span class="logo-epione">by EPIONE</span>
+        </div>
+      </div>
+      <div class="venue-info">
+        <div class="venue-name" id="venueName">Danh sách Booth</div>
+        <div class="venue-address" id="venueAddress"></div>
+      </div>
+      <div class="venue-list" id="venueBoothList">
+        <!-- Booth cards rendered by JS -->
+      </div>
+      <div class="venue-footer-note">Giữ chỗ tối đa 10 phút</div>
     </div>
   </div>
 
@@ -1197,6 +1437,7 @@
       <div class="conn-dot"></div>
       <span class="conn-label" id="connText">Đang kết nối...</span>
     </div>
+    <div class="reservation-banner" id="resvBanner"></div>
 
     <div class="main-area">
       <!-- State visual -->
@@ -1491,8 +1732,12 @@
     const urlParams = new URLSearchParams(window.location.search);
     const BOOTH_ID = urlParams.get('booth');
     const PRODUCT_PARAM = urlParams.get('product');
+    const PAGE_PARAM = urlParams.get('page');
 
-    if (!BOOTH_ID) {
+    if (PAGE_PARAM === 'venue') {
+      document.getElementById('pageVenue').classList.remove('hidden');
+      initVenue();
+    } else if (!BOOTH_ID) {
       document.getElementById('pageLanding').classList.remove('hidden');
     } else {
       document.getElementById('pageBooth').classList.remove('hidden');
@@ -1788,6 +2033,7 @@
         }
         onAuthSuccess(data);
         document.getElementById('registrationOverlay').classList.add('hidden');
+        onOverlayAuthDone();
       } catch (e) {
         errorEl.textContent = 'Lỗi đăng ký. Thử lại sau.';
         errorEl.classList.remove('hidden');
@@ -1826,6 +2072,7 @@
         }
         onAuthSuccess(data);
         document.getElementById('registrationOverlay').classList.add('hidden');
+        onOverlayAuthDone();
       } catch (e) {
         errorEl.textContent = 'Lỗi đăng nhập. Thử lại sau.';
         errorEl.classList.remove('hidden');
@@ -1833,6 +2080,14 @@
         btn.textContent = 'Đăng nhập';
       }
     };
+
+    function onOverlayAuthDone() {
+      // Refresh venue page if it's active
+      if (PAGE_PARAM === 'venue') {
+        var db = getPPDb();
+        loadVenueData(db);
+      }
+    }
 
     window.showLoginForm = function() {
       document.getElementById('authFormRegister').classList.add('hidden');
@@ -2175,6 +2430,204 @@
       for (const bp of products) { trackImpression(bp.id, 'check_in'); }
     }
 
+    // ============== VENUE PAGE ==============
+    var venuePollingTimer = null;
+    var venueCountdownTimer = null;
+
+    function initVenue() {
+      var db = getPPDb();
+      loadVenueData(db);
+      // Poll mỗi 5s
+      venuePollingTimer = setInterval(function() { loadVenueData(db); }, 5000);
+      // Realtime subscriptions
+      db.channel('venue-sessions')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'sessions' }, function() {
+          loadVenueData(db);
+        })
+        .subscribe();
+      db.channel('venue-reservations')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, function() {
+          loadVenueData(db);
+        })
+        .subscribe();
+    }
+
+    async function loadVenueData(db) {
+      try {
+        // Expire old reservations server-side
+        await db.rpc('expire_reservations');
+
+        var [boothsRes, sessionsRes, resvRes] = await Promise.all([
+          db.from('booths').select('booth_id, name, location, address, last_seen').order('booth_id'),
+          db.from('sessions').select('booth_id, status').in('status', ['active', 'paused']),
+          db.from('reservations').select('id, booth_id, user_id, status, expires_at').eq('status', 'active')
+        ]);
+
+        var booths = boothsRes.data || [];
+        var activeSessions = sessionsRes.data || [];
+        var activeReservations = resvRes.data || [];
+
+        var currentUserId = isLoggedIn() ? getStoredAuth().id : null;
+        var now = Date.now();
+
+        // Build booth status map
+        var occupiedBooths = {};
+        activeSessions.forEach(function(s) { occupiedBooths[s.booth_id] = true; });
+
+        var reservedBooths = {};
+        activeReservations.forEach(function(r) { reservedBooths[r.booth_id] = r; });
+
+        var container = document.getElementById('venueBoothList');
+        container.innerHTML = '';
+
+        booths.forEach(function(booth) {
+          var isOnline = booth.last_seen && (now - new Date(booth.last_seen).getTime() < HEARTBEAT_TIMEOUT_S * 1000);
+          var isOccupied = !!occupiedBooths[booth.booth_id];
+          var reservation = reservedBooths[booth.booth_id] || null;
+          var isMyReservation = reservation && currentUserId && reservation.user_id === currentUserId;
+          var isOtherReservation = reservation && (!currentUserId || reservation.user_id !== currentUserId);
+
+          var card = document.createElement('div');
+          card.className = 'booth-card' + (isMyReservation ? ' my-reservation' : '');
+
+          // Status badge
+          var statusBadge = '';
+          var statusClass = '';
+          if (!isOnline) {
+            statusBadge = 'Offline';
+            statusClass = 'offline';
+          } else if (isOccupied) {
+            statusBadge = 'Đang dùng';
+            statusClass = 'occupied';
+          } else if (isMyReservation) {
+            statusBadge = 'Đã đặt';
+            statusClass = 'my-reserved';
+          } else if (isOtherReservation) {
+            statusBadge = 'Đã đặt';
+            statusClass = 'reserved';
+          } else {
+            statusBadge = 'Sẵn sàng';
+            statusClass = 'available';
+          }
+
+          var html = '<div class="booth-card-header">' +
+            '<div class="booth-card-name">' + (booth.name || booth.booth_id) + '</div>' +
+            '<span class="booth-status-badge ' + statusClass + '">' + statusBadge + '</span>' +
+          '</div>';
+
+          // Countdown for my reservation
+          if (isMyReservation) {
+            var expiresAt = new Date(reservation.expires_at).getTime();
+            var remaining = Math.max(0, Math.ceil((expiresAt - now) / 1000));
+            var mins = Math.floor(remaining / 60);
+            var secs = remaining % 60;
+            html += '<div class="booth-card-countdown" id="venue-countdown-' + booth.booth_id + '">' +
+              '&#9202; Còn ' + mins + ':' + (secs < 10 ? '0' : '') + secs +
+            '</div>';
+            startVenueCountdown(booth.booth_id, expiresAt);
+          }
+
+          // Actions
+          html += '<div class="booth-card-actions">';
+          if (!isOnline || isOccupied || isOtherReservation) {
+            // Disabled state
+            html += '<button class="btn-reserve" disabled>' +
+              (isOccupied ? 'Đang dùng' : isOtherReservation ? 'Đã đặt' : 'Offline') +
+            '</button>';
+          } else if (isMyReservation) {
+            html += '<button class="btn-cancel-reserve" onclick="handleCancelReserve(\'' + reservation.id + '\')">Hủy đặt</button>';
+            html += '<button class="btn-use-now" onclick="window.location.href=\'/?booth=' + booth.booth_id + '\'">Dùng ngay</button>';
+          } else {
+            // Available
+            html += '<button class="btn-reserve" onclick="handleReserve(\'' + booth.booth_id + '\')">Giữ chỗ 10p</button>';
+            html += '<button class="btn-use-now" onclick="window.location.href=\'/?booth=' + booth.booth_id + '\'">Dùng ngay</button>';
+          }
+          html += '</div>';
+
+          // Login hint if not logged in and booth is available
+          if (!isLoggedIn() && isOnline && !isOccupied && !reservation) {
+            html += '<div class="booth-card-login-hint"><a href="#" onclick="showVenueLogin(); return false;">Đăng nhập</a> để giữ chỗ</div>';
+          }
+
+          card.innerHTML = html;
+          container.appendChild(card);
+        });
+
+      } catch (e) {
+        console.error('loadVenueData error:', e);
+      }
+    }
+
+    function startVenueCountdown(boothId, expiresAt) {
+      // Clear previous countdown if any
+      if (venueCountdownTimer) clearInterval(venueCountdownTimer);
+      venueCountdownTimer = setInterval(function() {
+        var el = document.getElementById('venue-countdown-' + boothId);
+        if (!el) { clearInterval(venueCountdownTimer); return; }
+        var remaining = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
+        if (remaining <= 0) {
+          clearInterval(venueCountdownTimer);
+          var db = getPPDb();
+          loadVenueData(db);
+          return;
+        }
+        var mins = Math.floor(remaining / 60);
+        var secs = remaining % 60;
+        el.innerHTML = '&#9202; Còn ' + mins + ':' + (secs < 10 ? '0' : '') + secs;
+      }, 1000);
+    }
+
+    window.handleReserve = async function(boothId) {
+      if (!isLoggedIn()) {
+        showVenueLogin();
+        return;
+      }
+      var auth = getStoredAuth();
+      try {
+        var db = getPPDb();
+        var result = await db.rpc('create_reservation', { p_booth_id: boothId, p_user_id: auth.id });
+        if (result.error) throw result.error;
+        var data = result.data;
+        if (data.error) {
+          var msg = {
+            'BOOTH_OCCUPIED': 'Booth đang được sử dụng!',
+            'BOOTH_RESERVED': 'Booth đã được đặt trước!',
+            'USER_HAS_RESERVATION': 'Bạn đã có đặt chỗ rồi!'
+          }[data.error] || 'Không thể đặt chỗ';
+          alert(msg);
+          return;
+        }
+        // Reload venue data to reflect new reservation
+        loadVenueData(db);
+      } catch (e) {
+        alert('Lỗi đặt chỗ. Thử lại sau.');
+      }
+    };
+
+    window.handleCancelReserve = async function(reservationId) {
+      if (!isLoggedIn()) return;
+      var auth = getStoredAuth();
+      try {
+        var db = getPPDb();
+        var result = await db.rpc('cancel_reservation', { p_reservation_id: reservationId, p_user_id: auth.id });
+        if (result.error) throw result.error;
+        loadVenueData(db);
+      } catch (e) {
+        alert('Lỗi hủy đặt chỗ. Thử lại sau.');
+      }
+    };
+
+    window.showVenueLogin = function() {
+      pendingSessionLink = null;
+      document.getElementById('loginPhone').value = '';
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('btnLogin').disabled = false;
+      document.getElementById('btnLogin').textContent = 'Đăng nhập';
+      showLoginForm();
+      document.getElementById('registrationOverlay').classList.remove('hidden');
+    };
+
     // ============== BOOTH CONTROL ==============
     function initBooth() {
       const { createClient } = supabase;
@@ -2477,6 +2930,74 @@
           .limit(1);
 
         handleSessionData(data && data.length > 0 ? data[0] : null);
+        checkBoothReservation();
+      }
+
+      var boothResvTimer = null;
+      async function checkBoothReservation() {
+        var banner = document.getElementById('resvBanner');
+        if (!banner) return;
+        try {
+          await db.rpc('expire_reservations');
+          var res = await db.from('reservations')
+            .select('id, user_id, expires_at')
+            .eq('booth_id', BOOTH_ID)
+            .eq('status', 'active')
+            .limit(1);
+          var resv = (res.data && res.data.length > 0) ? res.data[0] : null;
+          if (!resv) {
+            banner.className = 'reservation-banner';
+            banner.style.display = 'none';
+            if (boothResvTimer) { clearInterval(boothResvTimer); boothResvTimer = null; }
+            // Re-enable start if booth idle
+            if (currentState === 'idle' && boothOnline) btnStart.disabled = false;
+            return;
+          }
+          var isMine = isLoggedIn() && getStoredAuth().id === resv.user_id;
+          if (isMine) {
+            banner.className = 'reservation-banner mine';
+            banner.style.display = 'block';
+            updateResvBanner(banner, resv.expires_at, true);
+            startBoothResvCountdown(banner, resv.expires_at, true);
+          } else {
+            banner.className = 'reservation-banner blocked';
+            banner.style.display = 'block';
+            updateResvBanner(banner, resv.expires_at, false);
+            startBoothResvCountdown(banner, resv.expires_at, false);
+            // Block start button
+            if (currentState === 'idle') btnStart.disabled = true;
+          }
+        } catch (e) {
+          banner.style.display = 'none';
+        }
+      }
+
+      function updateResvBanner(el, expiresAt, isMine) {
+        var remaining = Math.max(0, Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 1000));
+        var mins = Math.floor(remaining / 60);
+        var secs = remaining % 60;
+        var timeStr = mins + ':' + (secs < 10 ? '0' : '') + secs;
+        if (isMine) {
+          el.innerHTML = 'Bạn đã đặt booth này — <span class="resv-countdown">' + timeStr + '</span>';
+        } else {
+          el.innerHTML = 'Booth đã được đặt trước — <span class="resv-countdown">' + timeStr + '</span>';
+        }
+      }
+
+      function startBoothResvCountdown(el, expiresAt, isMine) {
+        if (boothResvTimer) clearInterval(boothResvTimer);
+        boothResvTimer = setInterval(function() {
+          var remaining = Math.max(0, Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 1000));
+          if (remaining <= 0) {
+            clearInterval(boothResvTimer);
+            boothResvTimer = null;
+            el.style.display = 'none';
+            el.className = 'reservation-banner';
+            if (currentState === 'idle' && boothOnline) btnStart.disabled = false;
+            return;
+          }
+          updateResvBanner(el, expiresAt, isMine);
+        }, 1000);
       }
 
       // Actions
@@ -2538,6 +3059,27 @@
           setTimeout(function() { showStatus('', ''); }, 3000);
           return;
         }
+
+        // Check reservation trước khi cho phép bật
+        try {
+          await db.rpc('expire_reservations');
+          var resvCheck = await db.from('reservations')
+            .select('id, user_id')
+            .eq('booth_id', BOOTH_ID)
+            .eq('status', 'active')
+            .limit(1);
+          var resv = (resvCheck.data && resvCheck.data.length > 0) ? resvCheck.data[0] : null;
+          if (resv && resv.user_id !== getCurrentUserId()) {
+            showStatus('Booth đã được đặt trước!', '#ef4444');
+            btnStart.disabled = false;
+            setTimeout(function() { showStatus('', ''); }, 3000);
+            return;
+          }
+          // Nếu reservation là của mình → mark used
+          if (resv && resv.user_id === getCurrentUserId()) {
+            await db.from('reservations').update({ status: 'used' }).eq('id', resv.id);
+          }
+        } catch (e) { /* silent - cho phép bật nếu check fail */ }
 
         // Optimistic UI: chuyển sang active ngay
         optimisticUntil = Date.now() + 30000;
@@ -2675,6 +3217,18 @@
                   handleSessionData(null);
                 }
               }
+            })
+            .subscribe();
+
+          // Realtime: reservation changes
+          db.channel('booth-reservations')
+            .on('postgres_changes', {
+              event: '*',
+              schema: 'public',
+              table: 'reservations',
+              filter: 'booth_id=eq.' + BOOTH_ID
+            }, function() {
+              checkBoothReservation();
             })
             .subscribe();
 

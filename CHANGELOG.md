@@ -1,5 +1,35 @@
 # Phonebooth MVP - Changelog
 
+## [2026-03-14] Booth Reservation (Giữ chỗ 10 phút)
+
+### Tính năng
+- **Giữ chỗ 10 phút**: User đăng nhập có thể reserve booth trước, hold 10 phút
+- **Venue page**: Trang danh sách booth (`?page=venue`) hiển thị trạng thái real-time
+- **Block walk-in**: Booth đã đặt → user khác không bấm Start được
+- **Auto-expire**: Reservation tự hết hạn sau 10 phút
+- **Atomic reservation**: RPC function `create_reservation()` xử lý race condition
+- **Reservation banner**: Booth page hiện banner khi có reservation (mine/blocked)
+- **Real-time updates**: Supabase Realtime cho cả venue page và booth page
+
+### Database
+- Bảng `reservations` mới (id, booth_id, user_id, status, created_at, expires_at)
+- UNIQUE partial indexes: 1 active reservation/booth, 1 active reservation/user
+- RPC `create_reservation()`: atomic check + insert, auto-expire
+- RPC `cancel_reservation()`: chỉ owner mới hủy được
+- Function `expire_reservations()`: cleanup hết hạn
+
+### Constraints
+- Bắt buộc đăng nhập để đặt chỗ
+- Mỗi user chỉ 1 reservation active
+- Mỗi booth chỉ 1 reservation active
+- Không đặt được booth đang dùng (active session)
+
+### File thay đổi
+- `index.html` (venue page HTML/CSS/JS, reservation banner, handleStart check)
+- `migration_reservations.sql` (NEW - chạy trong Supabase SQL Editor)
+
+---
+
 ## [2026-03-14] Lazy Registration + Merged Post-Session UX
 
 ### Tinh nang
