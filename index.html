@@ -1312,6 +1312,14 @@
       color: var(--color-text-hint);
       white-space: nowrap;
     }
+    .booth-card-products-label {
+      font-size: 10px;
+      color: var(--color-text-hint);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
     .booth-status-badge {
       font-size: 11px;
       font-weight: 600;
@@ -1651,7 +1659,7 @@
 
       <!-- Check-in product notification -->
       <div class="checkin-products hidden" id="checkinProducts">
-        <div class="checkin-title">Đồ xịn trong booth hôm nay</div>
+        <div class="checkin-title">Trang bị trong booth</div>
         <div id="checkinCards"></div>
       </div>
     </div>
@@ -2739,12 +2747,12 @@
           var boothProds = boothProductsMap[booth.booth_id] || [];
           if (boothProds.length > 0) {
             html += '<div class="booth-card-products">';
+            html += '<span class="booth-card-products-label">Trang bị</span>';
             boothProds.slice(0, 3).forEach(function(p) {
               var img = (p.images && p.images.length > 0) ? p.images[0] : '';
-              var brandName = (p.brands && p.brands.name) ? p.brands.name : '';
               html += '<div class="booth-card-product">';
               if (img) html += '<img class="booth-card-product-img" src="' + img + '" alt="">';
-              html += '<span class="booth-card-product-name">' + (brandName || p.name) + '</span>';
+              html += '<span class="booth-card-product-name">' + p.name + '</span>';
               html += '</div>';
             });
             html += '</div>';
