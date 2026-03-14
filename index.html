@@ -2369,14 +2369,18 @@
     }
 
     // --- Product Discovery (F1) ---
+    function goToVenue() {
+      window.location.href = '/?page=venue';
+    }
+
     async function showProductDiscovery() {
-      if (!BOOTH_ID) return;
+      if (!BOOTH_ID) { goToVenue(); return; }
       try {
         await loadBoothProductsForBooth(BOOTH_ID);
         await loadUserLeads();
-      } catch (e) { return; }
+      } catch (e) { goToVenue(); return; }
       const products = getEligibleProducts(2);
-      if (products.length === 0) return;
+      if (products.length === 0) { goToVenue(); return; }
 
       currentProductSource = 'post_session';
       const container = document.getElementById('pdCards');
@@ -2409,6 +2413,7 @@
     window.closeProductDiscovery = function() {
       document.getElementById('productDiscoveryOverlay').classList.add('hidden');
       activeSessionId = null;
+      goToVenue();
     };
 
     window.handleDiscoveryCta = async function(boothProductId) {
