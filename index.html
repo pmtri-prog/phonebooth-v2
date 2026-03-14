@@ -3877,10 +3877,10 @@
     let cachedBoothProducts = [];
     let userLeadProductIds = new Set();
     let trackedImpressions = new Set();
-    let currentProductSource = 'post_session';
-    let currentDetailProduct = null;
-    let currentCarouselIndex = 0;
-    let ppDb = null;
+    var currentProductSource = 'post_session';
+    var currentDetailProduct = null;
+    var currentCarouselIndex = 0;
+    var ppDb = null;
 
     function getPPDb() {
       if (!ppDb) {
