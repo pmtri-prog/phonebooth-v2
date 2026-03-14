@@ -1049,7 +1049,40 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <script>
+    // Wrapper cho qrcode-generator → API tương thích QRCode.toCanvas/toDataURL
+    window.QRCode = {
+      toCanvas: function(canvas, text, opts) {
+        return new Promise(function(resolve) {
+          var qr = qrcode(0, 'M');
+          qr.addData(text);
+          qr.make();
+          var size = (opts && opts.width) || 300;
+          var margin = (opts && opts.margin) || 2;
+          var count = qr.getModuleCount();
+          var cell = Math.floor((size - margin * 2) / count);
+          var total = cell * count + margin * 2;
+          canvas.width = total; canvas.height = total;
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, total, total);
+          ctx.fillStyle = '#000';
+          for (var r = 0; r < count; r++)
+            for (var c = 0; c < count; c++)
+              if (qr.isDark(r, c))
+                ctx.fillRect(margin + c * cell, margin + r * cell, cell, cell);
+          resolve();
+        });
+      },
+      toDataURL: function(text, opts) {
+        var canvas = document.createElement('canvas');
+        return this.toCanvas(canvas, text, opts).then(function() {
+          return canvas.toDataURL('image/png');
+        });
+      }
+    };
+  </script>
   <script>
     const SUPABASE_URL = "https://iwczjfomyybszwdlzwjs.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3Y3pqZm9teXlic3p3ZGx6d2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDIzODgsImV4cCI6MjA4ODcxODM4OH0.dvGSX8N5_tHpGqWL5rCreCdGpASxOK2nwwcbCpILew4";
