@@ -1203,6 +1203,8 @@
       min-height: 100vh;
       background: var(--color-white);
       padding-bottom: 40px;
+      max-width: 480px;
+      margin: 0 auto;
     }
     .venue-header {
       display: flex;
@@ -1478,6 +1480,12 @@
       gap: 6px;
     }
     .btn-qr-scan:active { opacity: 0.85; }
+
+    /* ===== RESPONSIVE: Desktop shows mobile layout centered ===== */
+    #pageLanding, #pageBooth {
+      max-width: 480px;
+      margin: 0 auto;
+    }
   </style>
 </head>
 <body>
