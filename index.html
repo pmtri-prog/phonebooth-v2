@@ -1202,7 +1202,7 @@
     .venue-page {
       min-height: 100vh;
       background: var(--color-white);
-      padding-bottom: 40px;
+      padding-bottom: 80px;
       max-width: 480px;
       margin: 0 auto;
     }
@@ -1508,6 +1508,190 @@
       font-weight: 700;
     }
 
+    /* ===== STATS PAGE ===== */
+    .stats-page {
+      min-height: 100vh;
+      background: var(--color-white);
+      padding-bottom: 80px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .stats-hero {
+      padding: 24px var(--space-page) 16px;
+    }
+    .stats-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 16px;
+    }
+    .stats-summary {
+      display: flex;
+      gap: 10px;
+    }
+    .stats-card {
+      flex: 1;
+      background: #F6F5FF;
+      border-radius: var(--radius-card);
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .stats-card-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-accent);
+      line-height: 1.2;
+    }
+    .stats-card-label {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      margin-top: 4px;
+    }
+    .stats-week {
+      padding: 0 var(--space-page) 20px;
+    }
+    .stats-week-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .stats-week-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .stats-week-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    .stats-week-bar {
+      height: 8px;
+      background: var(--color-gray);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .stats-week-fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+    .stats-week-goal {
+      font-size: 11px;
+      color: var(--color-text-hint);
+      margin-top: 6px;
+      text-align: right;
+    }
+    .stats-history {
+      padding: 0 var(--space-page) 16px;
+    }
+    .stats-history-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 12px;
+    }
+    .stats-session {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .stats-session:last-child {
+      border-bottom: none;
+    }
+    .stats-session-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .stats-session-date {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .stats-session-booth {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+    }
+    .stats-session-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .stats-session-duration {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    .stats-session-time {
+      font-size: 11px;
+      color: var(--color-text-hint);
+    }
+    .stats-load-more {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-button);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-accent);
+      cursor: pointer;
+    }
+    .stats-empty {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 14px;
+      color: var(--color-text-hint);
+    }
+
+    /* ===== BOTTOM TAB BAR ===== */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      background: var(--color-white);
+      border-top: 1px solid var(--color-border);
+      padding: 6px 0 env(safe-area-inset-bottom, 8px);
+      z-index: 100;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 6px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-text-hint);
+      font-family: var(--font-family);
+    }
+    .tab-item.active {
+      color: var(--color-accent);
+    }
+    .tab-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+    .tab-label {
+      font-size: 10px;
+      font-weight: 600;
+    }
+
     /* ===== QR SCANNER ===== */
     .qr-scanner-overlay {
       position: fixed;
@@ -1656,6 +1840,67 @@
         <div class="venue-products-list" id="venueProductCards"></div>
       </div>
     </div>
+  </div>
+
+  <!-- ==================== STATS PAGE ==================== -->
+  <div id="pageStats" class="hidden">
+    <div class="stats-page">
+      <div class="venue-header">
+        <div class="venue-header-logo">
+          <span class="logo-focus">FOCUS</span>
+          <span class="logo-epione">by EPIONE</span>
+        </div>
+      </div>
+      <div class="stats-hero">
+        <div class="stats-title">Deep Work của bạn</div>
+        <div class="stats-summary">
+          <div class="stats-card">
+            <div class="stats-card-value" id="statsTotalHours">0h</div>
+            <div class="stats-card-label">Tổng giờ</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="statsTotalSessions">0</div>
+            <div class="stats-card-label">Tổng phiên</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-card-value" id="statsAvgDuration">0p</div>
+            <div class="stats-card-label">TB/phiên</div>
+          </div>
+        </div>
+      </div>
+      <div class="stats-week">
+        <div class="stats-week-header">
+          <span class="stats-week-title">Tuần này</span>
+          <span class="stats-week-value" id="statsWeekValue">0h</span>
+        </div>
+        <div class="stats-week-bar">
+          <div class="stats-week-fill" id="statsWeekFill" style="width:0%"></div>
+        </div>
+        <div class="stats-week-goal">Mục tiêu 10 giờ / tuần</div>
+      </div>
+      <div class="stats-history">
+        <div class="stats-history-title">Lịch sử gần đây</div>
+        <div id="statsHistoryList"></div>
+        <button class="stats-load-more hidden" id="statsLoadMore" onclick="loadMoreSessions()">Xem thêm</button>
+        <div class="stats-empty hidden" id="statsEmpty">Chưa có phiên nào. Hãy bắt đầu deep work!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== BOTTOM TAB BAR ==================== -->
+  <div class="tab-bar hidden" id="tabBar">
+    <button class="tab-item active" id="tabBooth" onclick="switchTab('venue')">
+      <span class="tab-icon">&#127968;</span>
+      <span class="tab-label">Booth</span>
+    </button>
+    <button class="tab-item" id="tabStats" onclick="switchTab('stats')">
+      <span class="tab-icon">&#128202;</span>
+      <span class="tab-label">Thống kê</span>
+    </button>
+    <button class="tab-item" id="tabProfile" onclick="switchTab('profile')">
+      <span class="tab-icon">&#128100;</span>
+      <span class="tab-label">Tôi</span>
+    </button>
   </div>
 
   <!-- ==================== QR SCANNER OVERLAY ==================== -->
@@ -1992,15 +2237,60 @@
     const PRODUCT_PARAM = urlParams.get('product');
     const PAGE_PARAM = urlParams.get('page');
 
+    // Show tab bar for venue/stats pages (logged-in users)
+    function showTabBar() {
+      if (isLoggedIn()) document.getElementById('tabBar').classList.remove('hidden');
+    }
+    function hideTabBar() {
+      document.getElementById('tabBar').classList.add('hidden');
+    }
+    function setActiveTab(tab) {
+      document.querySelectorAll('.tab-item').forEach(function(el) { el.classList.remove('active'); });
+      var tabEl = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      if (tabEl) tabEl.classList.add('active');
+    }
+
+    window.switchTab = function(tab) {
+      // Hide all pages
+      document.getElementById('pageVenue').classList.add('hidden');
+      document.getElementById('pageStats').classList.add('hidden');
+      document.getElementById('pageLanding').classList.add('hidden');
+      setActiveTab(tab);
+
+      if (tab === 'venue' || tab === 'booth') {
+        document.getElementById('pageVenue').classList.remove('hidden');
+        setActiveTab('booth');
+        initVenue();
+        history.replaceState(null, '', '/?page=venue');
+      } else if (tab === 'stats') {
+        document.getElementById('pageStats').classList.remove('hidden');
+        initStats();
+        history.replaceState(null, '', '/?page=stats');
+      } else if (tab === 'profile') {
+        // Placeholder - redirect to venue for now
+        document.getElementById('pageVenue').classList.remove('hidden');
+        setActiveTab('booth');
+        initVenue();
+        history.replaceState(null, '', '/?page=venue');
+      }
+    };
+
     if (PAGE_PARAM === 'venue') {
       document.getElementById('pageVenue').classList.remove('hidden');
+      showTabBar(); setActiveTab('booth');
       initVenue();
+    } else if (PAGE_PARAM === 'stats') {
+      document.getElementById('pageStats').classList.remove('hidden');
+      showTabBar(); setActiveTab('stats');
+      initStats();
     } else if (BOOTH_ID) {
       document.getElementById('pageBooth').classList.remove('hidden');
+      hideTabBar();
       initBooth();
     } else if (isLoggedIn()) {
       // Logged-in user → thẳng vào venue page (home)
       document.getElementById('pageVenue').classList.remove('hidden');
+      showTabBar(); setActiveTab('booth');
       initVenue();
     } else {
       document.getElementById('pageLanding').classList.remove('hidden');
@@ -2345,7 +2635,8 @@
 
     function onOverlayAuthDone() {
       // Refresh venue page if it's active
-      if (PAGE_PARAM === 'venue') {
+      if (PAGE_PARAM === 'venue' || PAGE_PARAM === 'stats' || !BOOTH_ID) {
+        showTabBar();
         var db = getPPDb();
         loadVenueData(db);
       }
@@ -2385,6 +2676,152 @@
       document.getElementById('btnRegister').textContent = 'Đăng ký';
       showRegisterForm();
       document.getElementById('registrationOverlay').classList.remove('hidden');
+    };
+
+    // ============== STATS PAGE ==============
+    var statsOffset = 0;
+    var STATS_PAGE_SIZE = 10;
+    var boothNamesCache = {};
+
+    function initStats() {
+      if (!isLoggedIn()) {
+        document.getElementById('statsEmpty').classList.remove('hidden');
+        document.getElementById('statsEmpty').textContent = 'Đăng nhập để xem thống kê deep work của bạn.';
+        return;
+      }
+      statsOffset = 0;
+      document.getElementById('statsHistoryList').innerHTML = '';
+      loadStats();
+    }
+
+    async function loadStats() {
+      var db = getPPDb();
+      var auth = getStoredAuth();
+      try {
+        // Load all ended sessions for this user
+        var { data: allSessions } = await db.from('sessions')
+          .select('id, booth_id, started_at, ended_at, duration_seconds')
+          .eq('user_id', auth.id)
+          .eq('status', 'ended')
+          .not('duration_seconds', 'is', null)
+          .order('ended_at', { ascending: false });
+
+        var sessions = allSessions || [];
+
+        // Total stats
+        var totalSeconds = 0;
+        sessions.forEach(function(s) { totalSeconds += (s.duration_seconds || 0); });
+        var totalHours = totalSeconds / 3600;
+        var totalSessions = sessions.length;
+        var avgMinutes = totalSessions > 0 ? Math.round((totalSeconds / totalSessions) / 60) : 0;
+
+        document.getElementById('statsTotalHours').textContent = formatHours(totalSeconds);
+        document.getElementById('statsTotalSessions').textContent = totalSessions;
+        document.getElementById('statsAvgDuration').textContent = avgMinutes + 'p';
+
+        // Week stats (Mon-Sun)
+        var now = new Date();
+        var dayOfWeek = now.getDay();
+        var mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        var monday = new Date(now);
+        monday.setHours(0, 0, 0, 0);
+        monday.setDate(monday.getDate() - mondayOffset);
+        var weekSeconds = 0;
+        sessions.forEach(function(s) {
+          if (new Date(s.ended_at) >= monday) weekSeconds += (s.duration_seconds || 0);
+        });
+        var weekHours = weekSeconds / 3600;
+        var weekGoal = 10;
+        var weekPct = Math.min(100, Math.round((weekHours / weekGoal) * 100));
+        document.getElementById('statsWeekValue').textContent = formatHours(weekSeconds);
+        document.getElementById('statsWeekFill').style.width = weekPct + '%';
+
+        // Load booth names
+        var boothIds = [];
+        sessions.forEach(function(s) {
+          if (s.booth_id && !boothNamesCache[s.booth_id] && boothIds.indexOf(s.booth_id) === -1) boothIds.push(s.booth_id);
+        });
+        if (boothIds.length > 0) {
+          var { data: booths } = await db.from('booths').select('booth_id, name').in('booth_id', boothIds);
+          (booths || []).forEach(function(b) { boothNamesCache[b.booth_id] = b.name || b.booth_id; });
+        }
+
+        // Render history
+        renderSessionHistory(sessions);
+
+      } catch (e) {
+        console.error('loadStats error:', e);
+      }
+    }
+
+    function formatHours(totalSeconds) {
+      var h = Math.floor(totalSeconds / 3600);
+      var m = Math.round((totalSeconds % 3600) / 60);
+      if (h > 0 && m > 0) return h + 'h' + (m < 10 ? '0' : '') + m + 'p';
+      if (h > 0) return h + 'h';
+      return m + 'p';
+    }
+
+    function formatTime(dateStr) {
+      var d = new Date(dateStr);
+      return (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    }
+
+    function formatDate(dateStr) {
+      var d = new Date(dateStr);
+      var now = new Date();
+      var today = new Date(now); today.setHours(0,0,0,0);
+      var yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+      var sessionDate = new Date(d); sessionDate.setHours(0,0,0,0);
+      if (sessionDate.getTime() === today.getTime()) return 'Hôm nay';
+      if (sessionDate.getTime() === yesterday.getTime()) return 'Hôm qua';
+      return (d.getDate() < 10 ? '0' : '') + d.getDate() + '/' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
+    }
+
+    function renderSessionHistory(sessions) {
+      var list = document.getElementById('statsHistoryList');
+      var emptyEl = document.getElementById('statsEmpty');
+      var loadMoreEl = document.getElementById('statsLoadMore');
+
+      if (sessions.length === 0) {
+        emptyEl.classList.remove('hidden');
+        loadMoreEl.classList.add('hidden');
+        return;
+      }
+      emptyEl.classList.add('hidden');
+
+      var page = sessions.slice(statsOffset, statsOffset + STATS_PAGE_SIZE);
+      page.forEach(function(s) {
+        var div = document.createElement('div');
+        div.className = 'stats-session';
+        var boothName = boothNamesCache[s.booth_id] || s.booth_id;
+        var duration = formatHours(s.duration_seconds || 0);
+        var startTime = s.started_at ? formatTime(s.started_at) : '';
+        var endTime = s.ended_at ? formatTime(s.ended_at) : '';
+        var dateStr = s.ended_at ? formatDate(s.ended_at) : '';
+        div.innerHTML = '<div class="stats-session-left">' +
+          '<div class="stats-session-date">' + dateStr + '</div>' +
+          '<div class="stats-session-booth">' + boothName + '</div>' +
+        '</div>' +
+        '<div class="stats-session-right">' +
+          '<div class="stats-session-duration">' + duration + '</div>' +
+          '<div class="stats-session-time">' + startTime + ' - ' + endTime + '</div>' +
+        '</div>';
+        list.appendChild(div);
+      });
+      statsOffset += STATS_PAGE_SIZE;
+
+      if (statsOffset < sessions.length) {
+        loadMoreEl.classList.remove('hidden');
+        // Store sessions for loadMore
+        window._statsSessions = sessions;
+      } else {
+        loadMoreEl.classList.add('hidden');
+      }
+    }
+
+    window.loadMoreSessions = function() {
+      if (window._statsSessions) renderSessionHistory(window._statsSessions);
     };
 
     // ============== PRODUCT PLACEMENT ==============
