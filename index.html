@@ -502,10 +502,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       color: var(--color-text-primary);
       text-align: center;
-      padding: 40px 24px;
+      padding: 48px 24px 36px;
       animation: fadeIn 0.3s ease;
       overflow-y: auto;
     }
@@ -631,26 +631,40 @@
     }
     .feedback-input::placeholder { color: var(--color-text-hint); }
     .feedback-input:focus { border-color: var(--color-border-active); }
-    .btn-send-feedback {
-      background: var(--color-accent);
-      color: #fff;
-      border: none;
-      font-family: var(--font-family);
-      font-size: 14px;
-      font-weight: 600;
-      padding: 12px 28px;
-      border-radius: var(--radius-button);
-      cursor: pointer;
-      transition: opacity 0.2s;
+
+    /* Completion auth section */
+    .completion-auth {
       width: 100%;
+      max-width: 340px;
+      text-align: center;
     }
-    .btn-send-feedback:active { opacity: 0.85; }
-    .btn-send-feedback:disabled { opacity: 0.3; cursor: default; }
-    .feedback-thanks {
-      font-size: 15px;
-      color: var(--color-accent);
+    .completion-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--color-border);
+      margin: 20px auto;
+    }
+    .completion-auth-title {
+      font-size: 17px;
       font-weight: 700;
-      padding: var(--space-card) 0;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .completion-auth-sub {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .completion-auth-success {
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .completion-auth-greeting {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-accent);
     }
 
     /* ===== PRODUCT DISCOVERY ===== */
@@ -1259,6 +1273,7 @@
     <div class="completion-duration" id="completionDuration">00:00</div>
     <div class="completion-msg" id="completionMsg">phút không ai quấy rầy</div>
 
+    <!-- Feedback (optional, inline) -->
     <div class="feedback-section" id="feedbackSection">
       <div class="feedback-label">Cho mình xin review nhanh nha!</div>
 
@@ -1299,11 +1314,50 @@
       </div>
 
       <textarea class="feedback-input" id="feedbackText" rows="2" placeholder="Muốn chia sẻ gì thêm không?"></textarea>
-      <button class="btn-send-feedback" id="btnSendFeedback" onclick="sendFeedback()" disabled>Gửi review</button>
     </div>
-    <div class="feedback-thanks hidden" id="feedbackThanks">Cảm ơn bạn!</div>
 
-    <button class="btn-done" onclick="closeCompletion()" style="margin-top:16px;">Tắt máy</button>
+    <!-- Auth inline (chỉ hiện khi chưa login) -->
+    <div class="completion-auth" id="completionAuth">
+      <div class="completion-divider"></div>
+      <div class="completion-auth-title">Lưu lịch sử & nhận ưu đãi?</div>
+      <div class="completion-auth-sub">Đăng ký để xem lại phiên làm việc và nhận voucher độc quyền.</div>
+
+      <div id="compAuthFormRegister">
+        <div class="auth-field">
+          <label class="auth-label">Số điện thoại</label>
+          <input type="tel" class="auth-input" id="compAuthPhone" placeholder="0912 345 678" autocomplete="tel">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Mật khẩu</label>
+          <input type="password" class="auth-input" id="compAuthPassword" placeholder="Tối thiểu 6 ký tự">
+        </div>
+        <div class="auth-error hidden" id="compAuthError"></div>
+        <button class="btn-auth-primary" id="compBtnRegister" onclick="handleCompRegister()">Đăng ký</button>
+        <div class="auth-switch">Đã có tài khoản? <a href="#" onclick="showCompLoginForm(); return false;">Đăng nhập</a></div>
+      </div>
+
+      <div id="compAuthFormLogin" class="hidden">
+        <div class="auth-field">
+          <label class="auth-label">Số điện thoại</label>
+          <input type="tel" class="auth-input" id="compLoginPhone" placeholder="0912 345 678" autocomplete="tel">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Mật khẩu</label>
+          <input type="password" class="auth-input" id="compLoginPassword" placeholder="Mật khẩu">
+        </div>
+        <div class="auth-error hidden" id="compLoginError"></div>
+        <button class="btn-auth-primary" id="compBtnLogin" onclick="handleCompLogin()">Đăng nhập</button>
+        <div class="auth-switch">Chưa có tài khoản? <a href="#" onclick="showCompRegisterForm(); return false;">Đăng ký</a></div>
+      </div>
+    </div>
+
+    <!-- Auth success (hiện sau khi đăng ký/đăng nhập thành công) -->
+    <div class="completion-auth-success hidden" id="completionAuthSuccess">
+      <div class="completion-divider"></div>
+      <div class="completion-auth-greeting" id="compAuthGreeting"></div>
+    </div>
+
+    <button class="btn-done" onclick="closeCompletion()" style="margin-top:20px;">Tắt máy</button>
   </div>
 
   <!-- ==================== PRODUCT DISCOVERY ==================== -->
@@ -1361,7 +1415,7 @@
         </div>
         <div class="auth-error hidden" id="authError"></div>
         <button class="btn-auth-primary" id="btnRegister" onclick="handleRegister()">Đăng ký</button>
-        <button class="btn-auth-skip" onclick="skipRegistration()">Để sau</button>
+        <button class="btn-auth-skip" onclick="document.getElementById('registrationOverlay').classList.add('hidden')">Để sau</button>
         <div class="auth-switch">Đã có tài khoản? <a href="#" onclick="showLoginForm(); return false;">Đăng nhập</a></div>
       </div>
 
@@ -1376,7 +1430,7 @@
         </div>
         <div class="auth-error hidden" id="loginError"></div>
         <button class="btn-auth-primary" id="btnLogin" onclick="handleLogin()">Đăng nhập</button>
-        <button class="btn-auth-skip" onclick="skipRegistration()">Để sau</button>
+        <button class="btn-auth-skip" onclick="document.getElementById('registrationOverlay').classList.add('hidden')">Để sau</button>
         <div class="auth-switch">Chưa có tài khoản? <a href="#" onclick="showRegisterForm(); return false;">Đăng ký</a></div>
       </div>
     </div>
@@ -1490,22 +1544,20 @@
     const feedbackRatings = { soundproof: 0, comfort: 0, app: 0 };
 
     window.closeCompletion = function() {
+      // Auto-send feedback nếu có bất kỳ rating nào
+      sendFeedbackSilent();
       document.getElementById('completionOverlay').classList.add('hidden');
-      resetFeedback();
-      if (!isLoggedIn()) {
-        showRegistrationPrompt(activeSessionId);
-      } else {
-        showProductDiscovery();
-      }
+      showProductDiscovery();
     };
 
     function showCompletion(durationStr) {
       const overlay = document.getElementById('completionOverlay');
-      // Chống gọi trùng: nếu overlay đang hiện rồi thì bỏ qua
       if (!overlay.classList.contains('hidden')) return;
       document.getElementById('completionDuration').textContent = durationStr;
       document.getElementById('completionMsg').textContent = randomFrom(COMPLETION_MSGS);
       resetFeedback();
+      resetCompAuth();
+      overlay.scrollTop = 0;
       overlay.classList.remove('hidden');
     }
 
@@ -1515,14 +1567,33 @@
       feedbackRatings.app = 0;
       document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('selected'));
       document.getElementById('feedbackText').value = '';
-      document.getElementById('btnSendFeedback').disabled = true;
       document.getElementById('feedbackSection').classList.remove('hidden');
-      document.getElementById('feedbackThanks').classList.add('hidden');
     }
 
-    function checkCanSend() {
-      const allRated = feedbackRatings.soundproof > 0 && feedbackRatings.comfort > 0 && feedbackRatings.app > 0;
-      document.getElementById('btnSendFeedback').disabled = !allRated;
+    function resetCompAuth() {
+      var authSection = document.getElementById('completionAuth');
+      var successSection = document.getElementById('completionAuthSuccess');
+      if (isLoggedIn()) {
+        authSection.classList.add('hidden');
+        var auth = getStoredAuth();
+        document.getElementById('compAuthGreeting').textContent = 'Chào, ' + (auth.name || auth.phone) + '!';
+        successSection.classList.remove('hidden');
+      } else {
+        authSection.classList.remove('hidden');
+        successSection.classList.add('hidden');
+        document.getElementById('compAuthPhone').value = '';
+        document.getElementById('compAuthPassword').value = '';
+        document.getElementById('compLoginPhone').value = '';
+        document.getElementById('compLoginPassword').value = '';
+        document.getElementById('compAuthError').classList.add('hidden');
+        document.getElementById('compLoginError').classList.add('hidden');
+        document.getElementById('compBtnRegister').disabled = false;
+        document.getElementById('compBtnRegister').textContent = 'Đăng ký';
+        document.getElementById('compBtnLogin').disabled = false;
+        document.getElementById('compBtnLogin').textContent = 'Đăng nhập';
+        showCompRegisterForm();
+      }
+      pendingSessionLink = activeSessionId;
     }
 
     // Star rating - per criteria
@@ -1535,35 +1606,153 @@
         row.querySelectorAll('.star-btn').forEach(b => {
           b.classList.toggle('selected', parseInt(b.dataset.val) <= feedbackRatings[criteria]);
         });
-        checkCanSend();
       });
     });
 
-    window.sendFeedback = async function() {
-      const btn = document.getElementById('btnSendFeedback');
-      btn.disabled = true;
-      btn.textContent = 'Đang gửi...';
+    async function sendFeedbackSilent() {
+      var hasAnyRating = feedbackRatings.soundproof > 0 || feedbackRatings.comfort > 0 || feedbackRatings.app > 0;
+      var text = document.getElementById('feedbackText').value.trim();
+      if (!hasAnyRating && !text) return;
 
-      const text = document.getElementById('feedbackText').value.trim();
-      const note = 'Cach am:' + feedbackRatings.soundproof + '/5 | Thoai mai:' + feedbackRatings.comfort + '/5 | App:' + feedbackRatings.app + '/5' + (text ? ' | ' + text : '');
-
+      var note = 'Cach am:' + feedbackRatings.soundproof + '/5 | Thoai mai:' + feedbackRatings.comfort + '/5 | App:' + feedbackRatings.app + '/5' + (text ? ' | ' + text : '');
       try {
-        const { createClient } = supabase;
-        const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+        var db = getPPDb();
         await db.from('booth_logs').insert({
           booth_id: BOOTH_ID,
           event: 'user_feedback',
           note: note
         });
-      } catch (e) {
-        // Silent fail
-      }
-
-      document.getElementById('feedbackSection').classList.add('hidden');
-      document.getElementById('feedbackThanks').classList.remove('hidden');
-    };
+      } catch (e) { /* silent */ }
+    }
 
     // ============== AUTH FUNCTIONS ==============
+    // --- Shared auth logic ---
+    async function linkSessionToUser(userId) {
+      if (!pendingSessionLink) return;
+      try {
+        var db = getPPDb();
+        await db.from('sessions').update({ user_id: userId }).eq('id', pendingSessionLink);
+      } catch (e) { /* silent */ }
+    }
+
+    async function migrateDeviceDataToUser(userId) {
+      try {
+        var db = getPPDb();
+        await Promise.all([
+          db.from('product_impressions').update({ user_id: userId }).eq('user_id', DEVICE_USER_ID),
+          db.from('product_leads').update({ user_id: userId }).eq('user_id', DEVICE_USER_ID)
+        ]);
+      } catch (e) { /* silent */ }
+    }
+
+    function onAuthSuccess(data) {
+      setStoredAuth({ id: data.id, phone: data.phone, name: data.name });
+      updateAuthUI();
+    }
+
+    // --- Completion overlay auth (inline) ---
+    window.handleCompRegister = async function() {
+      var phone = document.getElementById('compAuthPhone').value.trim();
+      var password = document.getElementById('compAuthPassword').value;
+      var errorEl = document.getElementById('compAuthError');
+      var btn = document.getElementById('compBtnRegister');
+
+      errorEl.classList.add('hidden');
+      if (!phone || phone.length < 9) {
+        errorEl.textContent = 'Vui lòng nhập số điện thoại hợp lệ';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      if (!password || password.length < 6) {
+        errorEl.textContent = 'Mật khẩu tối thiểu 6 ký tự';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng ký...';
+
+      try {
+        var db = getPPDb();
+        var result = await db.rpc('register_user', { p_phone: phone, p_password: password });
+        if (result.error) throw result.error;
+        var data = result.data;
+        if (data.error === 'PHONE_EXISTS') {
+          errorEl.textContent = 'Số điện thoại đã được đăng ký. Hãy đăng nhập.';
+          errorEl.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Đăng ký';
+          return;
+        }
+        onAuthSuccess(data);
+        await linkSessionToUser(data.id);
+        await migrateDeviceDataToUser(data.id);
+        showCompAuthSuccess(data.phone);
+      } catch (e) {
+        errorEl.textContent = 'Lỗi đăng ký. Thử lại sau.';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Đăng ký';
+      }
+    };
+
+    window.handleCompLogin = async function() {
+      var phone = document.getElementById('compLoginPhone').value.trim();
+      var password = document.getElementById('compLoginPassword').value;
+      var errorEl = document.getElementById('compLoginError');
+      var btn = document.getElementById('compBtnLogin');
+
+      errorEl.classList.add('hidden');
+      if (!phone || !password) {
+        errorEl.textContent = 'Vui lòng nhập đầy đủ thông tin';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Đang đăng nhập...';
+
+      try {
+        var db = getPPDb();
+        var result = await db.rpc('login_user', { p_phone: phone, p_password: password });
+        if (result.error) throw result.error;
+        var data = result.data;
+        if (data.error === 'INVALID_CREDENTIALS') {
+          errorEl.textContent = 'Sai số điện thoại hoặc mật khẩu';
+          errorEl.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Đăng nhập';
+          return;
+        }
+        onAuthSuccess(data);
+        await linkSessionToUser(data.id);
+        await migrateDeviceDataToUser(data.id);
+        showCompAuthSuccess(data.phone);
+      } catch (e) {
+        errorEl.textContent = 'Lỗi đăng nhập. Thử lại sau.';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Đăng nhập';
+      }
+    };
+
+    function showCompAuthSuccess(phone) {
+      document.getElementById('completionAuth').classList.add('hidden');
+      document.getElementById('compAuthGreeting').textContent = 'Chào, ' + phone + '!';
+      document.getElementById('completionAuthSuccess').classList.remove('hidden');
+    }
+
+    window.showCompLoginForm = function() {
+      document.getElementById('compAuthFormRegister').classList.add('hidden');
+      document.getElementById('compAuthFormLogin').classList.remove('hidden');
+    };
+
+    window.showCompRegisterForm = function() {
+      document.getElementById('compAuthFormLogin').classList.add('hidden');
+      document.getElementById('compAuthFormRegister').classList.remove('hidden');
+    };
+
+    // --- Landing page auth (separate overlay) ---
     window.handleRegister = async function() {
       var phone = document.getElementById('authPhone').value.trim();
       var password = document.getElementById('authPassword').value;
@@ -1597,10 +1786,8 @@
           btn.textContent = 'Đăng ký';
           return;
         }
-        setStoredAuth({ id: data.id, phone: data.phone, name: data.name });
-        await linkSessionToUser(data.id);
-        await migrateDeviceDataToUser(data.id);
-        closeRegistration();
+        onAuthSuccess(data);
+        document.getElementById('registrationOverlay').classList.add('hidden');
       } catch (e) {
         errorEl.textContent = 'Lỗi đăng ký. Thử lại sau.';
         errorEl.classList.remove('hidden');
@@ -1637,63 +1824,14 @@
           btn.textContent = 'Đăng nhập';
           return;
         }
-        setStoredAuth({ id: data.id, phone: data.phone, name: data.name });
-        await linkSessionToUser(data.id);
-        await migrateDeviceDataToUser(data.id);
-        closeRegistration();
+        onAuthSuccess(data);
+        document.getElementById('registrationOverlay').classList.add('hidden');
       } catch (e) {
         errorEl.textContent = 'Lỗi đăng nhập. Thử lại sau.';
         errorEl.classList.remove('hidden');
         btn.disabled = false;
         btn.textContent = 'Đăng nhập';
       }
-    };
-
-    async function linkSessionToUser(userId) {
-      if (!pendingSessionLink) return;
-      try {
-        var db = getPPDb();
-        await db.from('sessions').update({ user_id: userId }).eq('id', pendingSessionLink);
-      } catch (e) { /* silent */ }
-    }
-
-    async function migrateDeviceDataToUser(userId) {
-      try {
-        var db = getPPDb();
-        await Promise.all([
-          db.from('product_impressions').update({ user_id: userId }).eq('user_id', DEVICE_USER_ID),
-          db.from('product_leads').update({ user_id: userId }).eq('user_id', DEVICE_USER_ID)
-        ]);
-      } catch (e) { /* silent */ }
-    }
-
-    function showRegistrationPrompt(sessionId) {
-      pendingSessionLink = sessionId;
-      document.getElementById('authPhone').value = '';
-      document.getElementById('authPassword').value = '';
-      document.getElementById('loginPhone').value = '';
-      document.getElementById('loginPassword').value = '';
-      document.getElementById('authError').classList.add('hidden');
-      document.getElementById('loginError').classList.add('hidden');
-      document.getElementById('btnRegister').disabled = false;
-      document.getElementById('btnRegister').textContent = 'Đăng ký';
-      document.getElementById('btnLogin').disabled = false;
-      document.getElementById('btnLogin').textContent = 'Đăng nhập';
-      showRegisterForm();
-      document.getElementById('registrationOverlay').classList.remove('hidden');
-    }
-
-    function closeRegistration() {
-      document.getElementById('registrationOverlay').classList.add('hidden');
-      pendingSessionLink = null;
-      updateAuthUI();
-      if (BOOTH_ID) {
-        showProductDiscovery();
-      }
-    }
-
-    window.skipRegistration = function() {
-      closeRegistration();
     };
 
     window.showLoginForm = function() {

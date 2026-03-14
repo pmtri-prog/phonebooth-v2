@@ -1,13 +1,15 @@
 # Phonebooth MVP - Changelog
 
-## [2026-03-14] Lazy Registration - User Authentication
+## [2026-03-14] Lazy Registration + Merged Post-Session UX
 
 ### Tinh nang
-- **Lazy Registration**: User dùng booth anonymous trước, hỏi đăng ký SAU khi kết thúc session
+- **Lazy Registration**: User dùng booth anonymous trước, đăng ký ngay trong completion overlay
 - **Phone + Password auth**: Đăng ký/đăng nhập bằng SĐT + mật khẩu, bcrypt hash server-side
 - **Session linking**: Session tự động gắn user_id khi đã đăng nhập, hoặc link sau khi đăng ký
 - **Device data migration**: Khi đăng ký, product_impressions/leads từ device ID chuyển sang real user ID
 - **Landing page login**: Link "Đăng nhập" trên landing page hoạt động
+- **Merged post-session overlay**: Gộp completion + feedback + registration thành 1 overlay scrollable (giảm từ 4-5 tap xuống 2 tap)
+- **Feedback optional**: Không bắt buộc rate đủ 3 tiêu chí, auto-send khi bấm "Tắt máy"
 - **Auto-login**: Returning user tự động nhận diện qua localStorage token
 
 ### Database
