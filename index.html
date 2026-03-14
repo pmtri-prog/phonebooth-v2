@@ -3112,7 +3112,7 @@
       try {
         await loadBoothProductsForBooth(BOOTH_ID);
         await loadUserLeads();
-      } catch (e) { goToVenue(); return; }
+      } catch (e) { /* continue with cached products if any */ }
       const products = getEligibleProducts(2);
       if (products.length === 0) { goToVenue(); return; }
 
