@@ -721,6 +721,66 @@
       color: var(--color-accent);
     }
 
+    /* ===== PROFILE QUESTION ===== */
+    .profile-question {
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .profile-question-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 14px;
+    }
+    .profile-question-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .profile-chip {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .profile-chip:active, .profile-chip.selected {
+      background: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent);
+    }
+    .profile-save-btn {
+      margin-top: 8px;
+      padding: 10px 32px;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-button);
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .profile-skip {
+      display: block;
+      margin: 4px auto 0;
+      background: none;
+      border: none;
+      font-family: var(--font-family);
+      font-size: 12px;
+      color: var(--color-text-hint);
+      cursor: pointer;
+      padding: 8px;
+    }
+
     /* ===== PRODUCT DISCOVERY ===== */
     .product-discovery-overlay {
       position: fixed;
@@ -2097,6 +2157,18 @@
       <div class="completion-auth-greeting" id="compAuthGreeting"></div>
     </div>
 
+    <!-- Profile question (progressive) -->
+    <div class="profile-question hidden" id="profileQuestion">
+      <div class="completion-divider"></div>
+      <div class="profile-question-title" id="profileQuestionTitle"></div>
+      <div class="profile-question-options" id="profileQuestionOptions"></div>
+      <div class="profile-question-input hidden" id="profileQuestionInput">
+        <input type="text" class="auth-input" id="profileTextInput" placeholder="">
+        <button class="profile-save-btn" onclick="saveProfileText()">Lưu</button>
+      </div>
+      <button class="profile-skip" onclick="skipProfileQuestion()">Để sau</button>
+    </div>
+
     <button class="btn-done" onclick="closeCompletion()" style="margin-top:20px;">Tắt máy</button>
   </div>
 
@@ -2354,6 +2426,7 @@
       document.getElementById('completionMsg').textContent = randomFrom(COMPLETION_MSGS);
       resetFeedback();
       resetCompAuth();
+      checkProfileQuestion();
       overlay.scrollTop = 0;
       overlay.classList.remove('hidden');
     }
@@ -2443,8 +2516,15 @@
     }
 
     function onAuthSuccess(data) {
-      setStoredAuth({ id: data.id, phone: data.phone, name: data.name });
+      setStoredAuth({
+        id: data.id,
+        phone: data.phone,
+        name: data.name || '',
+        occupation: data.occupation || '',
+        purpose: data.purpose || ''
+      });
       updateAuthUI();
+      checkProfileQuestion();
     }
 
     // --- Completion overlay auth (inline) ---
@@ -2676,6 +2756,105 @@
       document.getElementById('btnRegister').textContent = 'Đăng ký';
       showRegisterForm();
       document.getElementById('registrationOverlay').classList.remove('hidden');
+    };
+
+    // ============== PROGRESSIVE PROFILE ==============
+    var profileQuestions = [
+      {
+        field: 'name',
+        title: 'Bạn tên gì?',
+        type: 'text',
+        placeholder: 'Nhập tên của bạn'
+      },
+      {
+        field: 'occupation',
+        title: 'Bạn làm nghề gì?',
+        type: 'chips',
+        options: ['Freelancer', 'Nhân viên VP', 'Sinh viên', 'Khác']
+      },
+      {
+        field: 'purpose',
+        title: 'Bạn hay dùng booth để?',
+        type: 'chips',
+        options: ['Làm việc', 'Học tập', 'Họp online', 'Nghỉ ngơi']
+      }
+    ];
+
+    function checkProfileQuestion() {
+      var container = document.getElementById('profileQuestion');
+      container.classList.add('hidden');
+
+      if (!isLoggedIn()) return;
+      var auth = getStoredAuth();
+
+      // Find first unanswered question
+      var question = null;
+      for (var i = 0; i < profileQuestions.length; i++) {
+        var q = profileQuestions[i];
+        if (!auth[q.field] || auth[q.field].trim() === '') {
+          question = q;
+          break;
+        }
+      }
+      if (!question) return; // All answered
+
+      // Render question
+      document.getElementById('profileQuestionTitle').textContent = question.title;
+      var optionsEl = document.getElementById('profileQuestionOptions');
+      var inputEl = document.getElementById('profileQuestionInput');
+      optionsEl.innerHTML = '';
+      inputEl.classList.add('hidden');
+
+      if (question.type === 'chips') {
+        question.options.forEach(function(opt) {
+          var chip = document.createElement('button');
+          chip.className = 'profile-chip';
+          chip.textContent = opt;
+          chip.onclick = function() { saveProfileAnswer(question.field, opt); };
+          optionsEl.appendChild(chip);
+        });
+      } else if (question.type === 'text') {
+        inputEl.classList.remove('hidden');
+        var input = document.getElementById('profileTextInput');
+        input.value = '';
+        input.placeholder = question.placeholder || '';
+        window._currentProfileField = question.field;
+      }
+
+      container.classList.remove('hidden');
+    }
+
+    async function saveProfileAnswer(field, value) {
+      if (!value || !value.trim()) return;
+      var auth = getStoredAuth();
+      if (!auth) return;
+
+      try {
+        var db = getPPDb();
+        var updateObj = {};
+        updateObj[field] = value.trim();
+        await db.from('users').update(updateObj).eq('id', auth.id);
+
+        // Update localStorage
+        auth[field] = value.trim();
+        setStoredAuth(auth);
+
+        // Hide question with brief success feedback
+        document.getElementById('profileQuestion').classList.add('hidden');
+      } catch (e) {
+        console.error('saveProfileAnswer error:', e);
+      }
+    }
+
+    window.saveProfileText = function() {
+      var value = document.getElementById('profileTextInput').value;
+      if (window._currentProfileField && value.trim()) {
+        saveProfileAnswer(window._currentProfileField, value);
+      }
+    };
+
+    window.skipProfileQuestion = function() {
+      document.getElementById('profileQuestion').classList.add('hidden');
     };
 
     // ============== STATS PAGE ==============
