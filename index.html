@@ -2741,7 +2741,7 @@
         var [boothsRes, sessionsRes, productsRes] = await Promise.all([
           db.from('booths').select('booth_id, name, location, address, last_seen').order('booth_id'),
           db.from('sessions').select('booth_id, status').in('status', ['active', 'paused']),
-          db.from('booth_products').select('booth_id, products(name, images, brands(name, logo_url))').eq('status', 'active').lte('start_date', today).gte('end_date', today)
+          db.from('booth_products').select('*, products(*, brands(name, logo_url))').eq('status', 'active').lte('start_date', today).gte('end_date', today)
         ]);
         var resvRes = { data: [] };
         try {
