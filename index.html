@@ -1289,6 +1289,29 @@
       font-weight: 700;
       color: var(--color-text-primary);
     }
+    .booth-card-products {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+    }
+    .booth-card-product {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .booth-card-product-img {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+    .booth-card-product-name {
+      font-size: 11px;
+      color: var(--color-text-hint);
+      white-space: nowrap;
+    }
     .booth-status-badge {
       font-size: 11px;
       font-weight: 600;
@@ -2641,10 +2664,12 @@
         // Expire old reservations server-side (silent fail nếu chưa chạy migration)
         try { await db.rpc('expire_reservations'); } catch (e) { /* silent */ }
 
-        // Load booths + sessions luôn, reservations có thể fail nếu bảng chưa tồn tại
-        var [boothsRes, sessionsRes] = await Promise.all([
+        // Load booths + sessions + products luôn, reservations có thể fail nếu bảng chưa tồn tại
+        var today = new Date().toISOString().split('T')[0];
+        var [boothsRes, sessionsRes, productsRes] = await Promise.all([
           db.from('booths').select('booth_id, name, location, address, last_seen').order('booth_id'),
-          db.from('sessions').select('booth_id, status').in('status', ['active', 'paused'])
+          db.from('sessions').select('booth_id, status').in('status', ['active', 'paused']),
+          db.from('booth_products').select('booth_id, products(name, images, brands(name, logo_url))').eq('status', 'active').lte('start_date', today).gte('end_date', today)
         ]);
         var resvRes = { data: [] };
         try {
@@ -2664,6 +2689,13 @@
 
         var reservedBooths = {};
         activeReservations.forEach(function(r) { reservedBooths[r.booth_id] = r; });
+
+        // Build products-per-booth map
+        var boothProductsMap = {};
+        (productsRes.data || []).forEach(function(bp) {
+          if (!boothProductsMap[bp.booth_id]) boothProductsMap[bp.booth_id] = [];
+          if (bp.products) boothProductsMap[bp.booth_id].push(bp.products);
+        });
 
         var container = document.getElementById('venueBoothList');
         container.innerHTML = '';
@@ -2702,6 +2734,21 @@
             '<div class="booth-card-name">' + (booth.name || booth.booth_id) + '</div>' +
             '<span class="booth-status-badge ' + statusClass + '">' + statusBadge + '</span>' +
           '</div>';
+
+          // Product strip (subtle)
+          var boothProds = boothProductsMap[booth.booth_id] || [];
+          if (boothProds.length > 0) {
+            html += '<div class="booth-card-products">';
+            boothProds.slice(0, 3).forEach(function(p) {
+              var img = (p.images && p.images.length > 0) ? p.images[0] : '';
+              var brandName = (p.brands && p.brands.name) ? p.brands.name : '';
+              html += '<div class="booth-card-product">';
+              if (img) html += '<img class="booth-card-product-img" src="' + img + '" alt="">';
+              html += '<span class="booth-card-product-name">' + (brandName || p.name) + '</span>';
+              html += '</div>';
+            });
+            html += '</div>';
+          }
 
           // Countdown for my reservation
           if (isMyReservation) {
