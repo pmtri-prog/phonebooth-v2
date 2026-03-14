@@ -2057,6 +2057,128 @@
       margin-top: 8px;
     }
 
+    /* ===== VOUCHER WALLET ===== */
+    .voucher-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .voucher-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      position: relative;
+      overflow: hidden;
+    }
+    .voucher-card.expiring {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .voucher-card.expired {
+      opacity: 0.5;
+    }
+    .voucher-card.used {
+      opacity: 0.6;
+    }
+    .voucher-brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f5f5f5;
+      flex-shrink: 0;
+    }
+    .voucher-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .voucher-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .voucher-desc {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+    .voucher-code {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-accent);
+      background: #F6F5FF;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 4px;
+      display: inline-block;
+      letter-spacing: 0.5px;
+    }
+    .voucher-meta {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .voucher-expiry {
+      font-size: 10px;
+      color: var(--color-text-hint);
+    }
+    .voucher-expiry.soon {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+    .voucher-expiry.expired {
+      color: #ef4444;
+      font-weight: 600;
+    }
+    .voucher-status-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .voucher-status-badge.active {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    .voucher-status-badge.used {
+      background: #f3f4f6;
+      color: #9ca3af;
+    }
+    .voucher-status-badge.expired {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+    .voucher-empty {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: var(--color-text-hint);
+    }
+    .voucher-noti {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-card);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #92400e;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .voucher-noti-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
     /* ===== BOTTOM TAB BAR ===== */
     .tab-bar {
       position: fixed;
@@ -2099,6 +2221,23 @@
     .tab-label {
       font-size: 10px;
       font-weight: 600;
+    }
+    .tab-item {
+      position: relative;
+    }
+    .tab-badge {
+      position: absolute;
+      top: 4px;
+      right: 50%;
+      transform: translateX(14px);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: none;
+    }
+    .tab-badge.show {
+      display: block;
     }
 
     /* ===== QR SCANNER ===== */
@@ -2321,6 +2460,18 @@
       </div>
       <div class="profile-section">
         <button class="profile-save-action" onclick="saveProfile()">Lưu thay đổi</button>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Voucher của tôi</div>
+        <div class="voucher-noti hidden" id="voucherNoti">
+          <span class="voucher-noti-icon">&#9888;</span>
+          <span id="voucherNotiText"></span>
+        </div>
+        <div class="voucher-list" id="voucherList">
+          <div class="voucher-empty">Đang tải...</div>
+        </div>
+      </div>
+      <div class="profile-section">
         <button class="profile-logout" onclick="handleLogout()">Đăng xuất</button>
       </div>
     </div>
@@ -2337,6 +2488,7 @@
       <span class="tab-label">Xếp hạng</span>
     </button>
     <button class="tab-item" id="tabProfile" onclick="switchTab('profile')">
+      <span class="tab-badge" id="profileBadge"></span>
       <span class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></span>
       <span class="tab-label">Tôi</span>
     </button>
@@ -2769,6 +2921,7 @@
       document.getElementById('pageLanding').classList.remove('hidden');
     }
     updateAuthUI();
+    checkVoucherBadge();
 
     // ============== MOTIVATIONAL MESSAGES ==============
     const MOTI_IDLE = [
@@ -3487,6 +3640,9 @@
       } else {
         toggle.classList.remove('on');
       }
+
+      // Load vouchers
+      loadVouchers();
     }
 
     async function loadProfileRank() {
@@ -3551,6 +3707,168 @@
       clearStoredAuth();
       window.location.href = '/';
     };
+
+    // ============== VOUCHER WALLET ==============
+    var VOUCHER_EXPIRY_WARN_DAYS = 3;
+
+    async function loadVouchers() {
+      var listEl = document.getElementById('voucherList');
+      var notiEl = document.getElementById('voucherNoti');
+      if (!isLoggedIn()) {
+        listEl.innerHTML = '<div class="voucher-empty">Đăng nhập để xem voucher.</div>';
+        notiEl.classList.add('hidden');
+        return;
+      }
+
+      var db = getPPDb();
+      var auth = getStoredAuth();
+      try {
+        var { data: leads } = await db.from('product_leads')
+          .select('id, cta_type, voucher_redeemed, created_at, booth_products(end_date, products(name, voucher_code, voucher_description, images, brands(name, logo_url)))')
+          .eq('user_id', auth.id)
+          .eq('cta_type', 'get_voucher')
+          .order('created_at', { ascending: false });
+
+        var vouchers = (leads || []).filter(function(l) {
+          return l.booth_products && l.booth_products.products;
+        });
+
+        if (vouchers.length === 0) {
+          listEl.innerHTML = '<div class="voucher-empty">Chưa có voucher nào. Sử dụng booth để nhận voucher từ các nhãn hàng!</div>';
+          notiEl.classList.add('hidden');
+          updateProfileBadge(0);
+          return;
+        }
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var expiringCount = 0;
+
+        var html = vouchers.map(function(v) {
+          var bp = v.booth_products;
+          var prod = bp.products;
+          var brand = prod.brands || {};
+          var endDate = bp.end_date ? new Date(bp.end_date + 'T23:59:59') : null;
+          var daysLeft = endDate ? Math.ceil((endDate - today) / 86400000) : 999;
+          var isExpired = daysLeft < 0;
+          var isExpiring = !isExpired && daysLeft <= VOUCHER_EXPIRY_WARN_DAYS;
+          var isUsed = v.voucher_redeemed;
+
+          if (isExpiring && !isUsed) expiringCount++;
+
+          var cardClass = 'voucher-card';
+          if (isUsed) cardClass += ' used';
+          else if (isExpired) cardClass += ' expired';
+          else if (isExpiring) cardClass += ' expiring';
+
+          var expiryText = '';
+          var expiryClass = 'voucher-expiry';
+          if (isExpired) {
+            expiryText = 'Đã hết hạn';
+            expiryClass += ' expired';
+          } else if (daysLeft === 0) {
+            expiryText = 'Hết hạn hôm nay!';
+            expiryClass += ' soon';
+          } else if (daysLeft <= VOUCHER_EXPIRY_WARN_DAYS) {
+            expiryText = 'Còn ' + daysLeft + ' ngày';
+            expiryClass += ' soon';
+          } else {
+            expiryText = 'HSD: ' + formatVoucherDate(bp.end_date);
+          }
+
+          var statusBadge = '';
+          if (isUsed) {
+            statusBadge = '<div class="voucher-status-badge used">Đã dùng</div>';
+          } else if (isExpired) {
+            statusBadge = '<div class="voucher-status-badge expired">Hết hạn</div>';
+          } else {
+            statusBadge = '<div class="voucher-status-badge active">Còn hiệu lực</div>';
+          }
+
+          var logoHtml = brand.logo_url
+            ? '<img class="voucher-brand-logo" src="' + brand.logo_url + '" alt="' + (brand.name || '') + '">'
+            : '<div class="voucher-brand-logo" style="display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#aaa;">' + (brand.name || '?').charAt(0) + '</div>';
+
+          var codeHtml = prod.voucher_code && !isExpired && !isUsed
+            ? '<div class="voucher-code">' + prod.voucher_code + '</div>'
+            : '';
+
+          return '<div class="' + cardClass + '">' +
+            logoHtml +
+            '<div class="voucher-info">' +
+              '<div class="voucher-name">' + (prod.name || 'Voucher') + '</div>' +
+              '<div class="voucher-desc">' + (prod.voucher_description || brand.name || '') + '</div>' +
+              codeHtml +
+            '</div>' +
+            '<div class="voucher-meta">' +
+              '<div class="' + expiryClass + '">' + expiryText + '</div>' +
+              statusBadge +
+            '</div>' +
+          '</div>';
+        }).join('');
+
+        listEl.innerHTML = html;
+
+        // Notification banner
+        if (expiringCount > 0) {
+          document.getElementById('voucherNotiText').textContent = expiringCount + ' voucher sắp hết hạn trong ' + VOUCHER_EXPIRY_WARN_DAYS + ' ngày!';
+          notiEl.classList.remove('hidden');
+        } else {
+          notiEl.classList.add('hidden');
+        }
+
+        // Badge on tab
+        updateProfileBadge(expiringCount);
+
+      } catch (e) {
+        console.error('loadVouchers error:', e);
+        listEl.innerHTML = '<div class="voucher-empty">Không tải được voucher.</div>';
+      }
+    }
+
+    function formatVoucherDate(dateStr) {
+      if (!dateStr) return '';
+      var d = new Date(dateStr);
+      return (d.getDate() < 10 ? '0' : '') + d.getDate() + '/' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
+    }
+
+    function updateProfileBadge(expiringCount) {
+      var badge = document.getElementById('profileBadge');
+      if (badge) {
+        if (expiringCount > 0) {
+          badge.classList.add('show');
+        } else {
+          badge.classList.remove('show');
+        }
+      }
+    }
+
+    // Check voucher badge on app load (non-blocking)
+    function checkVoucherBadge() {
+      if (!isLoggedIn()) return;
+      var db = getPPDb();
+      var auth = getStoredAuth();
+      var warnDate = new Date();
+      warnDate.setDate(warnDate.getDate() + VOUCHER_EXPIRY_WARN_DAYS);
+      var today = new Date().toISOString().split('T')[0];
+      var warnStr = warnDate.toISOString().split('T')[0];
+
+      db.from('product_leads')
+        .select('id, booth_products(end_date)')
+        .eq('user_id', auth.id)
+        .eq('cta_type', 'get_voucher')
+        .eq('voucher_redeemed', false)
+        .then(function(res) {
+          var count = 0;
+          (res.data || []).forEach(function(l) {
+            if (l.booth_products && l.booth_products.end_date) {
+              var end = l.booth_products.end_date;
+              if (end >= today && end <= warnStr) count++;
+            }
+          });
+          updateProfileBadge(count);
+        });
+    }
 
     // ============== PRODUCT PLACEMENT ==============
     let cachedBoothProducts = [];
