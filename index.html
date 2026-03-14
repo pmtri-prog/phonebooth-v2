@@ -3359,16 +3359,28 @@
       var auth = getStoredAuth();
       try {
         // Load all sessions grouped by user
-        var { data: allSessions } = await db.from('sessions')
-          .select('user_id, duration_seconds')
+        var sessRes = await db.from('sessions')
+          .select('user_id, duration_seconds, started_at, ended_at')
           .eq('status', 'ended');
 
-        // Aggregate per user
+        console.log('Leaderboard sessions:', sessRes.data ? sessRes.data.length : 0, sessRes.error);
+
+        var allSessions = sessRes.data || [];
+
+        // Aggregate per user — calc duration from timestamps if duration_seconds is null
         var userMinutes = {};
-        (allSessions || []).forEach(function(s) {
+        allSessions.forEach(function(s) {
           if (!s.user_id) return;
-          userMinutes[s.user_id] = (userMinutes[s.user_id] || 0) + Math.round((s.duration_seconds || 0) / 60);
+          var mins = 0;
+          if (s.duration_seconds) {
+            mins = Math.round(s.duration_seconds / 60);
+          } else if (s.started_at && s.ended_at) {
+            mins = Math.round((new Date(s.ended_at) - new Date(s.started_at)) / 60000);
+          }
+          if (mins > 0) userMinutes[s.user_id] = (userMinutes[s.user_id] || 0) + mins;
         });
+
+        console.log('Leaderboard userMinutes:', userMinutes);
 
         // Load users who show on leaderboard
         var userIds = Object.keys(userMinutes);
