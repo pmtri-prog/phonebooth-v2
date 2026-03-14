@@ -1455,7 +1455,9 @@
       overflow: hidden;
       background: var(--color-white);
       border: 1px solid var(--color-border);
+      cursor: pointer;
     }
+    .venue-product-card:active { opacity: 0.85; }
     .venue-product-img {
       width: 100%;
       height: 110px;
@@ -2839,21 +2841,27 @@
         });
 
         // Render product showcase (all products across all booths, deduplicated)
-        var allProducts = [];
+        var allBps = [];
         var seenProducts = {};
         (productsRes.data || []).forEach(function(bp) {
           if (bp.products && !seenProducts[bp.products.name]) {
             seenProducts[bp.products.name] = true;
-            allProducts.push(bp.products);
+            allBps.push(bp);
           }
         });
+        // Cache for openProductDetail
+        if (!window._venueBoothProducts) window._venueBoothProducts = [];
+        window._venueBoothProducts = allBps;
+        cachedBoothProducts = allBps;
+
         var venueProductsEl = document.getElementById('venueProducts');
         var venueCardsEl = document.getElementById('venueProductCards');
-        if (allProducts.length > 0) {
-          venueCardsEl.innerHTML = allProducts.slice(0, 3).map(function(p) {
+        if (allBps.length > 0) {
+          venueCardsEl.innerHTML = allBps.slice(0, 3).map(function(bp) {
+            var p = bp.products;
             var img = (p.images && p.images.length > 0) ? p.images[0] : '';
             var brand = (p.brands && p.brands.name) ? p.brands.name : '';
-            return '<div class="venue-product-card">' +
+            return '<div class="venue-product-card" onclick="openProductDetail(\'' + bp.id + '\', \'venue\')">' +
               (img ? '<img class="venue-product-img" src="' + img + '" alt="">' : '') +
               '<div class="venue-product-body">' +
                 (brand ? '<div class="venue-product-brand">' + brand + '</div>' : '') +
