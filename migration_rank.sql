@@ -90,7 +90,7 @@ BEGIN
       u.id,
       COALESCE(u.nickname, 'Ẩn danh') as nickname,
       COALESCE(u.avatar_icon, '🌱') as avatar_icon,
-      COALESCE(SUM(s.duration_minutes), 0)::int as total_minutes
+      COALESCE(SUM(s.duration_seconds / 60), 0)::int as total_minutes
     FROM users u
     INNER JOIN sessions s ON s.user_id = u.id::text AND s.status = 'ended'
     WHERE u.show_leaderboard = true
@@ -98,7 +98,7 @@ BEGIN
         SELECT booth_id FROM booths WHERE location = p_location
       ))
     GROUP BY u.id, u.nickname, u.avatar_icon
-    HAVING SUM(s.duration_minutes) > 0
+    HAVING SUM(s.duration_seconds) > 0
     ORDER BY total_minutes DESC
     LIMIT 50
   ) t;

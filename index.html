@@ -3317,12 +3317,12 @@
       var auth = getStoredAuth();
       try {
         var { data: sessions } = await db.from('sessions')
-          .select('duration_minutes')
+          .select('duration_seconds')
           .eq('user_id', auth.id)
           .eq('status', 'ended');
 
         var totalMinutes = 0;
-        (sessions || []).forEach(function(s) { totalMinutes += (s.duration_minutes || 0); });
+        (sessions || []).forEach(function(s) { totalMinutes += Math.round((s.duration_seconds || 0) / 60); });
 
         var rank = getRankTier(totalMinutes);
         document.getElementById('rankPoints').textContent = '+' + sessionMinutes;
@@ -3360,14 +3360,14 @@
       try {
         // Load all sessions grouped by user
         var { data: allSessions } = await db.from('sessions')
-          .select('user_id, duration_minutes')
+          .select('user_id, duration_seconds')
           .eq('status', 'ended');
 
         // Aggregate per user
         var userMinutes = {};
         (allSessions || []).forEach(function(s) {
           if (!s.user_id) return;
-          userMinutes[s.user_id] = (userMinutes[s.user_id] || 0) + (s.duration_minutes || 0);
+          userMinutes[s.user_id] = (userMinutes[s.user_id] || 0) + Math.round((s.duration_seconds || 0) / 60);
         });
 
         // Load users who show on leaderboard
@@ -3378,9 +3378,17 @@
           return;
         }
 
-        var { data: users } = await db.from('users')
+        var usersRes = await db.from('users')
           .select('id, nickname, avatar_icon, show_leaderboard')
           .in('id', userIds);
+        // Fallback: if columns don't exist yet (migration not run), retry with basic fields
+        var users;
+        if (usersRes.error) {
+          var fallback = await db.from('users').select('id, name').in('id', userIds);
+          users = (fallback.data || []).map(function(u) { return { id: u.id, nickname: u.name, avatar_icon: '🌱', show_leaderboard: true }; });
+        } else {
+          users = usersRes.data || [];
+        }
 
         var userMap = {};
         (users || []).forEach(function(u) { userMap[u.id] = u; });
@@ -3474,12 +3482,12 @@
       var auth = getStoredAuth();
       try {
         var { data: sessions } = await db.from('sessions')
-          .select('duration_minutes')
+          .select('duration_seconds')
           .eq('user_id', auth.id)
           .eq('status', 'ended');
 
         var totalMinutes = 0;
-        (sessions || []).forEach(function(s) { totalMinutes += (s.duration_minutes || 0); });
+        (sessions || []).forEach(function(s) { totalMinutes += Math.round((s.duration_seconds || 0) / 60); });
         var rank = getRankTier(totalMinutes);
         document.getElementById('profileTierIcon').textContent = rank.tier.icon;
         document.getElementById('profileTierName').textContent = rank.tier.name + ' · ' + formatMinutesAsHours(totalMinutes);
