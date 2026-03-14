@@ -258,6 +258,11 @@
       gap: 6px;
       margin-top: 10px;
     }
+    .booth-qr-actions {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #f0f0f0;
+    }
     .btn-ctrl {
       font-family: 'Inter', sans-serif;
       font-size: 10px;
@@ -1287,6 +1292,9 @@
           </div>
           ${sessionHtml}
           ${controlsHtml}
+          <div class="booth-qr-actions">
+            <button class="btn-ctrl" onclick="downloadBoothQR('${b.booth_id}', '${b.name || b.booth_id}')" title="Tải QR code cho booth này">📥 Tải QR Booth</button>
+          </div>
         </div>`;
       }).join('');
 
@@ -1871,6 +1879,20 @@
       a.href = bp.qr_code_url;
       a.download = 'QR_' + (bp.booth_id || 'booth') + '_' + bpId.substring(0, 8) + '.png';
       a.click();
+    }
+
+    async function downloadBoothQR(boothId, boothName) {
+      const qrUrl = BASE_URL + '?booth=' + boothId;
+      try {
+        const dataUrl = await QRCode.toDataURL(qrUrl, { width: 600, margin: 2 });
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = 'QR_' + boothId + '.png';
+        a.click();
+        showToast('Đã tải QR cho ' + boothName);
+      } catch (e) {
+        showToast('Lỗi tạo QR: ' + e.message);
+      }
     }
 
     function deleteBoothProduct(id) {
