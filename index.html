@@ -2805,21 +2805,6 @@
             '<span class="booth-status-badge ' + statusClass + '">' + statusBadge + '</span>' +
           '</div>';
 
-          // Product strip (subtle)
-          var boothProds = boothProductsMap[booth.booth_id] || [];
-          if (boothProds.length > 0) {
-            html += '<div class="booth-card-products">';
-            html += '<span class="booth-card-products-label">Trang bị</span>';
-            boothProds.slice(0, 3).forEach(function(p) {
-              var img = (p.images && p.images.length > 0) ? p.images[0] : '';
-              html += '<div class="booth-card-product">';
-              if (img) html += '<img class="booth-card-product-img" src="' + img + '" alt="">';
-              html += '<span class="booth-card-product-name">' + p.name + '</span>';
-              html += '</div>';
-            });
-            html += '</div>';
-          }
-
           // Countdown for my reservation
           if (isMyReservation) {
             var expiresAt = new Date(reservation.expires_at).getTime();
