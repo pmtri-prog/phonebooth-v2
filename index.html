@@ -1306,6 +1306,14 @@
       cursor: pointer;
       flex: 1;
     }
+    .booth-card-qr-hint {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-accent);
+      text-align: center;
+      padding: 10px 0;
+    }
     .booth-card-login-hint {
       font-size: 12px;
       color: var(--color-text-secondary);
@@ -2541,7 +2549,7 @@
             '</button>';
           } else if (isMyReservation) {
             html += '<button class="btn-cancel-reserve" onclick="handleCancelReserve(\'' + reservation.id + '\')">Hủy đặt</button>';
-            html += '<button class="btn-use-now" onclick="window.location.href=\'/?booth=' + booth.booth_id + '\'">Dùng ngay</button>';
+            html += '<div class="booth-card-qr-hint">Quét QR tại booth để vào</div>';
           } else {
             // Available
             html += '<button class="btn-reserve" onclick="handleReserve(\'' + booth.booth_id + '\')">Giữ chỗ 10p</button>';
@@ -2939,11 +2947,12 @@
       }
 
       var boothResvTimer = null;
+      var autoStartTriggered = false;
       async function checkBoothReservation() {
         var banner = document.getElementById('resvBanner');
         if (!banner) return;
         try {
-          await db.rpc('expire_reservations');
+          try { await db.rpc('expire_reservations'); } catch (e) { /* silent */ }
           var res = await db.from('reservations')
             .select('id, user_id, expires_at')
             .eq('booth_id', BOOTH_ID)
@@ -2964,6 +2973,12 @@
             banner.style.display = 'block';
             updateResvBanner(banner, resv.expires_at, true);
             startBoothResvCountdown(banner, resv.expires_at, true);
+            // Auto-start: QR scan + reservation → mở booth tự động
+            if (!autoStartTriggered && currentState === 'idle' && boothOnline) {
+              autoStartTriggered = true;
+              banner.innerHTML = 'Đang mở booth...';
+              setTimeout(function() { handleStart(); }, 500);
+            }
           } else {
             banner.className = 'reservation-banner blocked';
             banner.style.display = 'block';
@@ -3241,7 +3256,10 @@
           setInterval(function() {
             checkHeartbeat().catch(function(){});
           }, 10000);
-          checkHeartbeat().catch(function(){});
+          checkHeartbeat().then(function() {
+            // Re-check reservation after heartbeat confirms online status (for auto-start)
+            checkBoothReservation();
+          }).catch(function(){});
 
           // Poll backup: 15s vì Realtime đã handle instant updates
           async function pollLoop() {
