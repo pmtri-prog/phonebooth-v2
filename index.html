@@ -3499,6 +3499,8 @@
             '</div>';
           }).join('');
           venueProductsEl.classList.remove('hidden');
+          // Track venue impressions
+          allBps.slice(0, 3).forEach(function(bp) { trackImpression(bp.id, 'venue'); });
         } else {
           venueProductsEl.classList.add('hidden');
         }
