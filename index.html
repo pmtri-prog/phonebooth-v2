@@ -1252,6 +1252,15 @@
       font-size: 13px;
       color: var(--color-text-secondary);
     }
+    .venue-sponsor {
+      font-size: 12px;
+      color: var(--color-text-hint);
+      margin-top: 6px;
+    }
+    .venue-sponsor strong {
+      color: var(--color-text-secondary);
+      font-weight: 700;
+    }
     .venue-list {
       padding: 16px var(--space-page);
       display: flex;
@@ -1543,8 +1552,9 @@
         </div>
       </div>
       <div class="venue-info">
-        <div class="venue-name" id="venueName">Danh sách Booth</div>
-        <div class="venue-address" id="venueAddress"></div>
+        <div class="venue-name" id="venueName">Dreamplex</div>
+        <div class="venue-address" id="venueAddress">21 Nguyễn Trung Ngạn, Quận 1, TP.HCM</div>
+        <div class="venue-sponsor">Phonebooth tài trợ bởi <strong>Logitech</strong></div>
       </div>
       <div class="venue-list" id="venueBoothList">
         <!-- Booth cards rendered by JS -->
@@ -2721,11 +2731,6 @@
             html += '<button class="btn-qr-scan" onclick="openQrScanner()">&#128247; Quét QR để vào</button>';
           }
           html += '</div>';
-
-          // Login hint if not logged in and booth is available
-          if (!isLoggedIn() && isOnline && !isOccupied && !reservation) {
-            html += '<div class="booth-card-login-hint"><a href="#" onclick="showVenueLogin(); return false;">Đăng nhập</a> để giữ chỗ</div>';
-          }
 
           card.innerHTML = html;
           container.appendChild(card);
