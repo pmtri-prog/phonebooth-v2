@@ -2435,7 +2435,8 @@
     var venueCountdownTimer = null;
 
     function initVenue() {
-      var db = getPPDb();
+      var { createClient } = supabase;
+      var db = createClient(SUPABASE_URL, SUPABASE_KEY);
       loadVenueData(db);
       // Poll mỗi 5s
       venuePollingTimer = setInterval(function() { loadVenueData(db); }, 5000);
