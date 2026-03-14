@@ -2815,6 +2815,18 @@
     }
     const DEVICE_USER_ID = getDeviceId();
 
+    // ============== RANK & VOUCHER CONSTANTS ==============
+    var RANK_TIERS = [
+      { name: 'Tập sự', icon: '🌱', minMinutes: 0 },
+      { name: 'Bạc', icon: '🥈', minMinutes: 120 },
+      { name: 'Vàng', icon: '🥇', minMinutes: 600 },
+      { name: 'Bạch kim', icon: '💎', minMinutes: 1500 },
+      { name: 'Kim cương', icon: '👑', minMinutes: 3000 },
+      { name: 'Thách đấu', icon: '🔥', minMinutes: 6000 }
+    ];
+    var AVATAR_ICONS = ['🌱', '🎯', '⚡', '🔥', '💎', '👑', '🚀', '🦊', '🐻', '🐼', '🦁', '🐯', '🎧', '💻', '📚', '☕', '🌙', '⭐'];
+    var VOUCHER_EXPIRY_WARN_DAYS = 3;
+
     // ============== AUTH STATE ==============
     const AUTH_KEY = 'epione_auth';
     let activeSessionId = null;
@@ -3419,17 +3431,6 @@
     };
 
     // ============== RANK SYSTEM ==============
-    var RANK_TIERS = [
-      { name: 'Tập sự', icon: '🌱', minMinutes: 0 },
-      { name: 'Bạc', icon: '🥈', minMinutes: 120 },
-      { name: 'Vàng', icon: '🥇', minMinutes: 600 },
-      { name: 'Bạch kim', icon: '💎', minMinutes: 1500 },
-      { name: 'Kim cương', icon: '👑', minMinutes: 3000 },
-      { name: 'Thách đấu', icon: '🔥', minMinutes: 6000 }
-    ];
-
-    var AVATAR_ICONS = ['🌱', '🎯', '⚡', '🔥', '💎', '👑', '🚀', '🦊', '🐻', '🐼', '🦁', '🐯', '🎧', '💻', '📚', '☕', '🌙', '⭐'];
-
     function getRankTier(totalMinutes) {
       var tier = RANK_TIERS[0];
       for (var i = RANK_TIERS.length - 1; i >= 0; i--) {
@@ -3516,8 +3517,6 @@
           .select('user_id, duration_seconds, started_at, ended_at')
           .eq('status', 'ended');
 
-        console.log('Leaderboard sessions:', sessRes.data ? sessRes.data.length : 0, sessRes.error);
-
         var allSessions = sessRes.data || [];
 
         // Aggregate per user — calc duration from timestamps if duration_seconds is null
@@ -3532,8 +3531,6 @@
           }
           if (mins > 0) userMinutes[s.user_id] = (userMinutes[s.user_id] || 0) + mins;
         });
-
-        console.log('Leaderboard userMinutes:', userMinutes);
 
         // Load users who show on leaderboard
         var userIds = Object.keys(userMinutes);
@@ -3712,8 +3709,6 @@
     };
 
     // ============== VOUCHER WALLET ==============
-    var VOUCHER_EXPIRY_WARN_DAYS = 3;
-
     async function loadVouchers() {
       var listEl = document.getElementById('voucherList');
       var notiEl = document.getElementById('voucherNoti');
