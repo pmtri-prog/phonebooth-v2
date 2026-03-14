@@ -1745,11 +1745,15 @@
     if (PAGE_PARAM === 'venue') {
       document.getElementById('pageVenue').classList.remove('hidden');
       initVenue();
-    } else if (!BOOTH_ID) {
-      document.getElementById('pageLanding').classList.remove('hidden');
-    } else {
+    } else if (BOOTH_ID) {
       document.getElementById('pageBooth').classList.remove('hidden');
       initBooth();
+    } else if (isLoggedIn()) {
+      // Logged-in user → thẳng vào venue page (home)
+      document.getElementById('pageVenue').classList.remove('hidden');
+      initVenue();
+    } else {
+      document.getElementById('pageLanding').classList.remove('hidden');
     }
     updateAuthUI();
 
@@ -2553,7 +2557,7 @@
           } else {
             // Available
             html += '<button class="btn-reserve" onclick="handleReserve(\'' + booth.booth_id + '\')">Giữ chỗ 10p</button>';
-            html += '<button class="btn-use-now" onclick="window.location.href=\'/?booth=' + booth.booth_id + '\'">Dùng ngay</button>';
+            html += '<div class="booth-card-qr-hint">Quét QR để vào</div>';
           }
           html += '</div>';
 
