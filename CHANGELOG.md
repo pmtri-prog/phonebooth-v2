@@ -1,5 +1,22 @@
 # Phonebooth MVP - Changelog
 
+## [2026-03-14] Demographics Report cho khách hàng quảng cáo
+
+### Tính năng
+- **Demographics section** trong admin Reports: phân tích user profile cho brand
+- **Donut charts**: Phân bố nghề nghiệp + mục đích sử dụng
+- **Conversion bars**: So sánh conversion rate theo từng nhóm demographic
+- **Usage patterns**: Phân bố giờ sử dụng (24h) + ngày trong tuần
+- **Smart insights**: Tự động highlight nhóm user chính + conversion cao nhất
+- **Filter theo địa điểm**: Lọc demographics theo location/booth/brand
+- **Export CSV**: Xuất dữ liệu demographics cho từng user
+- **Summary cards**: Unique users, profile rate, sessions, impressions
+
+### File thay đổi
+- `admin.html` (Demographics section: HTML + CSS + JS)
+
+---
+
 ## [2026-03-14] Booth Reservation (Giữ chỗ 10 phút)
 
 ### Tính năng

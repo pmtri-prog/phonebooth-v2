@@ -571,11 +571,204 @@
     }
     .filter-sep { font-size: 11px; color: #999; }
 
+    /* Demographics Report */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .demo-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #EDEDED;
+      padding: 18px 20px;
+    }
+    .demo-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #aaa;
+      margin-bottom: 14px;
+    }
+    .demo-donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .demo-donut {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .demo-donut-hole {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .demo-donut-total {
+      font-size: 18px;
+      font-weight: 800;
+      color: #282828;
+      line-height: 1;
+    }
+    .demo-donut-sub {
+      font-size: 8px;
+      color: #bbb;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .demo-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+    .demo-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #555;
+    }
+    .demo-legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .demo-legend-pct {
+      margin-left: auto;
+      font-weight: 700;
+      color: #282828;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    .demo-bar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .demo-bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .demo-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #555;
+    }
+    .demo-bar-label strong {
+      font-weight: 700;
+      color: #282828;
+    }
+    .demo-bar-track {
+      height: 8px;
+      background: #F5F5F5;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .demo-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .demo-insight {
+      background: #F5F3FF;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #10069F;
+      font-weight: 500;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    .demo-insight strong {
+      font-weight: 700;
+    }
+    .demo-hours-grid {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      gap: 2px;
+      align-items: end;
+      height: 60px;
+    }
+    .demo-hour-bar {
+      background: #10069F;
+      border-radius: 2px 2px 0 0;
+      min-height: 2px;
+      opacity: 0.7;
+      transition: height 0.3s;
+    }
+    .demo-hour-bar:hover { opacity: 1; }
+    .demo-hours-labels {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      gap: 2px;
+      margin-top: 4px;
+    }
+    .demo-hours-labels span {
+      font-size: 7px;
+      color: #ccc;
+      text-align: center;
+    }
+    .demo-day-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 12px;
+    }
+    .demo-day-item {
+      text-align: center;
+    }
+    .demo-day-label {
+      font-size: 9px;
+      color: #bbb;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .demo-day-bar {
+      height: 6px;
+      background: #F5F5F5;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .demo-day-fill {
+      height: 100%;
+      background: #10069F;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .demo-day-count {
+      font-size: 10px;
+      font-weight: 700;
+      color: #282828;
+      margin-top: 3px;
+    }
+    .demo-summary-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
     /* ===== RESPONSIVE ===== */
 
     /* Tablet */
     @media (max-width: 768px) {
       .container { padding: 16px 12px; }
+      .demo-grid { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; }
       .stat-value { font-size: 26px; }
       .booths-grid { grid-template-columns: 1fr; }
@@ -950,6 +1143,107 @@
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      <!-- Demographics Report -->
+      <div class="section" style="margin-top:16px;">
+        <div class="section-header">
+          <h3>Demographics</h3>
+          <button class="btn-ctrl btn-unlock" onclick="loadDemographics()">Tải dữ liệu</button>
+        </div>
+        <div class="report-content">
+          <div class="report-filters">
+            <input type="date" id="demoDateFrom" class="filter-input">
+            <span class="filter-sep">đến</span>
+            <input type="date" id="demoDateTo" class="filter-input">
+            <select id="demoLocation" class="filter-input">
+              <option value="">Tất cả địa điểm</option>
+            </select>
+            <select id="demoBooth" class="filter-input">
+              <option value="">Tất cả booth</option>
+            </select>
+            <select id="demoBrand" class="filter-input">
+              <option value="">Tất cả brand</option>
+            </select>
+            <button class="btn-ctrl btn-unlock" onclick="loadDemographics()">Lọc</button>
+            <button class="btn-ctrl" style="background:#e8e6f8;color:#10069F;" onclick="exportDemoCSV()">Export CSV</button>
+          </div>
+
+          <!-- Summary cards -->
+          <div class="demo-summary-row" id="demoSummary">
+            <div class="stat-card">
+              <div class="stat-label">Unique Users</div>
+              <div class="stat-value" id="demoTotalUsers">--</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Có profile</div>
+              <div class="stat-value" id="demoProfileRate">--</div>
+              <div class="stat-sub">%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Tổng sessions</div>
+              <div class="stat-value" id="demoTotalSessions">--</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Impressions</div>
+              <div class="stat-value" id="demoTotalImpressions">--</div>
+            </div>
+          </div>
+
+          <!-- Charts grid -->
+          <div class="demo-grid" id="demoCharts">
+            <!-- Occupation donut -->
+            <div class="demo-card">
+              <div class="demo-card-title">Nghề nghiệp</div>
+              <div class="demo-donut-wrap" id="demoOccupation">
+                <div class="empty-msg">Nhấn "Tải dữ liệu" để xem</div>
+              </div>
+            </div>
+
+            <!-- Purpose donut -->
+            <div class="demo-card">
+              <div class="demo-card-title">Mục đích sử dụng</div>
+              <div class="demo-donut-wrap" id="demoPurpose">
+                <div class="empty-msg">Nhấn "Tải dữ liệu" để xem</div>
+              </div>
+            </div>
+
+            <!-- Engagement by occupation -->
+            <div class="demo-card">
+              <div class="demo-card-title">Conversion theo nghề nghiệp</div>
+              <div class="demo-bar-list" id="demoOccConversion">
+                <div class="empty-msg">Nhấn "Tải dữ liệu" để xem</div>
+              </div>
+            </div>
+
+            <!-- Engagement by purpose -->
+            <div class="demo-card">
+              <div class="demo-card-title">Conversion theo mục đích</div>
+              <div class="demo-bar-list" id="demoPurpConversion">
+                <div class="empty-msg">Nhấn "Tải dữ liệu" để xem</div>
+              </div>
+            </div>
+
+            <!-- Usage by hour -->
+            <div class="demo-card">
+              <div class="demo-card-title">Phân bố giờ sử dụng</div>
+              <div id="demoHours">
+                <div class="empty-msg">Nhấn "Tải dữ liệu" để xem</div>
+              </div>
+            </div>
+
+            <!-- Usage by day of week -->
+            <div class="demo-card">
+              <div class="demo-card-title">Phân bố ngày trong tuần</div>
+              <div id="demoDays">
+                <div class="empty-msg">Nhấn "Tải dữ liệu" để xem</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Insight -->
+          <div class="demo-insight hidden" id="demoInsight"></div>
         </div>
       </div>
     </div>
@@ -2129,6 +2423,352 @@
       }).join('');
     }
 
+    // ============== DEMOGRAPHICS REPORT ==============
+    const DEMO_COLORS = ['#10069F', '#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#8b5cf6'];
+    const OCC_LABELS = { 'Freelancer': 'Freelancer', 'Nhân viên VP': 'Nhân viên VP', 'Sinh viên': 'Sinh viên', 'Khác': 'Khác' };
+    const PURP_LABELS = { 'Làm việc': 'Làm việc', 'Học tập': 'Học tập', 'Họp online': 'Họp online', 'Nghỉ ngơi': 'Nghỉ ngơi' };
+    const DAY_NAMES = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+    let demoData = null;
+
+    async function loadDemographics() {
+      const dateFrom = document.getElementById('demoDateFrom').value;
+      const dateTo = document.getElementById('demoDateTo').value;
+      const locationFilter = document.getElementById('demoLocation').value;
+      const boothFilter = document.getElementById('demoBooth').value;
+      const brandFilter = document.getElementById('demoBrand').value;
+
+      // Populate dropdowns
+      populateDemoDropdowns();
+
+      // 1. Load all data in parallel
+      var sessQuery = db.from('sessions').select('id, user_id, booth_id, status, created_at, duration_minutes');
+      if (dateFrom) sessQuery = sessQuery.gte('created_at', dateFrom + 'T00:00:00');
+      if (dateTo) sessQuery = sessQuery.lte('created_at', dateTo + 'T23:59:59');
+      if (boothFilter) sessQuery = sessQuery.eq('booth_id', boothFilter);
+
+      var impQuery = db.from('product_impressions').select('id, user_id, booth_product_id, source, created_at');
+      if (dateFrom) impQuery = impQuery.gte('created_at', dateFrom + 'T00:00:00');
+      if (dateTo) impQuery = impQuery.lte('created_at', dateTo + 'T23:59:59');
+
+      var leadQuery = db.from('product_leads').select('id, user_id, booth_product_id, cta_type, source, created_at, booth_products(booth_id, products(brand_id))');
+      if (dateFrom) leadQuery = leadQuery.gte('created_at', dateFrom + 'T00:00:00');
+      if (dateTo) leadQuery = leadQuery.lte('created_at', dateTo + 'T23:59:59');
+
+      var [sessRes, impRes, leadRes, usersRes, bpRes] = await Promise.all([
+        sessQuery,
+        impQuery,
+        leadQuery,
+        db.from('users').select('id, occupation, purpose, created_at'),
+        db.from('booth_products').select('id, booth_id')
+      ]);
+
+      var sessions = sessRes.data || [];
+      var impressions = impRes.data || [];
+      var leads = leadRes.data || [];
+      var users = usersRes.data || [];
+      var bpMap = {};
+      (bpRes.data || []).forEach(function(bp) { bpMap[bp.id] = bp.booth_id; });
+
+      // Build booth → location map
+      var boothLocMap = {};
+      booths.forEach(function(b) { boothLocMap[b.booth_id] = b.location || ''; });
+
+      // Filter by location (booth filter already applied in query)
+      if (locationFilter) {
+        var locBooths = booths.filter(function(b) { return b.location === locationFilter; }).map(function(b) { return b.booth_id; });
+        sessions = sessions.filter(function(s) { return locBooths.indexOf(s.booth_id) >= 0; });
+        impressions = impressions.filter(function(i) { return locBooths.indexOf(bpMap[i.booth_product_id]) >= 0; });
+        leads = leads.filter(function(l) { return l.booth_products && locBooths.indexOf(l.booth_products.booth_id) >= 0; });
+      }
+      if (boothFilter) {
+        impressions = impressions.filter(function(i) { return bpMap[i.booth_product_id] === boothFilter; });
+        leads = leads.filter(function(l) { return l.booth_products && l.booth_products.booth_id === boothFilter; });
+      }
+      if (brandFilter) {
+        impressions = impressions.filter(function(i) { return false; }); // can't filter impressions by brand easily
+        leads = leads.filter(function(l) { return l.booth_products && l.booth_products.products && l.booth_products.products.brand_id === brandFilter; });
+      }
+
+      // Build user map
+      var userMap = {};
+      users.forEach(function(u) { userMap[u.id] = u; });
+
+      // Collect unique user IDs from sessions
+      var userIds = {};
+      sessions.forEach(function(s) { if (s.user_id) userIds[s.user_id] = true; });
+      var uniqueUsers = Object.keys(userIds);
+
+      // Count profiles
+      var withProfile = 0;
+      uniqueUsers.forEach(function(uid) {
+        var u = userMap[uid];
+        if (u && (u.occupation || u.purpose)) withProfile++;
+      });
+
+      // Summary
+      document.getElementById('demoTotalUsers').textContent = uniqueUsers.length;
+      document.getElementById('demoProfileRate').textContent = uniqueUsers.length > 0 ? Math.round(withProfile / uniqueUsers.length * 100) : 0;
+      document.getElementById('demoTotalSessions').textContent = sessions.length;
+      document.getElementById('demoTotalImpressions').textContent = impressions.length;
+
+      // Occupation breakdown
+      var occCounts = {};
+      uniqueUsers.forEach(function(uid) {
+        var u = userMap[uid];
+        var occ = (u && u.occupation) ? u.occupation : 'Chưa rõ';
+        occCounts[occ] = (occCounts[occ] || 0) + 1;
+      });
+      renderDonut('demoOccupation', occCounts, uniqueUsers.length);
+
+      // Purpose breakdown
+      var purpCounts = {};
+      uniqueUsers.forEach(function(uid) {
+        var u = userMap[uid];
+        var purp = (u && u.purpose) ? u.purpose : 'Chưa rõ';
+        purpCounts[purp] = (purpCounts[purp] || 0) + 1;
+      });
+      renderDonut('demoPurpose', purpCounts, uniqueUsers.length);
+
+      // Conversion by occupation
+      var occImp = {}, occLead = {};
+      impressions.forEach(function(i) {
+        var u = userMap[i.user_id];
+        var occ = (u && u.occupation) ? u.occupation : 'Chưa rõ';
+        occImp[occ] = (occImp[occ] || 0) + 1;
+      });
+      leads.forEach(function(l) {
+        var u = userMap[l.user_id];
+        var occ = (u && u.occupation) ? u.occupation : 'Chưa rõ';
+        occLead[occ] = (occLead[occ] || 0) + 1;
+      });
+      renderConversionBars('demoOccConversion', occImp, occLead);
+
+      // Conversion by purpose
+      var purpImp = {}, purpLead = {};
+      impressions.forEach(function(i) {
+        var u = userMap[i.user_id];
+        var purp = (u && u.purpose) ? u.purpose : 'Chưa rõ';
+        purpImp[purp] = (purpImp[purp] || 0) + 1;
+      });
+      leads.forEach(function(l) {
+        var u = userMap[l.user_id];
+        var purp = (u && u.purpose) ? u.purpose : 'Chưa rõ';
+        purpLead[purp] = (purpLead[purp] || 0) + 1;
+      });
+      renderConversionBars('demoPurpConversion', purpImp, purpLead);
+
+      // Hours distribution
+      var hourCounts = new Array(24).fill(0);
+      sessions.forEach(function(s) {
+        var h = new Date(s.created_at).getHours();
+        hourCounts[h]++;
+      });
+      renderHoursChart(hourCounts);
+
+      // Day of week distribution
+      var dayCounts = new Array(7).fill(0);
+      sessions.forEach(function(s) {
+        var d = new Date(s.created_at).getDay();
+        dayCounts[d]++;
+      });
+      renderDaysChart(dayCounts);
+
+      // Insight
+      renderInsight(occCounts, purpCounts, occImp, occLead, purpImp, purpLead, uniqueUsers.length);
+
+      // Store for CSV export
+      demoData = { uniqueUsers: uniqueUsers, userMap: userMap, occCounts: occCounts, purpCounts: purpCounts, sessions: sessions, impressions: impressions, leads: leads, hourCounts: hourCounts, dayCounts: dayCounts };
+    }
+
+    function populateDemoDropdowns() {
+      var locSel = document.getElementById('demoLocation');
+      if (locSel.options.length <= 1) {
+        var locs = {};
+        booths.forEach(function(b) { if (b.location) locs[b.location] = true; });
+        Object.keys(locs).forEach(function(loc) {
+          var opt = document.createElement('option');
+          opt.value = loc;
+          opt.textContent = loc;
+          locSel.appendChild(opt);
+        });
+      }
+      var boothSel = document.getElementById('demoBooth');
+      if (boothSel.options.length <= 1) {
+        booths.forEach(function(b) {
+          var opt = document.createElement('option');
+          opt.value = b.booth_id;
+          opt.textContent = b.name || b.booth_id;
+          boothSel.appendChild(opt);
+        });
+      }
+      var brandSel = document.getElementById('demoBrand');
+      if (brandSel.options.length <= 1 && typeof brandsCache !== 'undefined') {
+        brandsCache.forEach(function(b) {
+          var opt = document.createElement('option');
+          opt.value = b.id;
+          opt.textContent = b.name;
+          brandSel.appendChild(opt);
+        });
+      }
+    }
+
+    function renderDonut(elId, counts, total) {
+      var el = document.getElementById(elId);
+      if (total === 0) {
+        el.innerHTML = '<div class="empty-msg">Chưa có dữ liệu</div>';
+        return;
+      }
+      var entries = Object.entries(counts).sort(function(a, b) { return b[1] - a[1]; });
+      var segments = [];
+      var cumPct = 0;
+      entries.forEach(function(e, i) {
+        var pct = (e[1] / total) * 100;
+        segments.push(DEMO_COLORS[i % DEMO_COLORS.length] + ' ' + cumPct + '% ' + (cumPct + pct) + '%');
+        cumPct += pct;
+      });
+
+      var legendHtml = entries.map(function(e, i) {
+        var pct = Math.round((e[1] / total) * 100);
+        return '<div class="demo-legend-item">' +
+          '<div class="demo-legend-dot" style="background:' + DEMO_COLORS[i % DEMO_COLORS.length] + ';"></div>' +
+          '<span>' + e[0] + '</span>' +
+          '<span class="demo-legend-pct">' + pct + '%</span>' +
+          '</div>';
+      }).join('');
+
+      el.innerHTML = '<div class="demo-donut" style="background:conic-gradient(' + segments.join(', ') + ');">' +
+        '<div class="demo-donut-hole"><div class="demo-donut-total">' + total + '</div><div class="demo-donut-sub">users</div></div></div>' +
+        '<div class="demo-legend">' + legendHtml + '</div>';
+    }
+
+    function renderConversionBars(elId, impCounts, leadCounts) {
+      var el = document.getElementById(elId);
+      var allKeys = {};
+      Object.keys(impCounts).forEach(function(k) { allKeys[k] = true; });
+      Object.keys(leadCounts).forEach(function(k) { allKeys[k] = true; });
+      var entries = Object.keys(allKeys).map(function(k) {
+        var imp = impCounts[k] || 0;
+        var lead = leadCounts[k] || 0;
+        var conv = imp > 0 ? ((lead / imp) * 100).toFixed(1) : '0';
+        return { label: k, imp: imp, lead: lead, conv: parseFloat(conv) };
+      }).sort(function(a, b) { return b.conv - a.conv; });
+
+      if (entries.length === 0) {
+        el.innerHTML = '<div class="empty-msg">Chưa có dữ liệu</div>';
+        return;
+      }
+
+      var maxConv = Math.max.apply(null, entries.map(function(e) { return e.conv; })) || 1;
+
+      el.innerHTML = entries.map(function(e, i) {
+        var w = Math.max(4, (e.conv / maxConv) * 100);
+        return '<div class="demo-bar-item">' +
+          '<div class="demo-bar-label"><span>' + e.label + '</span><strong>' + e.conv + '% <span style="font-weight:400;color:#aaa;font-size:10px;">(' + e.lead + '/' + e.imp + ')</span></strong></div>' +
+          '<div class="demo-bar-track"><div class="demo-bar-fill" style="width:' + w + '%;background:' + DEMO_COLORS[i % DEMO_COLORS.length] + ';"></div></div>' +
+          '</div>';
+      }).join('');
+    }
+
+    function renderHoursChart(hourCounts) {
+      var el = document.getElementById('demoHours');
+      var max = Math.max.apply(null, hourCounts) || 1;
+      var barsHtml = hourCounts.map(function(c, i) {
+        var h = Math.max(2, (c / max) * 60);
+        return '<div class="demo-hour-bar" style="height:' + h + 'px;" title="' + i + ':00 — ' + c + ' sessions"></div>';
+      }).join('');
+      var labelsHtml = hourCounts.map(function(c, i) {
+        return '<span>' + (i % 3 === 0 ? i + 'h' : '') + '</span>';
+      }).join('');
+
+      el.innerHTML = '<div class="demo-hours-grid">' + barsHtml + '</div>' +
+        '<div class="demo-hours-labels">' + labelsHtml + '</div>';
+    }
+
+    function renderDaysChart(dayCounts) {
+      var el = document.getElementById('demoDays');
+      var max = Math.max.apply(null, dayCounts) || 1;
+
+      el.innerHTML = '<div class="demo-day-grid">' + dayCounts.map(function(c, i) {
+        var w = Math.max(8, (c / max) * 100);
+        return '<div class="demo-day-item">' +
+          '<div class="demo-day-label">' + DAY_NAMES[i] + '</div>' +
+          '<div class="demo-day-bar"><div class="demo-day-fill" style="width:' + w + '%;"></div></div>' +
+          '<div class="demo-day-count">' + c + '</div>' +
+          '</div>';
+      }).join('') + '</div>';
+    }
+
+    function renderInsight(occCounts, purpCounts, occImp, occLead, purpImp, purpLead, totalUsers) {
+      var el = document.getElementById('demoInsight');
+      if (totalUsers === 0) { el.classList.add('hidden'); return; }
+
+      var insights = [];
+
+      // Top occupation
+      var topOcc = Object.entries(occCounts).filter(function(e) { return e[0] !== 'Chưa rõ'; }).sort(function(a, b) { return b[1] - a[1]; })[0];
+      if (topOcc) {
+        var pct = Math.round((topOcc[1] / totalUsers) * 100);
+        insights.push('<strong>' + pct + '%</strong> người dùng là <strong>' + topOcc[0] + '</strong>');
+      }
+
+      // Top purpose
+      var topPurp = Object.entries(purpCounts).filter(function(e) { return e[0] !== 'Chưa rõ'; }).sort(function(a, b) { return b[1] - a[1]; })[0];
+      if (topPurp) {
+        var pct2 = Math.round((topPurp[1] / totalUsers) * 100);
+        insights.push('<strong>' + pct2 + '%</strong> dùng booth để <strong>' + topPurp[0] + '</strong>');
+      }
+
+      // Best converting demo
+      var bestConv = null;
+      var bestConvRate = 0;
+      Object.keys(occLead).forEach(function(k) {
+        if (k === 'Chưa rõ') return;
+        var imp = occImp[k] || 0;
+        var lead = occLead[k] || 0;
+        if (imp >= 5) {
+          var rate = (lead / imp) * 100;
+          if (rate > bestConvRate) { bestConvRate = rate; bestConv = k; }
+        }
+      });
+      if (bestConv) {
+        insights.push('Nhóm <strong>' + bestConv + '</strong> có conversion cao nhất: <strong>' + bestConvRate.toFixed(1) + '%</strong>');
+      }
+
+      if (insights.length === 0) { el.classList.add('hidden'); return; }
+      el.innerHTML = '💡 ' + insights.join(' · ');
+      el.classList.remove('hidden');
+    }
+
+    function exportDemoCSV() {
+      if (!demoData || demoData.uniqueUsers.length === 0) {
+        showToast('Không có dữ liệu để export');
+        return;
+      }
+      var d = demoData;
+      var csv = 'User ID,Occupation,Purpose,Sessions,Impressions,Leads\n';
+      d.uniqueUsers.forEach(function(uid) {
+        var u = d.userMap[uid] || {};
+        var sessCnt = d.sessions.filter(function(s) { return s.user_id === uid; }).length;
+        var impCnt = d.impressions.filter(function(i) { return i.user_id === uid; }).length;
+        var leadCnt = d.leads.filter(function(l) { return l.user_id === uid; }).length;
+        csv += [
+          '"' + uid.substring(0, 8) + '..."',
+          '"' + (u.occupation || '') + '"',
+          '"' + (u.purpose || '') + '"',
+          sessCnt, impCnt, leadCnt
+        ].join(',') + '\n';
+      });
+
+      var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'demographics_' + new Date().toISOString().split('T')[0] + '.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Đã export CSV');
+    }
+
     // ============== FIRMWARE MANAGEMENT ==============
     let firmwaresCache = [];
     let latestFwVersion = '';
@@ -2368,10 +3008,14 @@
 
     // Set default dates cho reports
     const today = new Date().toISOString().split('T')[0];
-    ['reportDateFrom', 'reportDateTo', 'latencyDateFrom', 'latencyDateTo'].forEach(id => {
+    ['reportDateFrom', 'reportDateTo', 'latencyDateFrom', 'latencyDateTo', 'demoDateTo'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = today;
     });
+    // Demographics: default last 30 days
+    var thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0];
+    document.getElementById('demoDateFrom').value = thirtyDaysAgo;
+    document.getElementById('demoDateTo').value = today;
 
     // setTimeout chaining thay setInterval → tránh overlap
     slowRefreshCount = SLOW_REFRESH_INTERVAL; // Lần đầu load tất cả
