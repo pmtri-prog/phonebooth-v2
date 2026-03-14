@@ -3568,15 +3568,16 @@
         document.getElementById('lbMyHours').textContent = formatMinutesAsHours(myMinutes);
         myEl.classList.remove('hidden');
 
-        // Build leaderboard (only users with show_leaderboard = true)
+        // Build leaderboard
         var entries = [];
         Object.keys(userMinutes).forEach(function(uid) {
           var u = userMap[uid];
-          if (!u || u.show_leaderboard === false) return;
+          // Skip if user explicitly set show_leaderboard = false
+          if (u && u.show_leaderboard === false) return;
           entries.push({
             id: uid,
-            nickname: u.nickname || 'Ẩn danh',
-            avatar: u.avatar_icon || '🌱',
+            nickname: (u && u.nickname) ? u.nickname : 'Ẩn danh',
+            avatar: (u && u.avatar_icon) ? u.avatar_icon : '🌱',
             minutes: userMinutes[uid]
           });
         });
@@ -3609,6 +3610,8 @@
 
       } catch (e) {
         console.error('loadLeaderboard error:', e);
+        document.getElementById('lbEmpty').classList.remove('hidden');
+        document.getElementById('lbEmpty').textContent = 'Không tải được bảng xếp hạng.';
       }
     }
 
