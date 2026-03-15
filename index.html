@@ -2232,6 +2232,41 @@
       flex-shrink: 0;
     }
 
+    /* ===== LOGIN PROMPT BANNER ===== */
+    .login-prompt-banner {
+      position: fixed;
+      bottom: 56px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px var(--space-page);
+      background: linear-gradient(135deg, #F0EDFF 0%, #E8F4FD 100%);
+      border-top: 1px solid var(--color-border);
+      z-index: 99;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .login-prompt-text {
+      flex: 1;
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      line-height: 1.3;
+    }
+    .login-prompt-btn {
+      flex-shrink: 0;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+
     /* ===== BOTTOM TAB BAR ===== */
     .tab-bar {
       position: fixed;
@@ -2862,6 +2897,12 @@
     </div>
   </div>
 
+  <!-- ==================== LOGIN PROMPT BANNER ==================== -->
+  <div class="login-prompt-banner hidden" id="loginPromptBanner">
+    <div class="login-prompt-text">Đăng nhập để tích điểm, nhận voucher và xem hạng</div>
+    <button class="login-prompt-btn" onclick="showLandingLogin()">Đăng nhập</button>
+  </div>
+
   <!-- ==================== BOTTOM TAB BAR ==================== -->
   <div class="tab-bar hidden" id="tabBar">
     <button class="tab-item active" id="tabBooth" onclick="switchTab('venue')">
@@ -3283,6 +3324,9 @@
           if (authRow) authRow.classList.remove('hidden');
         }
       }
+      // Hide login banner if logged in
+      var banner = document.getElementById('loginPromptBanner');
+      if (auth) banner.classList.add('hidden');
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -3290,12 +3334,19 @@
     const PRODUCT_PARAM = urlParams.get('product');
     const PAGE_PARAM = urlParams.get('page');
 
-    // Show tab bar for venue/stats pages (logged-in users)
+    // Show tab bar for all users; show login banner if not logged in
     function showTabBar() {
-      if (isLoggedIn()) document.getElementById('tabBar').classList.remove('hidden');
+      document.getElementById('tabBar').classList.remove('hidden');
+      var banner = document.getElementById('loginPromptBanner');
+      if (!isLoggedIn()) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
     }
     function hideTabBar() {
       document.getElementById('tabBar').classList.add('hidden');
+      document.getElementById('loginPromptBanner').classList.add('hidden');
     }
     function setActiveTab(tab) {
       document.querySelectorAll('.tab-item').forEach(function(el) { el.classList.remove('active'); });
