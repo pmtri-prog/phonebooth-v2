@@ -4176,7 +4176,7 @@
         today.setHours(0, 0, 0, 0);
         var expiringCount = 0;
 
-        var html = vouchers.map(function(v) {
+        var html = vouchers.slice(0, 2).map(function(v) {
           var bp = v.booth_products;
           var prod = bp.products;
           var brand = prod.brands || {};
