@@ -1823,8 +1823,8 @@
       border-radius: var(--radius-card);
       padding: 14px 16px;
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
+      gap: 0;
     }
     .lb-my-icon {
       font-size: 28px;
@@ -1853,6 +1853,34 @@
     .lb-my-hours-label {
       font-size: 10px;
       color: var(--color-text-hint);
+    }
+    .lb-my-progress {
+      width: 100%;
+      margin-top: 10px;
+    }
+    .lb-my-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(16,6,159,0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .lb-my-progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .lb-my-progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 11px;
+      color: var(--color-text-secondary);
+    }
+    .lb-my-progress-next {
+      font-weight: 600;
+      color: var(--color-accent);
     }
     .lb-list {
       padding: 0 var(--space-page) 16px;
@@ -2330,11 +2358,27 @@
 
     /* ===== DISCOVER PAGE ===== */
     .discover-page {
-      padding-bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 56px - 56px);
+      height: calc(100dvh - 56px - 56px);
+      overflow: hidden;
+    }
+    .discover-scroll {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+    .discover-rental-fixed {
+      flex: 0 0 auto;
+      padding: 12px var(--space-page) 14px;
+      border-top: 0.5px solid var(--color-border);
+      background: var(--color-white);
     }
     .discover-section {
       padding: 0 var(--space-page);
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
     .discover-section-title {
       font-size: 16px;
@@ -2410,42 +2454,38 @@
       flex-shrink: 0;
     }
 
-    /* Rental card in discover tab */
+    /* Rental card in discover tab (fixed bottom panel) */
     .discover-rental-card {
       background: #F8F8FF;
-      border: 0.5px solid var(--color-border);
       border-radius: var(--radius-card);
-      padding: 20px 16px;
+      padding: 16px;
     }
     .discover-rental-title {
       font-size: 15px;
       font-weight: 700;
       color: var(--color-text-primary);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-    .discover-rental-desc {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-      line-height: 1.5;
-      margin-bottom: 14px;
-    }
-    .discover-rental-features {
+    .discover-rental-chips {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
     }
-    .discover-rental-feat {
-      display: flex;
+    .discover-rental-chip {
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--color-text-primary);
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-accent);
+      background: rgba(16,6,159,0.06);
+      padding: 5px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
     }
-    .discover-rental-feat-icon {
-      font-size: 14px;
-      width: 20px;
-      text-align: center;
+    .discover-rental-chip svg {
+      flex-shrink: 0;
     }
     .discover-rental-cta {
       display: block;
@@ -2596,7 +2636,7 @@
     }
 
     /* ===== RESPONSIVE: Desktop shows mobile layout centered ===== */
-    #pageLanding, #pageBooth {
+    #pageLanding, #pageBooth, #pageDiscover {
       max-width: 480px;
       margin: 0 auto;
     }
@@ -2694,14 +2734,25 @@
         <div class="lb-title">Bảng xếp hạng</div>
         <div class="lb-subtitle">Deep Workers tại venue này</div>
         <div class="lb-my-rank hidden" id="lbMyRank">
-          <span class="lb-my-icon" id="lbMyIcon">🌱</span>
-          <div class="lb-my-info">
-            <div class="lb-my-name" id="lbMyName">Bạn</div>
-            <div class="lb-my-tier" id="lbMyTier">Tập sự</div>
+          <div style="display:flex;align-items:center;gap:12px;width:100%">
+            <span class="lb-my-icon" id="lbMyIcon">🌱</span>
+            <div class="lb-my-info">
+              <div class="lb-my-name" id="lbMyName">Bạn</div>
+              <div class="lb-my-tier" id="lbMyTier">Tập sự</div>
+            </div>
+            <div class="lb-my-hours">
+              <div class="lb-my-hours-value" id="lbMyHours">0h</div>
+              <div class="lb-my-hours-label">deep work</div>
+            </div>
           </div>
-          <div class="lb-my-hours">
-            <div class="lb-my-hours-value" id="lbMyHours">0h</div>
-            <div class="lb-my-hours-label">deep work</div>
+          <div class="lb-my-progress" id="lbMyProgress">
+            <div class="lb-my-progress-bar">
+              <div class="lb-my-progress-fill" id="lbMyProgressFill" style="width:0%"></div>
+            </div>
+            <div class="lb-my-progress-label">
+              <span id="lbMyProgressCurrent">0p</span>
+              <span class="lb-my-progress-next" id="lbMyProgressNext">→ 2h (Bạc)</span>
+            </div>
           </div>
         </div>
       </div>
@@ -2723,26 +2774,26 @@
         </div>
       </div>
 
-      <!-- Products section -->
-      <div class="discover-section">
-        <div class="discover-section-title">Sản phẩm trong booth</div>
-        <div class="discover-product-list" id="discoverProductList">
-          <div class="discover-empty">Đang tải...</div>
+      <!-- Scrollable products area (top 2/3) -->
+      <div class="discover-scroll">
+        <div class="discover-section">
+          <div class="discover-section-title">Sản phẩm bạn đã trải nghiệm</div>
+          <div class="discover-product-list" id="discoverProductList">
+            <div class="discover-empty">Đang tải...</div>
+          </div>
         </div>
       </div>
 
-      <!-- Rental service section -->
-      <div class="discover-section">
-        <div class="discover-section-title">Dịch vụ</div>
+      <!-- Fixed rental panel (bottom) -->
+      <div class="discover-rental-fixed">
         <div class="discover-rental-card">
-          <div class="discover-rental-title">🏢 Thuê booth cho văn phòng</div>
-          <div class="discover-rental-desc">Đặt Epione Booth ngay tại công ty để team luôn có không gian riêng tư.</div>
-          <div class="discover-rental-features">
-            <div class="discover-rental-feat"><span class="discover-rental-feat-icon">🔇</span> Cách âm cao cấp</div>
-            <div class="discover-rental-feat"><span class="discover-rental-feat-icon">🔐</span> Smart lock, quản lý qua app</div>
-            <div class="discover-rental-feat"><span class="discover-rental-feat-icon">⚡</span> Lắp đặt nhanh, thuê theo tháng</div>
+          <div class="discover-rental-title">Booth cho văn phòng của bạn</div>
+          <div class="discover-rental-chips">
+            <span class="discover-rental-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20"/><path d="M18.9 5A9.96 9.96 0 0 1 21 12"/><path d="M15.5 8.5A5 5 0 0 1 17 12"/><path d="M12 12h.01"/></svg> Cách âm</span>
+            <span class="discover-rental-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Smart lock</span>
+            <span class="discover-rental-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Thuê theo tháng</span>
           </div>
-          <button class="discover-rental-cta" onclick="openRentalSheet('discover')">Tìm hiểu thêm</button>
+          <button class="discover-rental-cta" onclick="openRentalSheet('discover')">Tìm hiểu ngay</button>
         </div>
       </div>
     </div>
@@ -3934,6 +3985,16 @@
         document.getElementById('lbMyName').textContent = auth.nickname || auth.name || 'Bạn';
         document.getElementById('lbMyTier').textContent = myRank.tier.icon + ' ' + myRank.tier.name + ' · ' + formatMinutesAsHours(myMinutes);
         document.getElementById('lbMyHours').textContent = formatMinutesAsHours(myMinutes);
+        // Progress bar
+        document.getElementById('lbMyProgressFill').style.width = myRank.progress + '%';
+        document.getElementById('lbMyProgressCurrent').textContent = formatMinutesAsHours(myMinutes);
+        if (myRank.nextTier) {
+          document.getElementById('lbMyProgressNext').textContent = '→ ' + formatMinutesAsHours(myRank.nextTier.minMinutes) + ' (' + myRank.nextTier.name + ')';
+          document.getElementById('lbMyProgress').classList.remove('hidden');
+        } else {
+          document.getElementById('lbMyProgressNext').textContent = 'MAX';
+          document.getElementById('lbMyProgress').classList.remove('hidden');
+        }
         myEl.classList.remove('hidden');
 
         // Build leaderboard
@@ -4536,31 +4597,50 @@
       try {
         var db = getPPDb();
         var today = new Date().toISOString().split('T')[0];
-        var { data } = await db.from('booth_products')
-          .select('*, products(*, brands(name, logo_url))')
-          .eq('status', 'active')
-          .lte('start_date', today)
-          .gte('end_date', today);
-        // Deduplicate by product name
+
+        // Load booth products AND all standalone products (catalog) in parallel
+        var [bpRes, catalogRes] = await Promise.all([
+          db.from('booth_products')
+            .select('*, products(*, brands(name, logo_url))')
+            .eq('status', 'active')
+            .lte('start_date', today)
+            .gte('end_date', today),
+          db.from('products')
+            .select('*, brands(name, logo_url)')
+        ]);
+
+        // Collect booth product IDs for dedup
         var seen = {};
-        var products = [];
-        (data || []).forEach(function(bp) {
+        var allItems = [];
+
+        // Booth products first (user đã trải nghiệm)
+        (bpRes.data || []).forEach(function(bp) {
           if (bp.products && !seen[bp.products.name]) {
             seen[bp.products.name] = true;
-            products.push(bp);
+            allItems.push({ id: bp.id, products: bp.products, _isBoothProduct: true });
           }
         });
-        // Cache for openProductDetail
-        cachedBoothProducts = products;
 
-        if (products.length === 0) {
+        // Catalog products (Epione catalog items not in any booth)
+        (catalogRes.data || []).forEach(function(p) {
+          if (!seen[p.name]) {
+            seen[p.name] = true;
+            // Wrap in same shape as booth_products for openProductDetail compatibility
+            allItems.push({ id: 'catalog-' + p.id, product_id: p.id, products: p, _isBoothProduct: false });
+          }
+        });
+
+        // Cache for openProductDetail
+        cachedBoothProducts = allItems;
+
+        if (allItems.length === 0) {
           container.innerHTML = '<div class="discover-empty">Chưa có sản phẩm nào</div>';
         } else {
-          container.innerHTML = products.map(function(bp) {
+          container.innerHTML = allItems.map(function(bp) {
             var p = bp.products;
             var brand = (p.brands && p.brands.name) ? p.brands.name : '';
             var img = (p.images && p.images.length > 0) ? p.images[0] : '';
-            var priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
+            var priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : (p.is_epione ? 'Liên hệ' : '');
             return '<div class="discover-product-card" onclick="openProductDetail(\'' + bp.id + '\', \'discover\')">' +
               (img
                 ? '<img class="discover-product-img" src="' + img + '" alt="">'
@@ -4573,8 +4653,9 @@
               '<div class="discover-product-arrow">›</div>' +
             '</div>';
           }).join('');
-          // Track impressions
-          products.forEach(function(bp) { trackImpression(bp.id, 'discover'); });
+          // Track impressions for booth products only
+          allItems.filter(function(bp) { return bp._isBoothProduct; })
+            .forEach(function(bp) { trackImpression(bp.id, 'discover'); });
         }
         discoverLoaded = true;
       } catch (e) {
@@ -4631,7 +4712,8 @@
       btn.textContent = 'Đang gửi...';
       try {
         var auth = isLoggedIn() ? getStoredAuth() : null;
-        await sb.from('rental_leads').insert({
+        var db = getPPDb();
+        await db.from('rental_leads').insert({
           name: name || null,
           phone: phone,
           company: company || null,
