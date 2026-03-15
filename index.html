@@ -2328,6 +2328,273 @@
     }
     .btn-qr-scan:active { opacity: 0.85; }
 
+    /* ===== DISCOVER PAGE ===== */
+    .discover-page {
+      padding-bottom: 80px;
+    }
+    .discover-section {
+      padding: 0 var(--space-page);
+      margin-bottom: 24px;
+    }
+    .discover-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 12px;
+    }
+    .discover-empty {
+      font-size: 14px;
+      color: var(--color-text-hint);
+      text-align: center;
+      padding: 32px 0;
+    }
+    .discover-product-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .discover-product-card {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border: 0.5px solid var(--color-border);
+      border-radius: var(--radius-card);
+      cursor: pointer;
+      align-items: center;
+    }
+    .discover-product-card:active { background: #FAFAFA; }
+    .discover-product-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #F8F8F8;
+      flex-shrink: 0;
+    }
+    .discover-product-img-placeholder {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      background: #F8F8F8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .discover-product-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .discover-product-brand {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text-hint);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .discover-product-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-top: 2px;
+    }
+    .discover-product-price {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+    .discover-product-arrow {
+      color: var(--color-text-hint);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Rental card in discover tab */
+    .discover-rental-card {
+      background: #F8F8FF;
+      border: 0.5px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 20px 16px;
+    }
+    .discover-rental-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+    }
+    .discover-rental-desc {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .discover-rental-features {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .discover-rental-feat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--color-text-primary);
+    }
+    .discover-rental-feat-icon {
+      font-size: 14px;
+      width: 20px;
+      text-align: center;
+    }
+    .discover-rental-cta {
+      display: block;
+      width: 100%;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      font-family: var(--font-family);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 0;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      text-align: center;
+    }
+    .discover-rental-cta:active { opacity: 0.85; }
+
+    /* Rental bottom sheet */
+    .rental-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(40,40,40,0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 130;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .rental-sheet {
+      background: var(--color-white);
+      border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+      padding: 28px 24px 36px;
+      width: 100%;
+      max-width: 420px;
+      animation: slideUp 0.3s ease;
+    }
+    .rental-sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+    .rental-sheet-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .rental-sheet-sub {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .rental-features {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .rental-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--color-text-primary);
+    }
+    .rental-feature-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #F0F0FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .rental-form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .rental-field {
+      margin-bottom: 10px;
+    }
+    .rental-field input {
+      width: 100%;
+      font-family: var(--font-family);
+      font-size: 14px;
+      padding: 12px 14px;
+      border: 0.5px solid var(--color-border);
+      border-radius: var(--radius-input);
+      outline: none;
+      color: var(--color-text-primary);
+    }
+    .rental-field input:focus { border-color: var(--color-accent); }
+    .btn-rental-submit {
+      width: 100%;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      font-family: var(--font-family);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 0;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .btn-rental-submit:active { opacity: 0.85; }
+    .btn-rental-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+    .rental-alt {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      text-align: center;
+      margin-top: 14px;
+    }
+    .rental-alt a {
+      color: var(--color-accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .rental-success {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .rental-success-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .rental-success-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+    }
+    .rental-success-desc {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+
     /* ===== RESPONSIVE: Desktop shows mobile layout centered ===== */
     #pageLanding, #pageBooth {
       max-width: 480px;
@@ -2380,6 +2647,8 @@
         <a href="partner.html">Venue Partner</a>
         <span class="sep">|</span>
         <a href="advertiser.html">Advertiser</a>
+        <span class="sep">|</span>
+        <a href="#" onclick="openRentalSheet('landing'); return false;">Thuê booth</a>
       </div>
     </div>
   </div>
@@ -2440,6 +2709,41 @@
         <div class="lb-list-title">Top Deep Workers</div>
         <div id="lbListItems"></div>
         <div class="lb-empty hidden" id="lbEmpty">Chưa có ai trên bảng xếp hạng. Hãy là người đầu tiên!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: DISCOVER ==================== -->
+  <div id="pageDiscover" class="hidden">
+    <div class="discover-page">
+      <div class="venue-header">
+        <div class="venue-header-logo">
+          <span class="logo-focus">FOCUS</span>
+          <span class="logo-epione">by EPIONE</span>
+        </div>
+      </div>
+
+      <!-- Products section -->
+      <div class="discover-section">
+        <div class="discover-section-title">Sản phẩm trong booth</div>
+        <div class="discover-product-list" id="discoverProductList">
+          <div class="discover-empty">Đang tải...</div>
+        </div>
+      </div>
+
+      <!-- Rental service section -->
+      <div class="discover-section">
+        <div class="discover-section-title">Dịch vụ</div>
+        <div class="discover-rental-card">
+          <div class="discover-rental-title">🏢 Thuê booth cho văn phòng</div>
+          <div class="discover-rental-desc">Đặt Epione Booth ngay tại công ty để team luôn có không gian riêng tư.</div>
+          <div class="discover-rental-features">
+            <div class="discover-rental-feat"><span class="discover-rental-feat-icon">🔇</span> Cách âm cao cấp</div>
+            <div class="discover-rental-feat"><span class="discover-rental-feat-icon">🔐</span> Smart lock, quản lý qua app</div>
+            <div class="discover-rental-feat"><span class="discover-rental-feat-icon">⚡</span> Lắp đặt nhanh, thuê theo tháng</div>
+          </div>
+          <button class="discover-rental-cta" onclick="openRentalSheet('discover')">Tìm hiểu thêm</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2508,6 +2812,10 @@
     <button class="tab-item" id="tabStats" onclick="switchTab('stats')">
       <span class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 22V9.354a4 4 0 0 0 4 0V22"/><path d="M8 2v2"/><path d="M16 2v2"/><path d="M8 4h8a2 2 0 0 1 2 2v3H6V6a2 2 0 0 1 2-2z"/></svg></span>
       <span class="tab-label">Xếp hạng</span>
+    </button>
+    <button class="tab-item" id="tabDiscover" onclick="switchTab('discover')">
+      <span class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
+      <span class="tab-label">Khám phá</span>
     </button>
     <button class="tab-item" id="tabProfile" onclick="switchTab('profile')">
       <span class="tab-badge" id="profileBadge"></span>
@@ -2781,6 +3089,36 @@
     </div>
   </div>
 
+  <!-- ==================== RENTAL INQUIRY BOTTOM SHEET ==================== -->
+  <div class="rental-overlay hidden" id="rentalOverlay">
+    <div class="rental-sheet">
+      <div class="rental-sheet-handle"></div>
+      <div id="rentalFormView">
+        <div class="rental-sheet-title">Booth cho văn phòng</div>
+        <div class="rental-sheet-sub">Đặt Epione Booth ngay tại công ty</div>
+        <div class="rental-features">
+          <div class="rental-feature"><div class="rental-feature-icon">🔇</div><span>Cách âm cao cấp, riêng tư hoàn toàn</span></div>
+          <div class="rental-feature"><div class="rental-feature-icon">🔐</div><span>Smart lock, quản lý qua app</span></div>
+          <div class="rental-feature"><div class="rental-feature-icon">⚡</div><span>Lắp đặt nhanh, thuê theo tháng</span></div>
+        </div>
+        <div class="rental-form-label">Để lại thông tin</div>
+        <div class="rental-field"><input type="text" id="rentalName" placeholder="Tên của bạn"></div>
+        <div class="rental-field"><input type="tel" id="rentalPhone" placeholder="Số điện thoại *"></div>
+        <div class="rental-field"><input type="text" id="rentalCompany" placeholder="Tên công ty"></div>
+        <button class="btn-rental-submit" id="btnRentalSubmit" onclick="submitRentalLead()">Gửi yêu cầu</button>
+        <div class="rental-alt">hoặc nhắn <a href="https://zalo.me/0977222395" target="_blank">Zalo</a></div>
+      </div>
+      <div id="rentalSuccessView" class="hidden">
+        <div class="rental-success">
+          <div class="rental-success-icon">✅</div>
+          <div class="rental-success-title">Đã gửi!</div>
+          <div class="rental-success-desc">Epione sẽ liên hệ bạn trong 24h.<br>Cảm ơn bạn đã quan tâm!</div>
+        </div>
+        <button class="btn-rental-submit" onclick="closeRentalSheet()" style="background:transparent;color:var(--color-text-secondary);border:0.5px solid var(--color-border);">Đóng</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== REGISTRATION / LOGIN ==================== -->
   <div class="auth-overlay hidden" id="registrationOverlay">
     <div class="auth-sheet">
@@ -2910,6 +3248,7 @@
       // Hide all pages
       document.getElementById('pageVenue').classList.add('hidden');
       document.getElementById('pageStats').classList.add('hidden');
+      document.getElementById('pageDiscover').classList.add('hidden');
       document.getElementById('pageProfile').classList.add('hidden');
       document.getElementById('pageLanding').classList.add('hidden');
       setActiveTab(tab);
@@ -2923,6 +3262,11 @@
         document.getElementById('pageStats').classList.remove('hidden');
         initLeaderboard();
         history.replaceState(null, '', '/?page=stats');
+      } else if (tab === 'discover') {
+        document.getElementById('pageDiscover').classList.remove('hidden');
+        setActiveTab('discover');
+        initDiscover();
+        history.replaceState(null, '', '/?page=discover');
       } else if (tab === 'profile') {
         document.getElementById('pageProfile').classList.remove('hidden');
         initProfile();
@@ -2938,6 +3282,10 @@
       document.getElementById('pageStats').classList.remove('hidden');
       showTabBar(); setActiveTab('stats');
       initLeaderboard();
+    } else if (PAGE_PARAM === 'discover') {
+      document.getElementById('pageDiscover').classList.remove('hidden');
+      showTabBar(); setActiveTab('discover');
+      initDiscover();
     } else if (PAGE_PARAM === 'profile') {
       document.getElementById('pageProfile').classList.remove('hidden');
       showTabBar(); setActiveTab('profile');
@@ -3019,6 +3367,7 @@
       var parts = durationStr.split(':').map(Number);
       var sessionMinutes = parts.length === 3 ? parts[0] * 60 + parts[1] : parts[0];
       showRankCard(sessionMinutes);
+      incrementSessionCount();
       overlay.scrollTop = 0;
       overlay.classList.remove('hidden');
     }
@@ -3665,6 +4014,7 @@
 
       // Load vouchers
       loadVouchers();
+
     }
 
     async function loadProfileRank() {
@@ -3678,6 +4028,7 @@
 
         var totalMinutes = 0;
         (sessions || []).forEach(function(s) { totalMinutes += Math.round((s.duration_seconds || 0) / 60); });
+        localStorage.setItem('epione_total_minutes', totalMinutes.toString());
         var rank = getRankTier(totalMinutes);
         document.getElementById('profileTierIcon').textContent = rank.tier.icon;
         document.getElementById('profileTierName').textContent = rank.tier.name + ' · ' + formatMinutesAsHours(totalMinutes);
@@ -4174,6 +4525,135 @@
         }
       }
     };
+
+    // ============== DISCOVER TAB ==============
+    var discoverLoaded = false;
+
+    async function initDiscover() {
+      var container = document.getElementById('discoverProductList');
+      if (discoverLoaded && container.children.length > 0 && !container.querySelector('.discover-empty')) return;
+      container.innerHTML = '<div class="discover-empty">Đang tải...</div>';
+      try {
+        var db = getPPDb();
+        var today = new Date().toISOString().split('T')[0];
+        var { data } = await db.from('booth_products')
+          .select('*, products(*, brands(name, logo_url))')
+          .eq('status', 'active')
+          .lte('start_date', today)
+          .gte('end_date', today);
+        // Deduplicate by product name
+        var seen = {};
+        var products = [];
+        (data || []).forEach(function(bp) {
+          if (bp.products && !seen[bp.products.name]) {
+            seen[bp.products.name] = true;
+            products.push(bp);
+          }
+        });
+        // Cache for openProductDetail
+        cachedBoothProducts = products;
+
+        if (products.length === 0) {
+          container.innerHTML = '<div class="discover-empty">Chưa có sản phẩm nào</div>';
+        } else {
+          container.innerHTML = products.map(function(bp) {
+            var p = bp.products;
+            var brand = (p.brands && p.brands.name) ? p.brands.name : '';
+            var img = (p.images && p.images.length > 0) ? p.images[0] : '';
+            var priceStr = p.price ? new Intl.NumberFormat('vi-VN').format(p.price) + 'đ' : '';
+            return '<div class="discover-product-card" onclick="openProductDetail(\'' + bp.id + '\', \'discover\')">' +
+              (img
+                ? '<img class="discover-product-img" src="' + img + '" alt="">'
+                : '<div class="discover-product-img-placeholder">📦</div>') +
+              '<div class="discover-product-info">' +
+                (brand ? '<div class="discover-product-brand">' + brand + '</div>' : '') +
+                '<div class="discover-product-name">' + p.name + '</div>' +
+                (priceStr ? '<div class="discover-product-price">' + priceStr + '</div>' : '') +
+              '</div>' +
+              '<div class="discover-product-arrow">›</div>' +
+            '</div>';
+          }).join('');
+          // Track impressions
+          products.forEach(function(bp) { trackImpression(bp.id, 'discover'); });
+        }
+        discoverLoaded = true;
+      } catch (e) {
+        console.error('initDiscover error:', e);
+        container.innerHTML = '<div class="discover-empty">Không thể tải sản phẩm</div>';
+      }
+    }
+
+    // ============== BOOTH RENTAL PROMO ==============
+    var RENTAL_SESSION_KEY = 'epione_session_count';
+    var RENTAL_LEAD_SENT_KEY = 'epione_rental_lead_sent';
+
+    function incrementSessionCount() {
+      var count = parseInt(localStorage.getItem(RENTAL_SESSION_KEY) || '0') + 1;
+      localStorage.setItem(RENTAL_SESSION_KEY, count.toString());
+    }
+
+    function getSessionCount() {
+      return parseInt(localStorage.getItem(RENTAL_SESSION_KEY) || '0');
+    }
+
+    var rentalSource = 'app';
+
+    window.openRentalSheet = function(source) {
+      rentalSource = source || 'app';
+      // Reset form
+      document.getElementById('rentalName').value = '';
+      document.getElementById('rentalPhone').value = '';
+      document.getElementById('rentalCompany').value = '';
+      document.getElementById('rentalFormView').classList.remove('hidden');
+      document.getElementById('rentalSuccessView').classList.add('hidden');
+      document.getElementById('btnRentalSubmit').disabled = false;
+      document.getElementById('btnRentalSubmit').textContent = 'Gửi yêu cầu';
+      // Pre-fill phone if logged in
+      if (isLoggedIn()) {
+        var auth = getStoredAuth();
+        if (auth.phone) document.getElementById('rentalPhone').value = auth.phone;
+        if (auth.name) document.getElementById('rentalName').value = auth.name;
+      }
+      document.getElementById('rentalOverlay').classList.remove('hidden');
+    };
+
+    window.closeRentalSheet = function() {
+      document.getElementById('rentalOverlay').classList.add('hidden');
+    };
+
+    window.submitRentalLead = async function() {
+      var phone = document.getElementById('rentalPhone').value.trim();
+      if (!phone) { document.getElementById('rentalPhone').style.borderColor = 'var(--color-error)'; return; }
+      var name = document.getElementById('rentalName').value.trim();
+      var company = document.getElementById('rentalCompany').value.trim();
+      var btn = document.getElementById('btnRentalSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Đang gửi...';
+      try {
+        var auth = isLoggedIn() ? getStoredAuth() : null;
+        await sb.from('rental_leads').insert({
+          name: name || null,
+          phone: phone,
+          company: company || null,
+          source: rentalSource,
+          user_id: auth ? auth.id : null,
+          device_id: DEVICE_USER_ID,
+          session_count: getSessionCount()
+        });
+        localStorage.setItem(RENTAL_LEAD_SENT_KEY, new Date().toISOString());
+        document.getElementById('rentalFormView').classList.add('hidden');
+        document.getElementById('rentalSuccessView').classList.remove('hidden');
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = 'Gửi yêu cầu';
+        console.error('Rental lead error:', e);
+      }
+    };
+
+    // Close rental sheet on backdrop click
+    document.getElementById('rentalOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeRentalSheet();
+    });
 
     // --- Check-in Products (F2) ---
     async function loadCheckinProducts() {
