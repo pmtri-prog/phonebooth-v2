@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusBooth cho Brands - Demo sản phẩm đúng người, đúng lúc, đo lường rõ ràng</title>
+  <meta name="description" content="Đưa sản phẩm công nghệ đến tay người dùng thực tế tại FocusBooth. Chi phí thấp hơn PG, data rõ ràng, đúng target audience. Coworking, quán cà phê, đại học.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-black: #282828;
+      --color-gray: #EDEDED;
+      --color-white: #FFFFFF;
+      --color-accent: #10069F;
+      --color-accent-dark: #0A0470;
+      --color-text-primary: #282828;
+      --color-text-secondary: #888888;
+      --color-text-hint: #BBBBBB;
+      --color-border: #EDEDED;
+      --color-success: #22c55e;
+      --color-error: #ef4444;
+      --color-glow-1: rgba(16,6,159,0.08);
+      --color-glow-2: rgba(16,6,159,0.04);
+      --color-icon-bg: rgba(16,6,159,0.06);
+      --font-family: 'Nunito Sans', sans-serif;
+      --radius-card: 12px;
+      --radius-button: 24px;
+      --radius-sheet: 16px;
+      --radius-badge: 10px;
+      --max-width: 1080px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-family);
+      background: var(--color-white);
+      color: var(--color-text-primary);
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid var(--color-border);
+      transition: box-shadow 0.3s;
+    }
+    .nav.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    .nav-inner {
+      max-width: var(--max-width); margin: 0 auto; padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-text { display: flex; flex-direction: column; align-items: flex-start; }
+    .nav-logo-text .logo-focus {
+      font-size: 16px; font-weight: 700; color: var(--color-text-primary);
+      letter-spacing: 3px; line-height: 1.2;
+    }
+    .nav-logo-text .logo-epione {
+      font-size: 9px; font-weight: 400; color: var(--color-text-secondary); letter-spacing: 1.5px;
+    }
+    .nav-cta {
+      background: var(--color-accent); color: white; border: none;
+      padding: 10px 20px; border-radius: var(--radius-button);
+      font-family: var(--font-family); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .nav-cta:hover { background: var(--color-accent-dark); }
+
+    /* Pulse Logo SVG */
+    .pulse-logo svg { width: 28px; height: 28px; }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: var(--ring-opacity); }
+      50% { transform: scale(1.04); opacity: calc(var(--ring-opacity) * 1.3); }
+    }
+    .pulse-ring { animation: pulse-ring 2s ease-in-out infinite; transform-origin: center; }
+    .pulse-ring:nth-child(1) { --ring-opacity: 0.25; animation-delay: 0s; }
+    .pulse-ring:nth-child(2) { --ring-opacity: 0.4; animation-delay: 0.15s; }
+    .pulse-ring:nth-child(3) { --ring-opacity: 0.65; animation-delay: 0.3s; }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 110px 20px 72px; text-align: center; background: var(--color-white);
+    }
+    .hero-inner { max-width: var(--max-width); margin: 0 auto; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--color-accent); color: white;
+      padding: 6px 16px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 24px;
+    }
+    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: white; }
+    .hero h1 {
+      font-size: 36px; font-weight: 700; line-height: 1.3;
+      color: var(--color-text-primary); margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--color-accent); }
+    .hero-sub {
+      font-size: 15px; color: var(--color-text-secondary);
+      max-width: 540px; margin: 0 auto 36px; line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ===== BUTTONS ===== */
+    .btn-primary {
+      background: var(--color-accent); color: white; border: none;
+      padding: 14px 32px; border-radius: var(--radius-button);
+      font-family: var(--font-family); font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--color-accent-dark); box-shadow: 0 0 0 12px var(--color-glow-1), 0 0 0 28px var(--color-glow-2); }
+    .btn-primary:active { opacity: 0.9; transform: scale(0.97); }
+    .btn-outline {
+      background: transparent; color: var(--color-accent);
+      border: 1px solid var(--color-border);
+      padding: 14px 32px; border-radius: var(--radius-button);
+      font-family: var(--font-family); font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { background: var(--color-gray); }
+    .btn-white {
+      background: white; color: var(--color-accent); border: none;
+      padding: 14px 32px; border-radius: var(--radius-button);
+      font-family: var(--font-family); font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-white:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+    .btn-outline-white {
+      background: transparent; color: white; border: 1px solid rgba(255,255,255,0.4);
+      padding: 14px 32px; border-radius: var(--radius-button);
+      font-family: var(--font-family); font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+
+    /* ===== SECTIONS ===== */
+    .section { padding: 72px 20px; }
+    .section-alt { background: #FAFAFA; }
+    .section-inner { max-width: var(--max-width); margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-label {
+      display: inline-block; color: var(--color-accent);
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .section-header h2 { font-size: 26px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+    .section-header p { font-size: 14px; color: var(--color-text-secondary); max-width: 480px; margin: 0 auto; }
+
+    /* ===== PAIN POINTS ===== */
+    .pain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .pain-card {
+      background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-card);
+      padding: 24px; display: flex; gap: 14px; align-items: flex-start;
+    }
+    .pain-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: #FDE8E8; border-radius: var(--radius-card);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pain-icon svg { width: 20px; height: 20px; }
+    .pain-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--color-text-primary); }
+    .pain-card p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+
+    /* ===== SOLUTION CARDS ===== */
+    .sol-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .sol-card {
+      background: var(--color-white); border: 1px solid var(--color-border);
+      border-radius: var(--radius-card); padding: 28px; text-align: center; transition: all 0.3s;
+    }
+    .sol-card:hover { border-color: var(--color-accent); box-shadow: 0 0 0 12px var(--color-glow-1), 0 0 0 28px var(--color-glow-2); }
+    .sol-icon {
+      width: 48px; height: 48px; background: var(--color-icon-bg);
+      border-radius: var(--radius-card); display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .sol-icon svg { width: 24px; height: 24px; }
+    .sol-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .sol-card p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+    /* ===== COMPARE TABLE ===== */
+    .compare {
+      border: 1px solid var(--color-border); border-radius: var(--radius-card); overflow: hidden;
+    }
+    .compare-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--color-border);
+    }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row.header {
+      background: var(--color-accent); color: white; font-weight: 700; font-size: 14px;
+    }
+    .compare-row.header .compare-cell { border-right-color: rgba(255,255,255,0.15); }
+    .compare-cell {
+      padding: 16px 20px; border-right: 1px solid var(--color-border);
+      font-size: 13px; line-height: 1.5; display: flex; align-items: center; gap: 8px;
+    }
+    .compare-cell:last-child { border-right: none; }
+    .compare-cell.label { font-weight: 600; background: #FAFAFA; }
+    .compare-cell.good { color: var(--color-accent); font-weight: 600; }
+    .compare-cell.bad { color: var(--color-text-hint); }
+    .compare-highlight {
+      background: rgba(16,6,159,0.03);
+    }
+
+    /* ===== AUDIENCE ===== */
+    .audience-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .audience-card {
+      background: var(--color-white); border: 1px solid var(--color-border);
+      border-radius: var(--radius-card); padding: 24px; text-align: center; transition: all 0.3s;
+    }
+    .audience-card:hover { border-color: var(--color-accent); box-shadow: 0 0 0 8px var(--color-glow-1); }
+    .audience-icon {
+      width: 48px; height: 48px; background: var(--color-icon-bg);
+      border-radius: var(--radius-card); display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .audience-icon svg { width: 24px; height: 24px; }
+    .audience-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .audience-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.4; }
+
+    /* ===== HOW IT WORKS ===== */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; position: relative; }
+    .steps::before {
+      content: ''; position: absolute; top: 28px; left: 14%; right: 14%;
+      height: 2px; background: var(--color-border); z-index: 0;
+    }
+    .step { text-align: center; position: relative; z-index: 1; }
+    .step-number {
+      width: 56px; height: 56px; background: var(--color-accent); color: white;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; margin: 0 auto 16px;
+      box-shadow: 0 0 0 8px var(--color-glow-1), 0 0 0 18px var(--color-glow-2);
+    }
+    .step h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .step p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+    /* ===== DATA STRIP ===== */
+    .data-strip { background: var(--color-accent); padding: 40px 20px; }
+    .data-inner {
+      max-width: var(--max-width); margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center;
+    }
+    .data-item { color: white; }
+    .data-icon {
+      width: 44px; height: 44px; background: rgba(255,255,255,0.12);
+      border-radius: var(--radius-card); display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .data-icon svg { width: 22px; height: 22px; }
+    .data-item h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .data-item p { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+
+    /* ===== CTA ===== */
+    .cta-section { padding: 72px 20px; background: var(--color-accent); text-align: center; }
+    .cta-inner { max-width: 520px; margin: 0 auto; }
+    .cta-section h2 { font-size: 26px; font-weight: 700; color: white; margin-bottom: 12px; line-height: 1.3; }
+    .cta-section p { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 32px; line-height: 1.6; }
+    .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ===== FOOTER ===== */
+    .footer { padding: 32px 20px; text-align: center; border-top: 0.5px solid var(--color-border); }
+    .footer-inner { max-width: var(--max-width); margin: 0 auto; }
+    .footer-logo { font-size: 14px; font-weight: 700; color: var(--color-text-primary); letter-spacing: 3px; margin-bottom: 6px; }
+    .footer-sub { font-size: 9px; color: var(--color-text-secondary); letter-spacing: 1.5px; margin-bottom: 8px; }
+    .footer p { font-size: 12px; color: var(--color-text-hint); }
+    .footer a { color: var(--color-accent); text-decoration: none; font-weight: 600; }
+
+    /* ===== ANIMATIONS ===== */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero { padding: 96px 20px 56px; }
+      .hero h1 { font-size: 24px; }
+      .hero-sub { font-size: 14px; }
+      .hero-actions { flex-direction: column; align-items: center; }
+
+      .section { padding: 48px 16px; }
+      .section-header h2 { font-size: 22px; }
+      .section-header { margin-bottom: 32px; }
+
+      .pain-grid { grid-template-columns: 1fr; }
+      .sol-grid { grid-template-columns: 1fr; }
+      .audience-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+      .steps::before { display: none; }
+      .data-inner { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+      .compare-row { grid-template-columns: 1fr; }
+      .compare-row.header { display: none; }
+      .compare-cell.label { font-size: 12px; padding: 12px 16px; }
+      .compare-cell { padding: 10px 16px; font-size: 12px; }
+      .compare-cell::before {
+        font-size: 10px; font-weight: 700; color: var(--color-text-hint);
+        text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px;
+      }
+      .compare-cell:nth-child(2)::before { content: 'PG truyền thống'; }
+      .compare-cell:nth-child(3)::before { content: 'FocusBooth'; }
+
+      .cta-section h2 { font-size: 22px; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-outline, .btn-white, .btn-outline-white {
+        padding: 14px 28px; font-size: 14px; width: 100%; justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="pulse-logo">
+          <svg viewBox="0 0 120 120">
+            <circle class="pulse-ring" cx="60" cy="60" r="55" fill="none" stroke="#10069F" stroke-width="1.5"/>
+            <circle class="pulse-ring" cx="60" cy="60" r="42" fill="none" stroke="#10069F" stroke-width="2"/>
+            <circle class="pulse-ring" cx="60" cy="60" r="28" fill="none" stroke="#10069F" stroke-width="2.5"/>
+            <circle cx="60" cy="60" r="12" fill="#10069F"/>
+          </svg>
+        </div>
+        <div class="nav-logo-text">
+          <span class="logo-focus">FOCUS</span>
+          <span class="logo-epione">by Epione</span>
+        </div>
+      </div>
+      <a href="#contact" class="nav-cta">Đặt lịch tư vấn</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge"><span class="dot"></span> Dành cho Brands & Advertisers</div>
+      <h1>Đưa sản phẩm đến tay người dùng.<br><span>Đúng người. Đúng lúc. Đo được.</span></h1>
+      <p class="hero-sub">
+        Đặt sản phẩm trực tiếp vào FocusBooth - nơi người dùng đang làm việc.
+        Họ dùng thử thực tế, bạn có data rõ ràng.
+        Chi phí thấp hơn nhiều so với PG truyền thống.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Đặt lịch tư vấn
+        </a>
+        <a href="#pain" class="btn-outline">Tìm hiểu thêm</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIN POINTS -->
+  <section class="section section-alt" id="pain">
+    <div class="section-inner">
+      <div class="section-header fade-up">
+        <div class="section-label">Vấn đề</div>
+        <h2>PG truyền thống không còn hiệu quả</h2>
+        <p>Bạn đang chi tiền cho sampling & activation nhưng kết quả không đo được, conversion thấp.</p>
+      </div>
+      <div class="pain-grid">
+        <div class="pain-card fade-up">
+          <div class="pain-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#993333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div>
+            <h3>Chi phí PG quá cao</h3>
+            <p>Thuê PG, thuê booth event, logistics, quản lý - tốn hàng chục triệu cho mỗi đợt activation mà chưa biết hiệu quả ra sao.</p>
+          </div>
+        </div>
+        <div class="pain-card fade-up">
+          <div class="pain-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#993333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <div>
+            <h3>Không đo lường được</h3>
+            <p>Bao nhiêu người thực sự dùng thử? Bao nhiêu người quan tâm? Không có data, chỉ có báo cáo "ước lượng" từ agency.</p>
+          </div>
+        </div>
+        <div class="pain-card fade-up">
+          <div class="pain-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#993333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <div>
+            <h3>Sai target audience</h3>
+            <p>PG phát sample ở siêu thị, sự kiện - người nhận chưa chắc là khách hàng tiềm năng. Nhận xong bỏ túi, không dùng. Conversion cực thấp.</p>
+          </div>
+        </div>
+        <div class="pain-card fade-up">
+          <div class="pain-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#993333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div>
+            <h3>Vị trí chất lượng không vào được</h3>
+            <p>Coworking space, tòa nhà văn phòng, đại học - đúng target nhưng PG không tiếp cận được. Bảo vệ chặn, nội quy không cho phép.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-up">
+        <div class="section-label">Giải pháp</div>
+        <h2>FocusBooth: Product placement thông minh</h2>
+        <p>Sản phẩm của bạn được đặt ngay trong booth - nơi người dùng đang làm việc. Họ dùng thử tự nhiên, không bị ép.</p>
+      </div>
+      <div class="sol-grid">
+        <div class="sol-card fade-up">
+          <div class="sol-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>Dùng thử thực tế</h3>
+          <p>Sản phẩm được đặt trong booth. User ngồi làm việc 30-60 phút, tự nhiên dùng thử. Trải nghiệm thật, không giả tạo.</p>
+        </div>
+        <div class="sol-card fade-up">
+          <div class="sol-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3>Tiếp cận đúng lúc</h3>
+          <p>User đang trong work mode - đúng context để thử sản phẩm công nghệ phục vụ công việc. Không phải giữa siêu thị đang vội về.</p>
+        </div>
+        <div class="sol-card fade-up">
+          <div class="sol-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          </div>
+          <h3>Data rõ ràng</h3>
+          <p>Biết chính xác: bao nhiêu impressions, bao nhiêu leads, thời gian tương tác, feedback trực tiếp. Không ước lượng.</p>
+        </div>
+        <div class="sol-card fade-up">
+          <div class="sol-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Chi phí thấp</h3>
+          <p>Không cần PG, không cần event booth, không cần logistics. Đặt sản phẩm vào, booth chạy 24/7. Cost per trial cực thấp.</p>
+        </div>
+        <div class="sol-card fade-up">
+          <div class="sol-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Vị trí premium</h3>
+          <p>Coworking, quán cà phê, đại học, tòa nhà văn phòng - những nơi PG không thể vào nhưng FocusBooth đã có mặt sẵn.</p>
+        </div>
+        <div class="sol-card fade-up">
+          <div class="sol-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Đúng target audience</h3>
+          <p>Sinh viên, người đi làm, startup, corporate - tất cả đều trong work context. Đúng người cần sản phẩm công nghệ phục vụ công việc.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARE: PG vs FocusBooth -->
+  <section class="section section-alt">
+    <div class="section-inner">
+      <div class="section-header fade-up">
+        <div class="section-label">So sánh</div>
+        <h2>PG truyền thống vs FocusBooth</h2>
+      </div>
+      <div class="compare fade-up">
+        <div class="compare-row header">
+          <div class="compare-cell"></div>
+          <div class="compare-cell">PG truyền thống</div>
+          <div class="compare-cell">FocusBooth</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell label">Chi phí</div>
+          <div class="compare-cell bad">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Cao (PG + booth + logistics)
+          </div>
+          <div class="compare-cell good compare-highlight">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Thấp, chỉ trả theo hiệu quả
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell label">Đo lường</div>
+          <div class="compare-cell bad">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Ước lượng, báo cáo manual
+          </div>
+          <div class="compare-cell good compare-highlight">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Data realtime, chính xác
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell label">Target audience</div>
+          <div class="compare-cell bad">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Ngẫu nhiên, ai đi ngang phát
+          </div>
+          <div class="compare-cell good compare-highlight">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Đúng đối tượng, work context
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell label">Trải nghiệm dùng thử</div>
+          <div class="compare-cell bad">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Nhận xong bỏ túi, không dùng
+          </div>
+          <div class="compare-cell good compare-highlight">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Dùng thực tế 30-60 phút
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell label">Vị trí tiếp cận</div>
+          <div class="compare-cell bad">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Siêu thị, sự kiện, ngoài đường
+          </div>
+          <div class="compare-cell good compare-highlight">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Coworking, office, đại học
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell label">Nhân sự vận hành</div>
+          <div class="compare-cell bad">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Cần PG, supervisor, logistics
+          </div>
+          <div class="compare-cell good compare-highlight">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Không cần, booth tự vận hành
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDIENCE -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-up">
+        <div class="section-label">Audience</div>
+        <h2>Ai đang sử dụng FocusBooth?</h2>
+        <p>Người dùng booth là những người đang trong work context - đúng đối tượng cần sản phẩm công nghệ phục vụ công việc.</p>
+      </div>
+      <div class="audience-grid">
+        <div class="audience-card fade-up">
+          <div class="audience-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 12 3 12 0v-5"/></svg>
+          </div>
+          <h3>Sinh viên</h3>
+          <p>Phỏng vấn online, làm bài, họp nhóm. Early adopter, ảnh hưởng peer.</p>
+        </div>
+        <div class="audience-card fade-up">
+          <div class="audience-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"/></svg>
+          </div>
+          <h3>Người đi làm</h3>
+          <p>Họp online, gọi điện quan trọng. Thu nhập ổn định, quyết định mua nhanh.</p>
+        </div>
+        <div class="audience-card fade-up">
+          <div class="audience-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3>Startup</h3>
+          <p>Cần công cụ hiệu quả, sẵn sàng thử cái mới. Word-of-mouth mạnh.</p>
+        </div>
+        <div class="audience-card fade-up">
+          <div class="audience-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10069F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <h3>Corporate</h3>
+          <p>Nhân viên văn phòng tại các tòa nhà. Volume lớn, potential B2B deals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATA STRIP -->
+  <div class="data-strip">
+    <div class="data-inner">
+      <div class="data-item fade-up">
+        <div class="data-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Impressions</h3>
+        <p>Số lượt nhìn thấy sản phẩm trong booth</p>
+      </div>
+      <div class="data-item fade-up">
+        <div class="data-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3>Leads</h3>
+        <p>User quan tâm, để lại thông tin liên hệ</p>
+      </div>
+      <div class="data-item fade-up">
+        <div class="data-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Dwell time</h3>
+        <p>Thời gian tương tác thực tế với sản phẩm</p>
+      </div>
+      <div class="data-item fade-up">
+        <div class="data-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Feedback</h3>
+        <p>Đánh giá trực tiếp từ user sau khi dùng thử</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="section-inner">
+      <div class="section-header fade-up">
+        <div class="section-label">Quy trình</div>
+        <h2>Chạy campaign trên FocusBooth</h2>
+      </div>
+      <div class="steps">
+        <div class="step fade-up">
+          <div class="step-number">1</div>
+          <h3>Brief</h3>
+          <p>Bạn cho biết sản phẩm, mục tiêu, target audience. Chúng tôi đề xuất plan phù hợp.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-number">2</div>
+          <h3>Setup</h3>
+          <p>Đặt sản phẩm + POSM vào booth tại các vị trí phù hợp. Sẵn sàng trong 1-2 ngày.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-number">3</div>
+          <h3>Chạy campaign</h3>
+          <p>User sử dụng booth, tiếp xúc sản phẩm, dùng thử thực tế. Data được track tự động.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-number">4</div>
+          <h3>Report</h3>
+          <p>Nhận báo cáo chi tiết: impressions, leads, feedback, conversion rate. Data thật, không ước lượng.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="contact">
+    <div class="cta-inner fade-up">
+      <h2>Đưa sản phẩm đến đúng người dùng</h2>
+      <p>Liên hệ để nhận proposal và báo giá chi tiết. Team FocusBooth sẽ phản hồi trong 24h.</p>
+      <div class="cta-buttons">
+        <a href="https://zalo.me/0901234567" class="btn-white" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Gọi ngay
+        </a>
+        <a href="mailto:hello@focusbooth.vn" class="btn-outline-white">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Gửi email
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">FOCUS</div>
+      <div class="footer-sub">by Epione</div>
+      <p>&copy; 2025 FocusBooth. <a href="https://focusbooth.vn">focusbooth.vn</a></p>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+</body>
+</html>
