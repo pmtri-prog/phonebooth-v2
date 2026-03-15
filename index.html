@@ -282,6 +282,23 @@
       text-decoration: none;
       font-weight: 600;
     }
+    .landing-partner-links {
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--color-text-hint);
+    }
+    .landing-partner-links a {
+      color: var(--color-text-hint);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .landing-partner-links a:hover {
+      color: var(--color-accent);
+    }
+    .landing-partner-links .sep {
+      margin: 0 6px;
+      opacity: 0.5;
+    }
     /* Fade in stagger */
     @keyframes fade-in-up {
       0% { opacity: 0; transform: translateY(8px); }
@@ -2359,6 +2376,11 @@
         <button class="btn-auth-outline" onclick="showLandingRegister(); return false;">Đăng ký</button>
       </div>
       <div class="landing-footer">Powered by Epione</div>
+      <div class="landing-partner-links">
+        <a href="partner.html">Venue Partner</a>
+        <span class="sep">|</span>
+        <a href="advertiser.html">Advertiser</a>
+      </div>
     </div>
   </div>
 
