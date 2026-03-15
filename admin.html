@@ -902,6 +902,16 @@
         <div class="stat-value" id="statAvgDur">--</div>
         <div class="stat-sub">phút</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-label">D7 Retention</div>
+        <div class="stat-value" id="statD7">--</div>
+        <div class="stat-sub">%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">User quay lại</div>
+        <div class="stat-value" id="statReturning">--</div>
+        <div class="stat-sub" id="statReturningSub"></div>
+      </div>
     </div>
 
     <!-- Admin Tabs -->
@@ -1675,6 +1685,63 @@
       } else {
         document.getElementById('statAvgDur').textContent = '0';
       }
+
+      // D7 Retention calculation
+      await loadRetention();
+    }
+
+    async function loadRetention() {
+      // Fetch all ended sessions with user_id
+      const { data: sessions } = await db.from('sessions')
+        .select('user_id, started_at')
+        .not('user_id', 'is', null)
+        .eq('status', 'ended')
+        .order('started_at', { ascending: true });
+
+      if (!sessions || sessions.length === 0) {
+        document.getElementById('statD7').textContent = '--';
+        document.getElementById('statReturning').textContent = '0';
+        document.getElementById('statReturningSub').textContent = '';
+        return;
+      }
+
+      // Group sessions by user_id
+      const userSessions = {};
+      sessions.forEach(s => {
+        if (!userSessions[s.user_id]) userSessions[s.user_id] = [];
+        userSessions[s.user_id].push(new Date(s.started_at));
+      });
+
+      const now = new Date();
+      const DAY_MS = 86400000;
+      let eligible = 0; // users whose first session was >= 7 days ago
+      let retained = 0; // users who returned within day 1-7
+      let totalUsers = Object.keys(userSessions).length;
+      let returningUsers = 0; // users with >1 session (any timeframe)
+
+      Object.values(userSessions).forEach(dates => {
+        if (dates.length > 1) returningUsers++;
+
+        const firstDate = dates[0];
+        const daysSinceFirst = (now - firstDate) / DAY_MS;
+
+        // Only count users whose first session was >= 7 days ago
+        if (daysSinceFirst >= 7) {
+          eligible++;
+          // Check if any subsequent session within day 1-7
+          const hasReturn = dates.some((d, i) => {
+            if (i === 0) return false;
+            const dayDiff = (d - firstDate) / DAY_MS;
+            return dayDiff >= 1 && dayDiff <= 7;
+          });
+          if (hasReturn) retained++;
+        }
+      });
+
+      const d7Rate = eligible > 0 ? Math.round((retained / eligible) * 100) : '--';
+      document.getElementById('statD7').textContent = d7Rate;
+      document.getElementById('statReturning').textContent = returningUsers;
+      document.getElementById('statReturningSub').textContent = `/ ${totalUsers} users`;
     }
 
     async function loadSessions() {
